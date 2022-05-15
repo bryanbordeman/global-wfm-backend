@@ -56,11 +56,16 @@ class WorkSegmentsWeek(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        isoweek = self.kwargs['isoweek']
-        qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
-
         user = self.request.user
-        return qs if user.is_superuser else qs.filter(id=user.id)
+        isoweek = self.kwargs['isoweek']
+        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-date')
+
+    # def get_queryset(self):
+    #     isoweek = self.kwargs['isoweek']
+    #     qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
+
+    #     user = self.request.user
+    #     return qs if user.is_superuser else qs.filter(id=user.id)
 
 @csrf_exempt
 def signup(request):
