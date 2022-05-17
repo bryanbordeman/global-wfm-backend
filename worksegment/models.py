@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator
 from django.core.exceptions import ValidationError
 from datetime import date, datetime
-from datetime import timedelta
 from isoweek import Week
 
 # validators

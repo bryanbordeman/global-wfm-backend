@@ -6,7 +6,7 @@ class  WorkSegmentSerializer(serializers.ModelSerializer):
     is_approved = serializers.ReadOnlyField()
     class Meta:
         model = WorkSegment
-        fields = '__all__'
+        fields = ['project', 'date', 'isoweek', 'is_approved', 'start_time', 'end_time', 'lunch', 'travel_duration', 'duration', 'notes']
 
 class WorkSegmentApprovedSerializer(serializers.ModelSerializer):
     '''Admin view only'''
