@@ -44,7 +44,7 @@ class WorkSegment(models.Model):
         ]
     
     def __str__(self):
-        return f'{self.user}_{self.isoweek}_{self.project}_{self.date}_{self.id}'
+        return f'User: {self.user} | Week: {self.isoweek} | Project: {self.project} | Date: {self.date} | Id: {self.id}'
 
     def save(self, *args, **kwargs):
         'get delta between end and start time and save to duration as float'
