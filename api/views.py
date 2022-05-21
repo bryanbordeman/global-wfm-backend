@@ -100,6 +100,14 @@ def login(request):
             else: #return user token
                 try:
                     token = Token.objects.get(user=user)
+                    user_information = User.objects.get(id=user.id)
+                    print(str(user_information.is_staff))
                 except: #if token not in db, create a new one
                     token = Token.objects.create(user=user)
-            return JsonResponse({'token' : str(token)}, status=201)
+            return JsonResponse({'token' : str(token), 
+                                'user' : str(user_information.username),
+                                'user_email' : str(user_information.email),
+                                'user_first_name' : str(user_information.first_name),
+                                'user_last_name' : str(user_information.last_name),
+                                'user_is_staff' : str(user_information.is_staff),
+                                }, status=201)
