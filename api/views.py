@@ -67,6 +67,18 @@ class WorkSegmentsWeek(generics.ListAPIView):
     #     user = self.request.user
     #     return qs if user.is_superuser else qs.filter(id=user.id)
 
+class AdminWorkSegmentsWeek(generics.ListAPIView):
+    '''get all worksegments for particular isoweek. Admin view only'''
+    serializer_class = WorkSegmentsWeekSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        isoweek = self.kwargs['isoweek']
+        qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
+
+        user = self.request.user
+        return qs if user.is_staff else qs.filter(id=user.id)
+
 @csrf_exempt
 def signup(request):
     if request.method == 'POST':
