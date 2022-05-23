@@ -49,7 +49,10 @@ class WorkSegment(models.Model):
     def save(self, *args, **kwargs):
         'get delta between end and start time and save to duration as float'
         delta = datetime.combine(self.date, self.end_time) - datetime.combine(self.date, self.start_time)
-        self.duration = (round(delta.total_seconds()/60)/60)
+        if self.lunch:
+            self.duration = (round(delta.total_seconds()/60)/60) - 0.5
+        else:
+            self.duration = (round(delta.total_seconds()/60)/60)
 
         'convert date to isoweek'
         self.isoweek = Week.withdate(self.date)
