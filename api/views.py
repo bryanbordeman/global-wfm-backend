@@ -24,10 +24,20 @@ class WorkSegmentCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return WorkSegment.objects.filter(user=user).order_by('-user')
+        if user.is_staff:
+            return WorkSegment.objects.all()
+        else:
+            return WorkSegment.objects.filter(user=user).order_by('-user')
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        user = self.request.user
+        if user.is_staff:
+            user_id = self.kwargs['user_id']
+            user = User.objects.filter(id=user_id)[0]
+            serializer.save(user=user)
+        else:
+            user = self.request.user
+            serializer.save(user=self.request.user)
 
 class WorkSegmentRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WorkSegmentSerializer
