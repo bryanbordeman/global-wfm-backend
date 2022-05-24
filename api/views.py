@@ -35,8 +35,11 @@ class WorkSegmentRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        # user can only update =, delete own posts
-        return WorkSegment.objects.filter(user=user)
+        if user.is_staff:
+            return WorkSegment.objects.all()
+        else:
+            # user can only update =, delete own posts
+            return WorkSegment.objects.filter(user=user)
 
 class WorkSegmentToggleApproved(generics.UpdateAPIView):
     '''Approve hours. Admin view only'''
@@ -44,8 +47,9 @@ class WorkSegmentToggleApproved(generics.UpdateAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        return WorkSegment.objects.filter(user=user)
+        # user = self.request.user
+        # return WorkSegment.objects.filter(user=user)
+        return WorkSegment.objects.all()
     
     def perform_update(self, serializer):
         serializer.instance.is_approved=not(serializer.instance.is_approved)
@@ -59,7 +63,7 @@ class WorkSegmentsWeek(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         isoweek = self.kwargs['isoweek']
-        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-date')
+        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-date', '-start_time')
 
     # def get_queryset(self):
     #     isoweek = self.kwargs['isoweek']
