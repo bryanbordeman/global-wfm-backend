@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from worksegment.models import WorkSegment
+from announcement.models import Announcement
 
 class  WorkSegmentSerializer(serializers.ModelSerializer):
     '''Employee view only'''
@@ -19,4 +20,10 @@ class  WorkSegmentsWeekSerializer(serializers.ModelSerializer):
     '''Admin view only'''
     class Meta:
         model = WorkSegment
+        fields = '__all__'
+
+class  AnnouncementSerializer(serializers.ModelSerializer):
+    '''Announcement serializer'''
+    class Meta:
+        model = Announcement
         fields = '__all__'

@@ -1,6 +1,8 @@
 from rest_framework import generics, permissions
 from .serializers import WorkSegmentSerializer, WorkSegmentApprovedSerializer, WorkSegmentsWeekSerializer
+from .serializers import AnnouncementSerializer
 from worksegment.models import WorkSegment
+from announcement.models import Announcement as AnnouncementModel
 from django.db import IntegrityError
 from django.contrib.auth.models import User
 from rest_framework.parsers import JSONParser
@@ -163,3 +165,10 @@ def login(request):
                                     'user_last_name' : str(user_information.last_name),
                                     'user_is_staff' : str(user_information.is_staff),
                                     }, status=201)
+
+class Announcement(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = AnnouncementSerializer
+
+    def get_queryset(self):
+        return AnnouncementModel.objects.filter(is_active=True).order_by('-created')
