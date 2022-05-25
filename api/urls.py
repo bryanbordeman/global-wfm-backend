@@ -10,6 +10,7 @@ urlpatterns = [
     path('worksegments/<str:isoweek>/', views.WorkSegmentsWeek.as_view()),
     path('admin/worksegments/<str:isoweek>/', views.AdminWorkSegmentsWeek.as_view()),
     path('announcement/', views.Announcement.as_view()),
+    path('announcement/<int:pk>', views.AnnouncementRetrieveUpdateDestroy.as_view()),
     path('signup/', views.signup),
     path('login/', views.login),
 ]
