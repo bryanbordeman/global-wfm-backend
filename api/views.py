@@ -174,6 +174,16 @@ class Announcement(generics.ListAPIView):
     def get_queryset(self):
         return AnnouncementModel.objects.filter(is_active=True).order_by('-created')
 
+class AnnouncementCreate(generics.ListCreateAPIView):
+    serializer_class = AnnouncementSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return AnnouncementModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
 class AnnouncementRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AnnouncementSerializer
     permissions_classes = [permissions.IsAuthenticated]

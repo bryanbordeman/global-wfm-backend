@@ -26,4 +26,4 @@ class  AnnouncementSerializer(serializers.ModelSerializer):
     '''Announcement serializer'''
     class Meta:
         model = Announcement
-        fields = '__all__'
+        fields = ['id','title', 'memo', 'is_active']
