@@ -1,0 +1,89 @@
+from rest_framework import generics, permissions
+from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedSerializer, WorkSegmentsWeekSerializer
+from worksegment.models import WorkSegment
+from django.contrib.auth.models import User
+
+
+class WorkSegments(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = WorkSegmentSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return WorkSegment.objects.filter(user=user).order_by('-date')
+
+class WorkSegmentCreate(generics.ListCreateAPIView):
+    serializer_class = WorkSegmentSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return WorkSegment.objects.all()
+        else:
+            return WorkSegment.objects.filter(user=user).order_by('-user')
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        if user.is_staff:
+            user_id = self.kwargs['user_id']
+            user = User.objects.filter(id=user_id)[0]
+            serializer.save(user=user)
+        else:
+            user = self.request.user
+            serializer.save(user=self.request.user)
+
+class WorkSegmentRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = WorkSegmentSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return WorkSegment.objects.all()
+        else:
+            # user can only update =, delete own posts
+            return WorkSegment.objects.filter(user=user)
+
+class WorkSegmentToggleApproved(generics.UpdateAPIView):
+    '''Approve hours. Admin view only'''
+    serializer_class = WorkSegmentApprovedSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # user = self.request.user
+        # return WorkSegment.objects.filter(user=user)
+        return WorkSegment.objects.all()
+    
+    def perform_update(self, serializer):
+        serializer.instance.is_approved=not(serializer.instance.is_approved)
+        serializer.save()
+
+class WorkSegmentsWeek(generics.ListAPIView):
+    '''get all worksegments for particular isoweek. Admin view only'''
+    serializer_class = WorkSegmentsWeekSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        isoweek = self.kwargs['isoweek']
+        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-date', '-start_time')
+
+    # def get_queryset(self):
+    #     isoweek = self.kwargs['isoweek']
+    #     qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
+
+    #     user = self.request.user
+    #     return qs if user.is_superuser else qs.filter(id=user.id)
+
+class AdminWorkSegmentsWeek(generics.ListAPIView):
+    '''get all worksegments for particular isoweek. Admin view only'''
+    serializer_class = WorkSegmentsWeekSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        isoweek = self.kwargs['isoweek']
+        qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
+
+        user = self.request.user
+        return qs if user.is_staff else qs.filter(id=user.id)
