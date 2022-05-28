@@ -22,7 +22,7 @@ class Project(models.Model):
     project_category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True)
     project_type = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True)
     address = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
-    customer_company = models.ForeignKey('contact.Company', null=True, blank=True, on_delete=models.PROTECT)
+    customer_company = models.ForeignKey('contact.Company', blank=True, on_delete=models.PROTECT)
     contact = models.ManyToManyField('contact.Contact')
     prevailing_rate = models.BooleanField(null= False, default=False)
     travel_job = models.BooleanField(null= False, default=False)
