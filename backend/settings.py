@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-tfhn+ml&kr43zon6#af23bt79#b=bn0ev1s=-v9bi20&v+a0)g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.14']
 
 
 # Application definition
@@ -96,8 +96,9 @@ REST_FRAMEWORK = {
     ]
 }
 
+
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    'http://localhost:3000','http://192.168.1.14:3000'
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
@@ -138,6 +139,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+USE_TZ = True
+
 TIME_ZONE = 'America/New_York'
 
 TIME_INPUT_FORMATS = ('%I:%M %p',)
@@ -146,7 +149,9 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+
+
+
 
 
 # Static files (CSS, JavaScript, Images)
