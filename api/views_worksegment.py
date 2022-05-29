@@ -84,6 +84,24 @@ class AdminWorkSegmentsWeek(generics.ListAPIView):
     def get_queryset(self):
         isoweek = self.kwargs['isoweek']
         qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
-
+        
+        qs_list = [i for i in qs]
+        users = {}
+        for i in qs_list:
+            users[f'{i.user.username}'] = {'total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0}
+        
+        for item in qs_list:
+            for key in users:
+                if item.user.username == key:
+                    users[f'{item.user.username}']['total_duration'] += item.duration
+                    users[f'{item.user.username}']['travel'] += item.travel_duration
+                    # print(item)
+        for k, v in users.items():
+            v['regular'] = v['total_duration'] - v['travel']
+            if v['regular'] > 40:
+                v['overtime'] = v['regular'] - 40
+                v['regular'] = 40
+            print(k, v['total_duration'], v['regular'],v['overtime'],v['travel'])
+    
         user = self.request.user
         return qs if user.is_staff else qs.filter(id=user.id)
