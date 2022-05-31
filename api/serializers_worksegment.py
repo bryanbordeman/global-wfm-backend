@@ -20,3 +20,4 @@ class  WorkSegmentsWeekSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkSegment
         fields = '__all__'
+        depth = 2

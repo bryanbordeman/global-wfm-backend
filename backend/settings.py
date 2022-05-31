@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-tfhn+ml&kr43zon6#af23bt79#b=bn0ev1s=-v9bi20&v+a0)g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.8', '192.168.1.14', '192.168.1.13']
+ALLOWED_HOSTS = ['192.168.1.8', '192.168.1.14', '192.168.1.13', '192.168.1.14', '192.168.90.31']
 
 
 # Application definition
@@ -100,7 +100,11 @@ REST_FRAMEWORK = {
 
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000','http://192.168.1.8:3000','http://192.168.1.13:3000'
+    'http://localhost:3000',
+    'http://192.168.1.8:3000',
+    'http://192.168.1.13:3000',
+    'http://192.168.1.14:3000',
+    'http://192.168.90.31:3000'
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
