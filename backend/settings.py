@@ -30,7 +30,8 @@ ALLOWED_HOSTS = ['192.168.1.8',
                 '192.168.1.13', 
                 '192.168.1.14', 
                 '192.168.90.31', 
-                '192.168.1.15']
+                '192.168.1.15',
+                '192.168.90.31']
 
 
 # Application definition
@@ -56,7 +57,8 @@ INSTALLED_APPS = [
     'worksegment',
     'contact',
     'project',
-    'announcement'
+    'announcement',
+    'expense',
 
 ]
 
@@ -110,7 +112,8 @@ CORS_ORIGIN_WHITELIST = [
     'http://192.168.1.13:3000',
     'http://192.168.1.14:3000',
     'http://192.168.90.31:3000',
-    'http://192.168.1.15:3000'
+    'http://192.168.1.15:3000',
+    'http://192.168.90.31:3000'
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'

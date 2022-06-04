@@ -2,7 +2,9 @@ from django.urls import path
 from . import views_worksegment
 from . import views_announcement
 from . import views_project
+from . import views_expense
 from . import views_user
+
 
 urlpatterns = [
     path('worksegments/', views_worksegment.WorkSegments.as_view()),
@@ -16,6 +18,7 @@ urlpatterns = [
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
     path('announcement/<int:pk>', views_announcement.AnnouncementRetrieveUpdateDestroy.as_view()),
     path('projects/', views_project.Project.as_view()),
+    path('expenses/', views_expense.Expense.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),
 ]
