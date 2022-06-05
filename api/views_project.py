@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .serializers_project import ProjectSerializer
+from .serializers_project import ProjectSerializer, ProjectCreateSerializer
 from project.models import Project as ProjectModel
 
 class Project(generics.ListAPIView):
@@ -10,19 +10,25 @@ class Project(generics.ListAPIView):
     def get_queryset(self):
         return ProjectModel.objects.filter(is_active=True).order_by('-number')
 
-# class AnnouncementCreate(generics.ListCreateAPIView):
-#     serializer_class = AnnouncementSerializer
-#     permissions_classes = [permissions.IsAuthenticated]
+class ProjectCreate(generics.ListCreateAPIView):
+    serializer_class = ProjectCreateSerializer
+    permissions_classes = [permissions.IsAuthenticated]
 
-#     def get_queryset(self):
-#         return AnnouncementModel.objects.all()
+    def get_queryset(self):
+        return ProjectModel.objects.all()
     
-#     def perform_create(self, serializer):
-#         serializer.save()
+    def perform_create(self, serializer):
+        number = self.request.POST['number']
+        if ProjectModel.objects.filter(number=number).exists():
+            return print('Project number already exist')
+        else:
+            serializer.save()
 
-# class AnnouncementRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = AnnouncementSerializer
-#     permissions_classes = [permissions.IsAuthenticated]
+        
 
-#     def get_queryset(self):
-#         return AnnouncementModel.objects.all()
+class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProjectCreateSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ProjectModel.objects.all()
