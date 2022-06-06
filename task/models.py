@@ -36,6 +36,7 @@ class Task(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
+    is_read = models.BooleanField(default=False)
     completed = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
