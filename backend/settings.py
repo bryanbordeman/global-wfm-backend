@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-tfhn+ml&kr43zon6#af23bt79#b=bn0ev1s=-v9bi20&v+a0)g
 DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.8', 
-                '192.168.1.14', 
+                '192.168.1.12', 
                 '192.168.1.13', 
                 '192.168.1.14', 
                 '192.168.90.31', 
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'project',
     'announcement',
     'expense',
+    'task',
 
 ]
 
@@ -111,7 +112,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://192.168.1.8:3000',
     'http://192.168.1.13:3000',
     'http://192.168.1.14:3000',
-    'http://192.168.90.31:3000',
+    'http://192.168.1.12:3000',
     'http://192.168.1.15:3000',
     'http://192.168.90.31:3000'
 ]
