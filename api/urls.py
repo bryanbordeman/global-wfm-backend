@@ -4,6 +4,8 @@ from . import views_announcement
 from . import views_project
 from . import views_expense
 from . import views_user
+from . import views_task
+from . import views_user
 
 
 urlpatterns = [
@@ -23,6 +25,8 @@ urlpatterns = [
     path('expenses/', views_expense.Expense.as_view()),
     path('create/expense/', views_expense.ExpenseCreate.as_view()),
     path('expense/<int:pk>', views_expense.ExpenseRetrieveUpdateDestroy.as_view()),
+    path('task/', views_task.Task.as_view()),
+    path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),
 ]

@@ -37,8 +37,8 @@ class Task(models.Model):
     is_complete = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     is_read = models.BooleanField(default=False)
-    completed = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    completed = models.DateTimeField(null=True, blank=True)
+    updated = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.project} | {self.title}'

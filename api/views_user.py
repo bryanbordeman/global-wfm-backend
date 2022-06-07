@@ -7,6 +7,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 import json
 
+from rest_framework import generics, permissions
+from .serializers_user import UserSerializer
+from django.contrib.auth.models import User
+
+class UserView(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = UserSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return User.objects.filter(is_active=True).all()
+
 @csrf_exempt
 def signup(request):
     if request.method == 'POST':
