@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-tfhn+ml&kr43zon6#af23bt79#b=bn0ev1s=-v9bi20&v+a0)g
 DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.8', 
+                '192.168.1.7', 
                 '192.168.1.10',
                 '192.168.1.12', 
                 '192.168.1.13', 
@@ -110,6 +111,7 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://192.168.1.7:3000',
     'http://192.168.1.8:3000',
     'http://192.168.1.10:3000',
     'http://192.168.1.13:3000',

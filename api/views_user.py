@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 import json
+from django.forms.models import model_to_dict
 
 from rest_framework import generics, permissions
 from .serializers_user import UserSerializer
@@ -53,11 +54,17 @@ def login(request):
                 try:
                     token = Token.objects.get(user=user)
                     user_information = User.objects.get(id=user.id)
+                    dict_obj = model_to_dict( user_information )
+                    keys = ['id', 'username', 'first_name', 'last_name', 'is_staff', 'email', 'groups']
+                    filtered = dict(zip(keys, [dict_obj[k] for k in keys]))
+                    print(filtered)
+                    
                     
                 except: #if token not in db, create a new one
                     token = Token.objects.create(user=user)
 
             return JsonResponse({'token' : str(token), 
+                                'userObject' : str(filtered),
                                 'user' : str(user_information.username),
                                 'user_email' : str(user_information.email),
                                 'user_first_name' : str(user_information.first_name),
