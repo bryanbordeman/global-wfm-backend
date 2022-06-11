@@ -3,7 +3,6 @@ from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedS
 from worksegment.models import WorkSegment
 from django.contrib.auth.models import User
 
-
 class WorkSegments(generics.ListAPIView):
     '''Employee view'''
     serializer_class = WorkSegmentSerializer
@@ -24,15 +23,10 @@ class WorkSegmentCreate(generics.ListCreateAPIView):
             return WorkSegment.objects.filter(user=user).order_by('-user')
 
     def perform_create(self, serializer):
-        user = self.request.user
-        if user.is_staff:
-            user_id = self.kwargs['user_id']
-            user = User.objects.filter(id=user_id)[0]
-            serializer.save(user=user)
-        else:
-            user = self.request.user
-            serializer.save(user=self.request.user)
-
+        user_id = self.kwargs['user_id']
+        user = User.objects.filter(id=user_id)[0]
+        serializer.save(user=user)
+ 
 class WorkSegmentRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WorkSegmentSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -67,14 +61,7 @@ class WorkSegmentsWeek(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         isoweek = self.kwargs['isoweek']
-        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-date', '-start_time')
-
-    # def get_queryset(self):
-    #     isoweek = self.kwargs['isoweek']
-    #     qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
-
-    #     user = self.request.user
-    #     return qs if user.is_superuser else qs.filter(id=user.id)
+        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-start_time', '-date')
 
 class AdminWorkSegmentsWeek(generics.ListAPIView):
     '''get all worksegments for particular isoweek. Admin view only'''
