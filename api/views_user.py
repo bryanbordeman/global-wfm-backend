@@ -53,21 +53,22 @@ def login(request):
             else: #return user token
                 try:
                     token = Token.objects.get(user=user)
-                    user_information = User.objects.get(id=user.id)
-                    dict_obj = model_to_dict( user_information )
+                    # user_information = User.objects.get(id=user.id)
+                    dict_obj = model_to_dict( User.objects.get(id=user.id) )
                     keys = ['id', 'username', 'first_name', 'last_name', 'is_staff', 'email', 'groups']
                     filtered = dict(zip(keys, [dict_obj[k] for k in keys]))
-                    print(filtered)
+                    jsonObject = json.dumps(filtered, default=lambda o: o.__dict__, sort_keys=True, indent=2)
+                    # print(jsonObject)
                     
                     
                 except: #if token not in db, create a new one
                     token = Token.objects.create(user=user)
 
             return JsonResponse({'token' : str(token), 
-                                'userObject' : str(filtered),
-                                'user' : str(user_information.username),
-                                'user_email' : str(user_information.email),
-                                'user_first_name' : str(user_information.first_name),
-                                'user_last_name' : str(user_information.last_name),
-                                'user_is_staff' : str(user_information.is_staff),
+                                'userObject' : str(jsonObject),
+                                # 'user' : str(user_information.username),
+                                # 'user_email' : str(user_information.email),
+                                # 'user_first_name' : str(user_information.first_name),
+                                # 'user_last_name' : str(user_information.last_name),
+                                # 'user_is_staff' : str(user_information.is_staff),
                                 }, status=201)
