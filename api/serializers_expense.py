@@ -6,6 +6,7 @@ class  ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = '__all__'
+        depth = 1
 
 class ExpenseApprovedSerializer(serializers.ModelSerializer):
     '''Admin view only'''
