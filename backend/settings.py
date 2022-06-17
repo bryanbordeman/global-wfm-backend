@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.8', 
                 '192.168.1.7', 
-                '192.168.1.3', 
+                '192.168.1.4', 
                 '192.168.1.10',
                 '192.168.1.12', 
                 '192.168.1.13', 
@@ -113,7 +114,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://192.168.1.7:3000',
-    'http://192.168.1.3:3000',
+    'http://192.168.1.4:3000',
     'http://192.168.1.8:3000',
     'http://192.168.1.10:3000',
     'http://192.168.1.13:3000',
@@ -180,6 +181,9 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
