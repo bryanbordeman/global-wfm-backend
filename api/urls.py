@@ -21,7 +21,7 @@ urlpatterns = [
     path('projects/', views_project.Project.as_view()),
     path('create/project/', views_project.ProjectCreate.as_view()),
     path('project/<int:pk>', views_project.ProjectRetrieveUpdateDestroy.as_view()),
-    path('expenses/', views_expense.Expense.as_view()),
+    path('expenses/<int:month>', views_expense.Expense.as_view()),
     path('create/expense/', views_expense.ExpenseCreate.as_view()),
     path('expense/<int:pk>', views_expense.ExpenseRetrieveUpdateDestroy.as_view()),
     path('task/', views_task.Task.as_view()),

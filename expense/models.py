@@ -54,4 +54,4 @@ class Expense (models.Model):
     date_created = models.DateField(auto_now_add= True)
 
     def __str__(self):
-        return f'{self.user.username}_{self.project}_{self.merchant}_{self.date_created}'
+        return f'{self.user.username}_{self.project}_{self.merchant}_{self.date_purchased}'
