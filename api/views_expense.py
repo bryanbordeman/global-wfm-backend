@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
-from .serializers_expense import ExpenseSerializer, ExpenseApprovedSerializer
+from .serializers_expense import ExpenseSerializer, ExpenseApprovedSerializer, MileSerializer
 from expense.models import Expense as ExpenseModel
+from expense.models import Mile as MileModel
 
 def filter_by_month(qs, month):
     qs_list = [i for i in qs]
@@ -54,3 +55,11 @@ class ExpenseToggleApproved(generics.UpdateAPIView):
     def perform_update(self, serializer):
         serializer.instance.is_approved=not(serializer.instance.is_approved)
         serializer.save()
+
+class Mile(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = MileSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return MileModel.objects.all()

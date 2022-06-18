@@ -24,6 +24,7 @@ urlpatterns = [
     path('expenses/<int:month>', views_expense.Expense.as_view()),
     path('create/expense/', views_expense.ExpenseCreate.as_view()),
     path('expense/<int:pk>', views_expense.ExpenseRetrieveUpdateDestroy.as_view()),
+    path('miles/', views_expense.Mile.as_view()),
     path('task/', views_task.Task.as_view()),
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),

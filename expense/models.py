@@ -20,7 +20,6 @@ class MileRate (models.Model):
         return f'$ {self.rate} | {self.year} Rate'
 
 class Mile (models.Model):
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.CASCADE)
     miles = models.FloatField(null= True)

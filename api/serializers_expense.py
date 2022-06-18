@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from expense.models import Expense
+from expense.models import Expense, Mile
 
 class  ExpenseSerializer(serializers.ModelSerializer):
     '''Expense serializer'''
@@ -14,3 +14,10 @@ class ExpenseApprovedSerializer(serializers.ModelSerializer):
         model = Expense
         fields = ['id']
         read_only_fields = ['project', 'receipt_pic', 'merchant', 'price', 'notes', 'is_reimbursable', 'is_approved', 'date_purchased', 'date_created']
+
+class  MileSerializer(serializers.ModelSerializer):
+    '''Expense serializer'''
+    class Meta:
+        model = Mile
+        fields = '__all__'
+        depth = 1
