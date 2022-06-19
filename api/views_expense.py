@@ -3,7 +3,6 @@ from .serializers_expense import ExpenseSerializer, ExpenseApprovedSerializer, M
 from expense.models import Expense as ExpenseModel
 from expense.models import Mile as MileModel
 from django.contrib.auth.models import User
-from django.core.files.storage import FileSystemStorage
 
 def filter_by_month(qs, month):
     qs_list = [i for i in qs]
@@ -12,7 +11,6 @@ def filter_by_month(qs, month):
         if i.date_purchased.month == month:
             qs_filtered.append(i)
     return qs_filtered
-
 
 class Expense(generics.ListAPIView):
     '''Employee view'''

@@ -41,7 +41,6 @@ class Mile (models.Model):
 class Expense (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey('project.Project', null=True, on_delete=models.CASCADE)
-    # receipt_pic = models.ImageField(default='receipt.png', null=True, blank=False, upload_to='receipt_pic')
     receipt_pic = ProcessedImageField(default='receipt.png', format='JPEG', upload_to='None', options={'quality': 20})
     merchant = models.CharField(max_length=200, null= True, blank=True)
     price = models.FloatField(null= True)
