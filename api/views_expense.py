@@ -43,7 +43,7 @@ class ExpenseCreate(generics.ListCreateAPIView):
 
 
 class ExpenseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ExpenseSerializer
+    serializer_class = CreateExpenseSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -55,8 +55,6 @@ class ExpenseToggleApproved(generics.UpdateAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # user = self.request.user
-        # return WorkSegment.objects.filter(user=user)
         return ExpenseModel.objects.all()
     
     def perform_update(self, serializer):
