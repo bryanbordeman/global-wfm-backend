@@ -61,5 +61,13 @@ class  MileSerializer(serializers.ModelSerializer):
     '''Expense serializer'''
     class Meta:
         model = Mile
-        fields = '__all__'
+        fields = ['id', 'user', 'project', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
         depth = 1
+
+class MileApprovedSerializer(serializers.ModelSerializer):
+    '''Admin view only'''
+    class Meta:
+        model = Mile
+        fields = ['id']
+        read_only_fields = ['user', 'project', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
+

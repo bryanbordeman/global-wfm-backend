@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .serializers_expense import ExpenseSerializer, ExpenseApprovedSerializer, MileSerializer, CreateExpenseSerializer
+from .serializers_expense import ExpenseSerializer, ExpenseApprovedSerializer, MileSerializer, CreateExpenseSerializer, MileApprovedSerializer
 from expense.models import Expense as ExpenseModel
 from expense.models import Mile as MileModel
 from django.contrib.auth.models import User
@@ -21,7 +21,7 @@ class Expense(generics.ListAPIView):
         month = self.kwargs['month']
         user = self.request.user
         if user.is_staff:
-            return filter_by_month(ExpenseModel.objects.all(), month)
+            return filter_by_month(ExpenseModel.objects.all().order_by('-date_created'), month)
         else:
             return filter_by_month(ExpenseModel.objects.filter(user=user).order_by('-date_created'), month)
 
@@ -67,4 +67,21 @@ class Mile(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        month = self.kwargs['month']
+        user = self.request.user
+        if user.is_staff:
+            return filter_by_month(MileModel.objects.all().order_by('-date_created'), month)
+        else:
+            return filter_by_month(MileModel.objects.filter(user=user).order_by('-date_created'), month)
+
+class MileToggleApproved(generics.UpdateAPIView):
+    '''Approve expense. Admin view only'''
+    serializer_class = MileApprovedSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
         return MileModel.objects.all()
+    
+    def perform_update(self, serializer):
+        serializer.instance.is_approved=not(serializer.instance.is_approved)
+        serializer.save()

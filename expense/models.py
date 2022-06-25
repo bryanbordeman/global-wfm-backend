@@ -28,7 +28,7 @@ class Mile (models.Model):
     notes = models.TextField(max_length=250, blank=True,
                             validators=[MaxLengthValidator(250)])
     is_approved = models.BooleanField(null= False, default=False)
-    date = models.DateField(null=True, validators=[no_future])
+    date_purchased = models.DateField(null=True, validators=[no_future])
     date_created = models.DateField(auto_now_add= True)
 
     @property
