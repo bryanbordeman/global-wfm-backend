@@ -15,6 +15,7 @@ def no_future(value):
 class MileRate (models.Model):
     rate = models.FloatField(null= True)
     year = models.IntegerField(null=False)
+    is_current = models.BooleanField(null= False, default=False)
 
     def __str__(self):
         return f'$ {self.rate} | {self.year} Rate'

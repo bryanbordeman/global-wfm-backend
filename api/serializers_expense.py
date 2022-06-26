@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from expense.models import Expense, Mile
+from expense.models import Expense, Mile, MileRate
+from api.serializers_user import UserSerializer
 
 class Base64ImageField(serializers.ImageField):
     def to_internal_value(self, data):
@@ -35,6 +36,7 @@ class Base64ImageField(serializers.ImageField):
 class  ExpenseSerializer(serializers.ModelSerializer):
     '''Expense serializer'''
     is_approved = serializers.ReadOnlyField()
+    user = UserSerializer()
     class Meta:
         model = Expense
         fields = '__all__'
@@ -59,10 +61,19 @@ class ExpenseApprovedSerializer(serializers.ModelSerializer):
 
 class  MileSerializer(serializers.ModelSerializer):
     '''Expense serializer'''
+    user = UserSerializer()
     class Meta:
         model = Mile
         fields = ['id', 'user', 'project', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
         depth = 1
+
+class  CreateMileSerializer(serializers.ModelSerializer):
+    '''Miles serializer'''
+    is_approved = serializers.ReadOnlyField()
+    class Meta:
+        model = Mile
+        # fields = '__all__'
+        exclude = ['user']
 
 class MileApprovedSerializer(serializers.ModelSerializer):
     '''Admin view only'''
@@ -71,3 +82,8 @@ class MileApprovedSerializer(serializers.ModelSerializer):
         fields = ['id']
         read_only_fields = ['user', 'project', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
 
+class  MileRatesSerializer(serializers.ModelSerializer):
+    '''Mile Rates serializer'''
+    class Meta:
+        model = MileRate
+        fields = '__all__'
