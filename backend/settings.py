@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'announcement',
     'expense',
     'task',
+    'schedule',
 
 ]
 
