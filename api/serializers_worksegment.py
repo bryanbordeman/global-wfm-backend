@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from worksegment.models import WorkSegment
+from api.serializers_user import MinimalUserSerializer
 
 class  WorkSegmentSerializer(serializers.ModelSerializer):
     '''Employee view only'''
@@ -17,6 +18,7 @@ class WorkSegmentApprovedSerializer(serializers.ModelSerializer):
 
 class  WorkSegmentsWeekSerializer(serializers.ModelSerializer):
     '''Admin view only'''
+    user=MinimalUserSerializer()
     class Meta:
         model = WorkSegment
         fields = '__all__'

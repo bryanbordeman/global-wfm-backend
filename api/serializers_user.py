@@ -6,3 +6,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'is_staff', 'email', 'groups' ]
         depth = 1
+
+class MinimalUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', ]

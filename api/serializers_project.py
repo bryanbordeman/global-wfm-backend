@@ -9,7 +9,7 @@ class  ProjectSerializer(serializers.ModelSerializer):
         depth = 3
 
 class  ProjectCreateSerializer(serializers.ModelSerializer):
-    '''Project serializer'''
+    ''' Create Project serializer'''
     is_active = serializers.BooleanField(initial=True)
     class Meta:
         model = Project

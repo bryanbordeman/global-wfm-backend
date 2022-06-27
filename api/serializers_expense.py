@@ -60,7 +60,7 @@ class ExpenseApprovedSerializer(serializers.ModelSerializer):
         read_only_fields = ['project', 'receipt_pic', 'merchant', 'price', 'notes', 'is_reimbursable', 'is_approved', 'date_purchased', 'date_created']
 
 class  MileSerializer(serializers.ModelSerializer):
-    '''Expense serializer'''
+    '''Miles serializer'''
     user = UserSerializer()
     class Meta:
         model = Mile
@@ -68,7 +68,7 @@ class  MileSerializer(serializers.ModelSerializer):
         depth = 1
 
 class  CreateMileSerializer(serializers.ModelSerializer):
-    '''Miles serializer'''
+    '''Create Miles serializer'''
     is_approved = serializers.ReadOnlyField()
     class Meta:
         model = Mile
