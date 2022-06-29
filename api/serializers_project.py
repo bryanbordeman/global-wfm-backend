@@ -8,6 +8,11 @@ class  ProjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 3
 
+class MinimalProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'number', 'name', 'is_active' ]
+
 class  ProjectCreateSerializer(serializers.ModelSerializer):
     ''' Create Project serializer'''
     is_active = serializers.BooleanField(initial=True)

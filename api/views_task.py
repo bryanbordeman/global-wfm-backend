@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
-from .serializers_task import TaskSerializer
+from .serializers_task import TaskSerializer, TaskListSerializer
 from task.models import Task as TaskModel
+from task.models import TaskList as TaskListModel
 
 class Task(generics.ListAPIView):
     '''Employee view'''
@@ -8,10 +9,10 @@ class Task(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        return TaskModel.objects.filter(is_deleted=False).filter(assignee=user).order_by('-created')
-
-
+        # user = self.request.user
+        # return TaskModel.objects.filter(is_deleted=False).filter(assignee=user).order_by('-created')
+        return TaskModel.objects.filter(is_deleted=False).order_by('-created')
+        # return TaskModel.objects.filter(is_deleted=False).order_by('-created')[:2]
 
 # class TaskCreate(generics.ListCreateAPIView):
 #     serializer_class = TaskSerializer
@@ -29,3 +30,11 @@ class Task(generics.ListAPIView):
 
 #     def get_queryset(self):
 #         return TaskModel.objects.all()
+
+class TaskList(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = TaskListSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return TaskListModel.objects.all()
