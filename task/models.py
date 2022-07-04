@@ -25,12 +25,15 @@ class SubTask(models.Model):
         return self.title
 
 class Task(models.Model):
+    created_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE)
+    # assignee = models.ForeignKey(User, related_name='related_assignee', on_delete=models.CASCADE)
+    
+    assignee = models.ForeignKey(User, on_delete=models.CASCADE)
     tasklist = models.ForeignKey(TaskList, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     notes = models.TextField(max_length=1000, blank=True,
                                 validators=[MaxLengthValidator(1000)])
     due = models.DateField(null=True)
-    assignee = models.ForeignKey(User, on_delete=models.CASCADE)
     subtasks = models.ManyToManyField(SubTask, blank=True)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
     created = models.DateTimeField(auto_now_add=True)

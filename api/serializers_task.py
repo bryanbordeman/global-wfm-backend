@@ -6,6 +6,7 @@ from api.serializers_project import MinimalProjectSerializer
 
 class  TaskSerializer(serializers.ModelSerializer):
     '''Task serializer'''
+    created_by = MinimalUserSerializer()
     assignee = MinimalUserSerializer()
     project = MinimalProjectSerializer()
     
@@ -13,6 +14,14 @@ class  TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = '__all__'
         depth = 1
+
+
+class  TaskCreateSerializer(serializers.ModelSerializer):
+    '''Create Task serializer'''
+    class Meta:
+        model = Task
+        fields = '__all__'
+
 
 class  TaskListSerializer(serializers.ModelSerializer):
     '''Task List serializer'''

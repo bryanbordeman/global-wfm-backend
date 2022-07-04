@@ -32,6 +32,8 @@ urlpatterns = [
     path('milerates/', views_expense.MileRates.as_view()),
     path('tasks/<int:assignee>/<int:tasklist>/', views_task.Task.as_view()),
     path('tasklist/', views_task.TaskList.as_view()),
+    path('create/task/', views_task.TaskCreate.as_view()),
+    path('task/<int:pk>', views_task.TaskRetrieveUpdateDestroy.as_view()),
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),
