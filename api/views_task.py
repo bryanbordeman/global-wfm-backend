@@ -11,9 +11,9 @@ class Task(generics.ListAPIView):
     def get_queryset(self):
         tasklist = self.kwargs['tasklist']
         assignee = self.kwargs['assignee']
-        # user = self.request.user
+        user = self.request.user
         # return TaskModel.objects.filter(is_deleted=False).filter(assignee=user).order_by('-created')
-        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(is_deleted=False).filter(tasklist=tasklist).order_by('-created')
+        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(is_deleted=False).filter(tasklist=tasklist).order_by('due')
         # return TaskModel.objects.filter(is_deleted=False).order_by('-created')[:2]
 
 class TaskCreate(generics.ListCreateAPIView):
@@ -27,7 +27,7 @@ class TaskCreate(generics.ListCreateAPIView):
         serializer.save()
 
 class TaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = TaskSerializer
+    serializer_class = TaskCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
