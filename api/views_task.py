@@ -2,19 +2,17 @@ from rest_framework import generics, permissions
 from .serializers_task import TaskSerializer, TaskListSerializer, TaskCreateSerializer
 from task.models import Task as TaskModel
 from task.models import TaskList as TaskListModel
+from django.forms.models import model_to_dict
+from django.http import JsonResponse
 
-class Task(generics.ListAPIView):
+class TaskAssignee(generics.ListAPIView):
     '''Employee view'''
     serializer_class = TaskSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        tasklist = self.kwargs['tasklist']
         assignee = self.kwargs['assignee']
-        user = self.request.user
-        # return TaskModel.objects.filter(is_deleted=False).filter(assignee=user).order_by('-created')
-        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(is_deleted=False).filter(tasklist=tasklist).order_by('due')
-        # return TaskModel.objects.filter(is_deleted=False).order_by('-created')[:2]
+        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(is_deleted=False).order_by('due')
 
 class TaskCreate(generics.ListCreateAPIView):
     serializer_class = TaskCreateSerializer
@@ -37,8 +35,6 @@ class TaskList(generics.ListAPIView):
     '''Employee view'''
     serializer_class = TaskListSerializer
     permissions_classes = [permissions.IsAuthenticated]
-
-    
 
     def get_queryset(self):
         return TaskListModel.objects.all()
