@@ -1,6 +1,6 @@
 from dataclasses import field
 from rest_framework import serializers
-from task.models import Task, TaskList
+from task.models import Task, TaskList, SubTask
 from api.serializers_user import MinimalUserSerializer
 from api.serializers_project import MinimalProjectSerializer
 
@@ -29,3 +29,9 @@ class  TaskListSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskList
         fields = '__all__'
+
+class SubTaskCompleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubTask
+        fields = ['id']
+        read_only_fields = ['title', 'notes', 'due', 'created', 'is_complete', 'is_deleted', 'completed', 'updated']
