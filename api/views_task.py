@@ -15,6 +15,17 @@ class TaskAssignee(generics.ListAPIView):
         assignee = self.kwargs['assignee']
         return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(is_deleted=False).order_by('due')
 
+class TaskAssigneeList(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = TaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        assignee = self.kwargs['assignee']
+        tasklist = self.kwargs['tasklist']
+        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).order_by('due')
+
+
 class TaskCreate(generics.ListCreateAPIView):
     serializer_class = TaskCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
