@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .serializers_task import TaskSerializer, TaskListSerializer, TaskCreateSerializer, SubTaskCompleteSerializer
+from .serializers_task import TaskSerializer, TaskListSerializer, TaskCreateSerializer, SubTaskCompleteSerializer, SubTaskSerializer
 from task.models import Task as TaskModel
 from task.models import TaskList as TaskListModel
 from task.models import SubTask as SubTaskModel
@@ -62,3 +62,10 @@ class SubtaskToggleCompleted(generics.UpdateAPIView):
     def perform_update(self, serializer):
         serializer.instance.is_complete=not(serializer.instance.is_complete)
         serializer.save()
+
+class SubtaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = SubTaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return SubTaskModel.objects.all()
