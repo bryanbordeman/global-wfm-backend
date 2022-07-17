@@ -15,10 +15,7 @@ class SubTask(models.Model):
     title = models.CharField(max_length=100)
     notes = models.TextField(max_length=1000, blank=True,
                                 validators=[MaxLengthValidator(1000)])
-    # due = models.DateField(null=True)
-    # created = models.DateTimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
-    # is_deleted = models.BooleanField(default=False)
     completed = models.DateTimeField(auto_now_add=True, editable=True)
     updated = models.DateTimeField(auto_now_add=True, editable=True)
 
@@ -29,8 +26,8 @@ class SubTask(models.Model):
         ''' On save, update timestamps '''
         if self.is_complete == True:
             self.completed = timezone.now()
-        # else:
-        #     self.completed = ''
+        else:
+            self.completed = self.completed
         # if not self.id:
         #     self.created = timezone.now()
         self.updated = timezone.now()

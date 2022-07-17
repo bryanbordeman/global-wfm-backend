@@ -37,6 +37,7 @@ urlpatterns = [
     path('task/<int:pk>', views_task.TaskRetrieveUpdateDestroy.as_view()),
     path('subtask/<int:pk>/completed/', views_task.SubtaskToggleCompleted.as_view()),
     path('subtask/<int:pk>', views_task.SubtaskRetrieveUpdateDestroy.as_view()),
+    path('create/subtask/', views_task.SubtaskCreate.as_view()),
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),

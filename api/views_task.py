@@ -69,3 +69,13 @@ class SubtaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return SubTaskModel.objects.all()
+
+class SubtaskCreate(generics.ListCreateAPIView):
+    serializer_class = SubTaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return SubTaskModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
