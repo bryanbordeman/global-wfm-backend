@@ -79,11 +79,3 @@ class SubtaskCreate(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save()
-
-class SubTaskLast(generics.ListAPIView):
-    '''Returns last task made'''
-    serializer_class = SubTaskSerializer
-    permissions_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return SubTaskModel.objects.all().order_by('-id')[:1]

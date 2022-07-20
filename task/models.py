@@ -35,8 +35,6 @@ class SubTask(models.Model):
 
 class Task(models.Model):
     created_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE)
-    # assignee = models.ForeignKey(User, related_name='related_assignee', on_delete=models.CASCADE)
-    
     assignee = models.ForeignKey(User, on_delete=models.CASCADE)
     tasklist = models.ForeignKey(TaskList, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)

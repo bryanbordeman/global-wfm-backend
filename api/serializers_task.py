@@ -4,7 +4,6 @@ from task.models import Task, TaskList, SubTask
 from api.serializers_user import MinimalUserSerializer
 from api.serializers_project import MinimalProjectSerializer
 
-
 class  TaskSerializer(serializers.ModelSerializer):
     '''Task serializer'''
     created_by = MinimalUserSerializer()
