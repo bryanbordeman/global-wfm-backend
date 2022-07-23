@@ -32,6 +32,7 @@ urlpatterns = [
     path('milerates/', views_expense.MileRates.as_view()),
     path('tasks/<int:assignee>/', views_task.TaskAssignee.as_view()),
     path('tasks/<int:assignee>/<int:tasklist>/', views_task.TaskAssigneeList.as_view()),
+    path('complete/tasks/<int:assignee>/<int:tasklist>/', views_task.TaskAssigneeCompleteList.as_view()),
     path('tasklist/', views_task.TaskList.as_view()),
     path('create/task/', views_task.TaskCreate.as_view()),
     path('task/<int:pk>/completed/', views_task.TaskToggleCompleted.as_view()),
