@@ -61,7 +61,7 @@ class WorkSegmentsWeek(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         isoweek = self.kwargs['isoweek']
-        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-start_time', '-date')
+        return WorkSegment.objects.filter(isoweek=isoweek, user=user).order_by('-date','start_time')
 
 class AdminWorkSegmentsWeek(generics.ListAPIView):
     '''get all worksegments for particular isoweek. Admin view only'''
