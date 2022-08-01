@@ -3,8 +3,6 @@ from .serializers_task import TaskSerializer, TaskListSerializer, TaskCreateSeri
 from task.models import Task as TaskModel
 from task.models import TaskList as TaskListModel
 from task.models import SubTask as SubTaskModel
-from django.forms.models import model_to_dict
-from django.http import JsonResponse
 
 class TaskAssignee(generics.ListAPIView):
     '''Employee view'''
