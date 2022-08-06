@@ -2,6 +2,7 @@ from django.urls import path
 from . import views_worksegment
 from . import views_announcement
 from . import views_project
+from . import views_quote
 from . import views_expense
 from . import views_user
 from . import views_task
@@ -18,6 +19,7 @@ urlpatterns = [
     path('announcement/', views_announcement.Announcement.as_view()),
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
     path('announcement/<int:pk>', views_announcement.AnnouncementRetrieveUpdateDestroy.as_view()),
+    path('quotes/', views_quote.Quote.as_view()),
     path('projects/', views_project.Project.as_view()),
     path('create/project/', views_project.ProjectCreate.as_view()),
     path('project/<int:pk>', views_project.ProjectRetrieveUpdateDestroy.as_view()),

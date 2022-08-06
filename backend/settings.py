@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'worksegment',
     'contact',
     'project',
+    'quote',
     'announcement',
     'expense',
     'task',

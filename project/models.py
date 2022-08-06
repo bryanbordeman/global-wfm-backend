@@ -23,7 +23,7 @@ class Project(models.Model):
     project_type = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True)
     address = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
     customer_company = models.ForeignKey('contact.Company', null=True, blank=True, on_delete=models.PROTECT)
-    contact = models.ManyToManyField('contact.Contact')
+    contact = models.ManyToManyField('contact.Contact', blank=True)
     prevailing_rate = models.BooleanField(null= False, default=False)
     travel_job = models.BooleanField(null= False, default=False)
     notes = models.TextField(max_length=250, blank=True,
