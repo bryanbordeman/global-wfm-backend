@@ -15,8 +15,8 @@ def no_future(value):
 
 # Create your models here.
 class WorkSegment(models.Model):
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    segment_type = models.CharField(max_length=100)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
     is_approved = models.BooleanField(null= False, default=False)
     date = models.DateField(null=True, validators=[no_future])
