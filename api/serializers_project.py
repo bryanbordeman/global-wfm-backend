@@ -1,5 +1,17 @@
 from rest_framework import serializers
-from project.models import Project
+from project.models import Project, ProjectCategory, ProjectType
+
+class  ProjectCategorySerializer(serializers.ModelSerializer):
+    '''Project Category serializer'''
+    class Meta:
+        model = ProjectCategory
+        fields = '__all__'
+
+class  ProjectTypeSerializer(serializers.ModelSerializer):
+    '''Project Type serializer'''
+    class Meta:
+        model = ProjectType
+        fields = '__all__'
 
 class  ProjectSerializer(serializers.ModelSerializer):
     '''Project serializer'''

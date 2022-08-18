@@ -20,6 +20,8 @@ urlpatterns = [
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
     path('announcement/<int:pk>', views_announcement.AnnouncementRetrieveUpdateDestroy.as_view()),
     path('quotes/', views_quote.Quote.as_view()),
+    path('project/categories/', views_project.ProjectCategory.as_view()),
+    path('project/types/', views_project.ProjectType.as_view()),
     path('projects/', views_project.Project.as_view()),
     path('create/project/', views_project.ProjectCreate.as_view()),
     path('project/<int:pk>', views_project.ProjectRetrieveUpdateDestroy.as_view()),
