@@ -20,6 +20,7 @@ urlpatterns = [
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
     path('announcement/<int:pk>', views_announcement.AnnouncementRetrieveUpdateDestroy.as_view()),
     path('quotes/', views_quote.Quote.as_view()),
+    path('next/quote/', views_quote.NextQuoteNumber),
     path('project/categories/', views_project.ProjectCategory.as_view()),
     path('project/types/', views_project.ProjectType.as_view()),
     path('projects/', views_project.Project.as_view()),
