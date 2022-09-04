@@ -33,7 +33,7 @@ class Base64ImageField(serializers.ImageField):
 
         return extension
 
-class  ExpenseSerializer(serializers.ModelSerializer):
+class ExpenseSerializer(serializers.ModelSerializer):
     '''Expense serializer'''
     is_approved = serializers.ReadOnlyField()
     user = UserSerializer()
@@ -42,7 +42,7 @@ class  ExpenseSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-class  CreateExpenseSerializer(serializers.ModelSerializer):
+class CreateExpenseSerializer(serializers.ModelSerializer):
     '''Expense serializer'''
     is_approved = serializers.ReadOnlyField()
     receipt_pic = Base64ImageField(max_length=None, use_url=True)
@@ -59,7 +59,7 @@ class ExpenseApprovedSerializer(serializers.ModelSerializer):
         fields = ['id']
         read_only_fields = ['project', 'receipt_pic', 'merchant', 'price', 'notes', 'is_reimbursable', 'is_approved', 'date_purchased', 'date_created']
 
-class  MileSerializer(serializers.ModelSerializer):
+class MileSerializer(serializers.ModelSerializer):
     '''Miles serializer'''
     user = UserSerializer()
     class Meta:
@@ -67,7 +67,7 @@ class  MileSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'project', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
         depth = 1
 
-class  CreateMileSerializer(serializers.ModelSerializer):
+class CreateMileSerializer(serializers.ModelSerializer):
     '''Create Miles serializer'''
     is_approved = serializers.ReadOnlyField()
     class Meta:
@@ -82,7 +82,7 @@ class MileApprovedSerializer(serializers.ModelSerializer):
         fields = ['id']
         read_only_fields = ['user', 'project', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
 
-class  MileRatesSerializer(serializers.ModelSerializer):
+class MileRatesSerializer(serializers.ModelSerializer):
     '''Mile Rates serializer'''
     class Meta:
         model = MileRate

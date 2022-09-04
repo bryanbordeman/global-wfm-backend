@@ -4,15 +4,15 @@ from localflavor.us.models import USZipCodeField, USStateField
 from phone_field import PhoneField
 
 class Address(models.Model):
-    address1 = models.CharField("Address line 1", max_length=1024,)
-    address2 = models.CharField("Address line 2", max_length=1024, blank=True)
+    place_id = models.CharField("Place ID", max_length=1024,)
+    address = models.CharField("Address line 1", max_length=1024,)
     city = models.CharField( "City", max_length=1024,)
-    state = USStateField()
-    zip_code = USZipCodeField()
+    state = models.CharField(max_length=200, null= True)
+    postal_code = USZipCodeField()
     country = CountryField()
 
     def __str__(self):
-        return f'''{self.address1} {self.address2}, {self.city}, {self.state} {self.zip_code}'''
+        return f'''{self.address}, {self.city}, {self.state} {self.postal_code}'''
 
 class Phone(models.Model):
     TYPE = (
