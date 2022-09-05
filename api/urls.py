@@ -27,6 +27,7 @@ urlpatterns = [
     path('addresses/', views_address.Address.as_view()),
     path('create/address/', views_address.AddressCreate.as_view()),
     path('address/<int:pk>', views_address.AddressRetrieveUpdateDestroy.as_view()),
+    path('address/lookup/<str:place_id>', views_address.AddressLookup.as_view()),
     path('contacts/', views_contact.Contact.as_view()),
     path('create/contact/', views_contact.ContactCreate.as_view()),
     path('contact/<int:pk>', views_contact.ContactRetrieveUpdateDestroy.as_view()),

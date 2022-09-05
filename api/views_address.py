@@ -12,6 +12,15 @@ class Address(generics.ListAPIView):
     def get_queryset(self):
         return AddressModel.objects.all()
 
+class AddressLookup(generics.ListAPIView):
+    '''get all worksegments for particular isoweek. Admin view only'''
+    serializer_class = AddressSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        place_id = self.kwargs['place_id']
+        return AddressModel.objects.filter(place_id=place_id).all()
+
 class AddressCreate(generics.ListCreateAPIView):
     serializer_class = AddressSerializer
     permissions_classes = [permissions.IsAuthenticated]
