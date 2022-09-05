@@ -23,10 +23,10 @@ class QuoteCreate(generics.ListCreateAPIView):
         return QuoteModel.objects.all()
     
     def perform_create(self, serializer):
-        number = self.request.POST['number']
-        if QuoteModel.objects.filter(number=number).exists():
-            return print('Project number already exist')
-        else:
+        # number = self.request.POST['number']
+        # if QuoteModel.objects.filter(number=number).exists():
+        #     return print('Project number already exist')
+        # else:
             serializer.save()
 
 class QuoteRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
