@@ -6,6 +6,7 @@ class Quote(models.Model):
     is_active = models.BooleanField(null= False, default=True)
     number = models.CharField(max_length=8, null= True)
     name = models.CharField(max_length=200, null= True)
+    due = models.DateField(null=False)
     project_category = models.ForeignKey('project.ProjectCategory', on_delete=models.SET_NULL, null=True)
     project_type = models.ForeignKey('project.ProjectType', on_delete=models.SET_NULL, null=True)
     manager = models.ForeignKey(User, on_delete=models.CASCADE)
