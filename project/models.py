@@ -3,6 +3,7 @@ from django.core.validators import MaxLengthValidator
 
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=200)
+    code = models.CharField(max_length=3)
 
     def __str__(self):
         return self.name
@@ -10,7 +11,7 @@ class ProjectCategory(models.Model):
 class ProjectType(models.Model):
     project_category = models.ForeignKey(ProjectCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    code = models.CharField(max_length=7)
+    code = models.CharField(max_length=3)
 
     def __str__(self):
         return self.name

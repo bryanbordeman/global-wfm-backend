@@ -22,6 +22,22 @@ class ProjectType(generics.ListAPIView):
     def get_queryset(self):
         return ProjectTypeModel.objects.all()
 
+class ProjectCategoryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProjectCategorySerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ProjectCategoryModel.objects.all()
+
+class ProjectTypeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProjectTypeSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ProjectTypeModel.objects.all()
+
+
+
 class Project(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ProjectSerializer
@@ -43,8 +59,6 @@ class ProjectCreate(generics.ListCreateAPIView):
             return print('Project number already exist')
         else:
             serializer.save()
-
-        
 
 class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectCreateSerializer
