@@ -58,3 +58,14 @@ def NextQuoteNumber(request):
             next_number_str = f'Q{year}-{str(next_number)}'
 
         return JsonResponse({'next_quote_number': str(next_number_str)}, status=201)
+
+
+@csrf_exempt
+def LastQuote(request):
+    '''Get the Last Quote Number'''
+    if request.method == 'GET':
+        last_quote = model_to_dict(QuoteModel.objects.filter(is_active=True).order_by('-number').first())
+        
+        last_quote_id = (last_quote['id'])
+
+        return JsonResponse({'last_quote_id': str(last_quote_id)}, status=201)

@@ -41,6 +41,7 @@ urlpatterns = [
     path('company/short/<int:pk>', views_company.CompanyRetrieveUpdateDestroyShort.as_view()),
     path('quotes/', views_quote.Quote.as_view()),
     path('next/quote/', views_quote.NextQuoteNumber),
+    path('last/quote/', views_quote.LastQuote),
     path('create/quote/', views_quote.QuoteCreate.as_view()),
     path('quote/<int:pk>', views_quote.QuoteRetrieveUpdateDestroy.as_view()),
     path('project/categories/', views_project.ProjectCategory.as_view()),
