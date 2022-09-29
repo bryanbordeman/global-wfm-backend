@@ -43,7 +43,7 @@ class Task(models.Model):
     due = models.DateField(null=True)
     subtasks = models.ManyToManyField(SubTask, blank=True)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
-    quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.PROTECT)
+    quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)

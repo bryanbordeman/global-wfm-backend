@@ -67,7 +67,6 @@ urlpatterns = [
     path('create/task/', views_task.TaskCreate.as_view()),
     path('task/<int:pk>/completed/', views_task.TaskToggleCompleted.as_view()),
     path('task/<int:pk>', views_task.TaskRetrieveUpdateDestroy.as_view()),
-    path('task/quote/<int:quote_id>', views_task.TaskQuote.as_view()),
     path('subtask/<int:pk>/completed/', views_task.SubtaskToggleCompleted.as_view()),
     path('subtask/<int:pk>', views_task.SubtaskRetrieveUpdateDestroy.as_view()),
     path('create/subtask/', views_task.SubtaskCreate.as_view()),
