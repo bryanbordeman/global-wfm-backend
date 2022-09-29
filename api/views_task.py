@@ -1,3 +1,4 @@
+from email.quoprimime import quote
 from rest_framework import generics, permissions
 from .serializers_task import TaskSerializer, TaskListSerializer, TaskCreateSerializer, SubTaskCompleteSerializer, SubTaskSerializer, TaskCompleteSerializer
 from task.models import Task as TaskModel
@@ -50,6 +51,16 @@ class TaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return TaskModel.objects.all()
+
+class TaskQuote(generics.ListAPIView):
+    
+    serializer_class = TaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        quote_id = self.kwargs['quote_id']
+        return TaskModel.objects.filter(quote=quote_id)
+
 
 class TaskList(generics.ListAPIView):
     '''Employee view'''
