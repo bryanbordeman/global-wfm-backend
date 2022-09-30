@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.core.validators import MaxLengthValidator
 from django.contrib.auth.models import User
@@ -15,6 +16,8 @@ class Quote(models.Model):
     contacts = models.ManyToManyField('contact.Contact', blank=True)
     prevailing_rate = models.BooleanField(null= False, default=False)
     travel_job = models.BooleanField(null= False, default=False)
+    price = models.FloatField(null=True, blank=True)
+    revision = models.IntegerField(null=True, default=0)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
 
