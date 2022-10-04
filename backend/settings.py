@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'localflavor',
     'django_countries',
     'phone_field',
+    'django_filters',
 
     #apps
     'api',
@@ -117,6 +118,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated'
     ],
     'DATE_INPUT_FORMATS': ['iso-8601', '%Y-%m-%dT%H:%M:%S.%fZ'],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 

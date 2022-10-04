@@ -16,7 +16,7 @@ class Quote(models.Model):
     contacts = models.ManyToManyField('contact.Contact', blank=True)
     prevailing_rate = models.BooleanField(null= False, default=False)
     travel_job = models.BooleanField(null= False, default=False)
-    price = models.FloatField(null=True, blank=True)
+    price = models.FloatField(null=True, blank=True, default=0)
     revision = models.IntegerField(null=True, default=0)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
