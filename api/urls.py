@@ -31,6 +31,8 @@ urlpatterns = [
     path('contacts/', views_contact.Contact.as_view()),
     path('create/contact/', views_contact.ContactCreate.as_view()),
     path('contact/<int:pk>', views_contact.ContactRetrieveUpdateDestroy.as_view()),
+    path('contact/quote/<int:quote_id>', views_contact.ContactQuote.as_view()),
+
     path('phone_numbers/', views_phone.Phone.as_view()),
     path('create/phone_number/', views_phone.PhoneCreate.as_view()),
     path('phone_number/<int:pk>', views_phone.PhoneRetrieveUpdateDestroy.as_view()),
