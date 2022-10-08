@@ -13,7 +13,7 @@ class Quote(models.Model):
     manager = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
     customers = models.ManyToManyField('contact.Company', blank=True)
-    contacts = models.ManyToManyField('contact.Contact', blank=True)
+    # contacts = models.ManyToManyField('contact.Contact', blank=True)
     prevailing_rate = models.BooleanField(null= False, default=False)
     travel_job = models.BooleanField(null= False, default=False)
     price = models.FloatField(null=True, blank=True, default=0)

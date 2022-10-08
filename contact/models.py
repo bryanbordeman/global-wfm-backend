@@ -42,6 +42,8 @@ class Contact(models.Model):
     phone = models.ManyToManyField(Phone, blank=True)
     fax = models.CharField(max_length=200, null= True, blank=True)
     email = models.EmailField(max_length=200, null= True, blank=True)
+    quotes = models.ManyToManyField('quote.Quote', blank=True)
+    projects = models.ManyToManyField('project.Project', blank=True)
 
     def __str__(self):
         return self.name

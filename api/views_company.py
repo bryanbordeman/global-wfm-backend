@@ -7,8 +7,7 @@ class Company(generics.ListAPIView):
     '''Company view'''
     serializer_class = CompanySerializer
     permissions_classes = [permissions.IsAuthenticated]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+
 
     def get_queryset(self):
         return CompanyModel.objects.all()
@@ -17,6 +16,8 @@ class CompanyShort(generics.ListAPIView):
     '''Company view'''
     serializer_class = CompanyShortSerializer
     permissions_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def get_queryset(self):
         return CompanyModel.objects.all()
