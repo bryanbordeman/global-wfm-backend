@@ -38,6 +38,7 @@ class Company(models.Model):
 
 class Contact(models.Model):
     name = models.CharField(max_length=200, null= True)
+    job_title = models.CharField(max_length=200, blank=True)
     company = models.ForeignKey(Company, null=True, blank=True, on_delete=models.PROTECT)
     phone = models.ManyToManyField(Phone, blank=True)
     fax = models.CharField(max_length=200, null= True, blank=True)
