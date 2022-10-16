@@ -43,7 +43,7 @@ class Contact(models.Model):
     job_title = models.CharField(max_length=200, blank=True)
     company = models.ForeignKey(Company, null=True, blank=True, on_delete=models.PROTECT)
     phone = models.ManyToManyField(Phone, blank=True)
-    fax = models.ForeignKey(Phone, related_name='+', blank=True, null=True, on_delete=models.CASCADE)
+    fax = models.ForeignKey(Phone, related_name='+', blank=True, null=True, on_delete=models.SET_NULL)
     email = models.EmailField(max_length=200, null= True, blank=True)
     quotes = models.ManyToManyField('quote.Quote', blank=True)
     projects = models.ManyToManyField('project.Project', blank=True)
