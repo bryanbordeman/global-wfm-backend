@@ -21,5 +21,5 @@ class Quote(models.Model):
                                 validators=[MaxLengthValidator(250)])
 
     def __str__(self):
-        return self.number
+        return f'{self.number} {self.name}'
 
