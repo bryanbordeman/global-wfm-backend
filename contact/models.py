@@ -33,7 +33,7 @@ class Company(models.Model):
     name = models.CharField(max_length=100, null= True)
     address = models.ManyToManyField(Address, blank=True)
     phone = models.ManyToManyField(Phone, blank=True)
-    fax = models.CharField(max_length=20, null= True, blank=True)
+    fax = models.ForeignKey(Phone, related_name='+', blank=True, null=True, on_delete=models.SET_NULL)
     website = models.URLField(max_length=50, blank=True)
 
     def __str__(self):
