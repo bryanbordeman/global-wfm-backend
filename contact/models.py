@@ -17,6 +17,7 @@ class Address(models.Model):
 class Phone(models.Model):
     TYPE = (
         ('Mobile', 'Mobile'),
+        ('Main', 'Main'),
         ('Work','Work'),
         ('Home','Home'),
         ('Direct','Direct'),

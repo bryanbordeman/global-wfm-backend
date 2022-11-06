@@ -23,7 +23,7 @@ class CompanyShortSerializer(serializers.ModelSerializer):
     '''Company serializer'''
     class Meta:
         model = Company
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'website']
 
 class ContactSerializer(serializers.ModelSerializer):
     '''Contact serializer'''
