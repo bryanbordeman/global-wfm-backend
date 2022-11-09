@@ -16,7 +16,7 @@ def no_future(value):
 # Create your models here.
 class WorkSegment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    segment_type = models.CharField(max_length=100)
+    segment_type = models.CharField(null=True, blank=True, max_length=100)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
     is_approved = models.BooleanField(null= False, default=False)
     date = models.DateField(null=True, validators=[no_future])
@@ -25,7 +25,7 @@ class WorkSegment(models.Model):
     end_time = models.TimeField(null=True, blank=False)
     lunch = models.BooleanField(null= False, default=True)
     travel_duration = models.DecimalField(max_digits= 5, decimal_places = 2, null=True, blank=True, default=0)
-    duration = models.DecimalField(max_digits= 5, decimal_places = 2, null=True, blank=True, default=0, editable=False)
+    duration = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=0, editable=False)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
 
