@@ -31,7 +31,7 @@ class Phone(models.Model):
 
 class Company(models.Model):
     name = models.CharField(max_length=100, null= True)
-    address = models.ManyToManyField(Address, blank=True)
+    # address = models.ManyToManyField(Address, blank=True)
     phone = models.ManyToManyField(Phone, blank=True)
     fax = models.ForeignKey(Phone, related_name='+', blank=True, null=True, on_delete=models.SET_NULL)
     website = models.URLField(max_length=50, blank=True)
@@ -43,6 +43,7 @@ class Contact(models.Model):
     name = models.CharField(max_length=200, null= True)
     job_title = models.CharField(max_length=200, blank=True)
     company = models.ForeignKey(Company, null=True, blank=True, on_delete=models.PROTECT)
+    address = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
     phone = models.ManyToManyField(Phone, blank=True)
     fax = models.ForeignKey(Phone, related_name='+', blank=True, null=True, on_delete=models.SET_NULL)
     email = models.EmailField(max_length=200, null= True, blank=True)
