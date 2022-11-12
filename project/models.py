@@ -24,7 +24,6 @@ class BillingType(models.Model):
         return self.name
 class OrderType(models.Model):
     name = models.CharField(max_length=200)
-    code = models.CharField(max_length=3)
 
     def __str__(self):
         return self.name

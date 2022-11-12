@@ -1,9 +1,12 @@
 from rest_framework import generics, permissions
 from .serializers_project import ProjectSerializer, ProjectCreateSerializer
 from .serializers_project import ProjectCategorySerializer, ProjectTypeSerializer
+from .serializers_project import BillingTypeSerializer, OrderTypeSerializer
 from project.models import Project as ProjectModel
 from project.models import ProjectCategory as ProjectCategoryModel
 from project.models import ProjectType as ProjectTypeModel
+from project.models import BillingType as BillingTypeModel
+from project.models import OrderType as OrderTypeModel
 
 
 class ProjectCategory(generics.ListAPIView):
@@ -35,6 +38,22 @@ class ProjectTypeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return ProjectTypeModel.objects.all()
+
+class BillingType(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = BillingTypeSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return BillingTypeModel.objects.all()
+
+class OrderType(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = OrderTypeSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return OrderTypeModel.objects.all()
 
 
 

@@ -48,6 +48,8 @@ urlpatterns = [
     path('quote/<int:pk>', views_quote.QuoteRetrieveUpdateDestroy.as_view()),
     path('project/categories/', views_project.ProjectCategory.as_view()),
     path('project/types/', views_project.ProjectType.as_view()),
+    path('project/billings/', views_project.BillingType.as_view()),
+    path('project/orders/', views_project.OrderType.as_view()),
     path('project/category/<int:pk>', views_project.ProjectCategoryRetrieveUpdateDestroy.as_view()),
     path('project/type/<int:pk>', views_project.ProjectTypeRetrieveUpdateDestroy.as_view()),
     path('projects/', views_project.Project.as_view()),
