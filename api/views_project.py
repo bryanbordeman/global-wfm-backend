@@ -3,6 +3,8 @@ from .serializers_project import ProjectSerializer, ProjectCreateSerializer
 from .serializers_project import ProjectCategorySerializer, ProjectTypeSerializer
 from .serializers_project import BillingTypeSerializer, OrderTypeSerializer
 from project.models import Project as ProjectModel
+from project.models import Service as ServiceModel
+from project.models import HSE as HSEModel
 from project.models import ProjectCategory as ProjectCategoryModel
 from project.models import ProjectType as ProjectTypeModel
 from project.models import BillingType as BillingTypeModel
@@ -93,30 +95,82 @@ class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 @csrf_exempt
 def NextProjectNumber(request):
-    '''Get the Next Project Number'''
+    '''Get the Next Project, Service, and HSE Numbers'''
     year = time.strftime("%Y")[2:]
     if request.method == 'GET':
         #! what if its not sequential and we manually enter old quote or database is empty?? 
-        last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
+        try:
+            last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
+            last_project_number = (last_project['number'])
+            current_project_year = last_project_number[-2:]
+
+            if current_project_year == year:
+                next_project_number = int(last_project_number[:3])+1
+                next_project_number_str = f'{next_project_number}{current_project_year}'
+            else:
+                next_project_number = '100'
+                next_project_number_str = f'{next_project_number}{year}'
+
+        except AttributeError: 
+            last_project = None  #Doesn't exist, set to None
+            next_project_number_str = f'100{year}'
+
+
+        try:
+            last_service = model_to_dict(ServiceModel.objects.filter(is_active=True).order_by('-number').first())
+            last_service_number = (last_service['number'])
+            current_service_year = last_service_number[:2]
+
+            if current_service_year == year:
+                next_service_number = int(last_service_number[-3:])+1
+                if len(str(next_service_number)) == 1:
+                    next_service_number_str = f'{str(current_service_year)}00{str(next_service_number)}'
+                elif len(str(next_service_number)) == 2:
+                    next_service_number_str = f'{str(current_service_year)}0{str(next_service_number)}'
+                elif len(str(next_service_number)) == 3:
+                    next_service_number_str = f'{str(current_service_year)}{str(next_service_number)}'
+            else:
+                next_service_number = '001'
+                next_service_number_str = f'{year}{str(next_service_number)}'
+            
+        except AttributeError:
+            last_service_number = None
+            next_service_number_str = f'{year}001'
+
+        try:
+            last_hse = model_to_dict(HSEModel.objects.filter(is_active=True).order_by('-number').first())
+            last_hse_number = (last_hse['number'])
+            current_hse_year = last_hse_number[3:5]
+
+            if current_service_year == year:
+                next_hse_number = int(last_hse_number[-2:])+1
+                if len(str(next_hse_number)) == 1:
+                    next_hse_number_str = f'HSE{current_hse_year}0{next_hse_number}'
+                elif len(str(next_hse_number)) == 2:
+                    next_hse_number_str = f'HSE{current_hse_year}{next_hse_number}'
+            else:
+                last_hse_number = '01'
+                next_hse_number_str = f'HSE{year}{next_hse_number}'
+
+        except AttributeError:
+            last_hse_number = None
+            next_hse_number_str = f'HSE{year}01'
         
-        last_project_number = (last_project['number'])
-        current_project_year = last_project_number[-2:]
-
-        if current_project_year == year:
-            next_number = int(last_project_number[:3])+1
-            next_number_str = f'{next_number}{current_project_year}'
-        else:
-            next_number = '100'
-            next_number_str = f'{next_number}{year}'
-
-        return JsonResponse({'next_project_number': str(next_number_str)}, status=201)
+        return JsonResponse({
+            'next_project_number': str(next_project_number_str),
+            'next_service_number': str(next_service_number_str),
+            'next_HSE_number': str(next_hse_number_str),
+            }, status=201)
 
 @csrf_exempt
 def LastProject(request):
     '''Get the Last Quote Number'''
     if request.method == 'GET':
-        last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
-        
-        last_project_id = (last_project['id'])
-
-        return JsonResponse({'last_project_id': str(last_project_id)}, status=201)
+        try:
+            last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
+            last_project_id = (last_project['id'])
+            return JsonResponse({'last_project_id': str(last_project_id)}, status=201)
+        #to be more specific you can except ProfileObjectDoesNotExist
+        except AttributeError: 
+            last_project = None  #Doesn't exist, set to None
+            return JsonResponse({'last_project_id': str('Table Empty')}, status=201)

@@ -51,3 +51,11 @@ class Project(models.Model):
 
     def __str__(self):
         return f'{self.number} {self.name}'
+
+class Service(Project):
+    def __str__(self):
+        return f'{self.number} {self.name}'
+
+class HSE(Project):
+    def __str__(self):
+        return f'{self.number} {self.name}'
