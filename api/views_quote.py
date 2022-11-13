@@ -4,7 +4,6 @@ from quote.models import Quote as QuoteModel
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
-
 import time
 
 class Quote(generics.ListAPIView):
@@ -42,6 +41,7 @@ def NextQuoteNumber(request):
     '''Get the Next Quote Number'''
     year = time.strftime("%Y")[2:]
     if request.method == 'GET':
+        #! what if its not sequential and we manually enter old quote or database is empty?? 
         last_quote = model_to_dict(QuoteModel.objects.filter(is_active=True).order_by('-number').first())
         
         last_quote_number = (last_quote['number'])

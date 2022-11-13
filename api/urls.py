@@ -55,6 +55,8 @@ urlpatterns = [
     path('projects/', views_project.Project.as_view()),
     path('create/project/', views_project.ProjectCreate.as_view()),
     path('project/<int:pk>', views_project.ProjectRetrieveUpdateDestroy.as_view()),
+    path('next/project/', views_project.NextProjectNumber),
+    path('last/project/', views_project.LastProject),
     path('expenses/<int:month>', views_expense.Expense.as_view()),
     path('create/expense/<int:user_id>/', views_expense.ExpenseCreate.as_view()),
     path('expense/<int:pk>', views_expense.ExpenseRetrieveUpdateDestroy.as_view()),
