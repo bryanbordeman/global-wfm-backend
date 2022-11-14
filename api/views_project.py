@@ -60,9 +60,6 @@ class OrderType(generics.ListAPIView):
 
     def get_queryset(self):
         return OrderTypeModel.objects.all()
-
-
-
 class Project(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ProjectSerializer
@@ -112,6 +109,7 @@ def NextProjectNumber(request):
                 next_project_number_str = f'{next_project_number}{year}'
 
         except AttributeError: 
+            #if database is empty
             last_project = None  #Doesn't exist, set to None
             next_project_number_str = f'100{year}'
 
@@ -134,6 +132,7 @@ def NextProjectNumber(request):
                 next_service_number_str = f'{year}{str(next_service_number)}'
             
         except AttributeError:
+            #if database is empty
             last_service_number = None
             next_service_number_str = f'{year}001'
 
@@ -142,7 +141,7 @@ def NextProjectNumber(request):
             last_hse_number = (last_hse['number'])
             current_hse_year = last_hse_number[3:5]
 
-            if current_service_year == year:
+            if current_hse_year == year:
                 next_hse_number = int(last_hse_number[-2:])+1
                 if len(str(next_hse_number)) == 1:
                     next_hse_number_str = f'HSE{current_hse_year}0{next_hse_number}'
@@ -153,13 +152,14 @@ def NextProjectNumber(request):
                 next_hse_number_str = f'HSE{year}{next_hse_number}'
 
         except AttributeError:
+            #if database is empty
             last_hse_number = None
             next_hse_number_str = f'HSE{year}01'
         
         return JsonResponse({
             'next_project_number': str(next_project_number_str),
             'next_service_number': str(next_service_number_str),
-            'next_HSE_number': str(next_hse_number_str),
+            'next_hse_number': str(next_hse_number_str),
             }, status=201)
 
 @csrf_exempt

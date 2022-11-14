@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import ProjectCategory, ProjectType, BillingType
-from .models import OrderType, Project, Service, HSE
+from .models import ProjectCategory, ProjectType
+from .models import Project, Service, HSE
+from .models import OrderType, BillingType
 
 admin.site.register(ProjectCategory)
 admin.site.register(ProjectType)
