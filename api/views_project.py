@@ -76,10 +76,10 @@ class ProjectCreate(generics.ListCreateAPIView):
         return ProjectModel.objects.all()
     
     def perform_create(self, serializer):
-        number = self.request.POST['number']
-        if ProjectModel.objects.filter(number=number).exists():
-            return print('Project number already exist')
-        else:
+        # number = self.request.POST['number']
+        # if ProjectModel.objects.filter(number=number).exists():
+        #     return print('Project number already exist')
+        # else:
             serializer.save()
 
 class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -96,6 +96,7 @@ def NextProjectNumber(request):
     year = time.strftime("%Y")[2:]
     if request.method == 'GET':
         #! what if its not sequential and we manually enter old quote or database is empty?? 
+        #! project number
         try:
             last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
             last_project_number = (last_project['number'])
@@ -113,29 +114,30 @@ def NextProjectNumber(request):
             last_project = None  #Doesn't exist, set to None
             next_project_number_str = f'100{year}'
 
-
+        #! service number
         try:
             last_service = model_to_dict(ServiceModel.objects.filter(is_active=True).order_by('-number').first())
-            last_service_number = (last_service['number'])
-            current_service_year = last_service_number[:2]
+            last_service_number = (last_service['number'])  
+            current_service_year = last_service_number[3:5]
 
             if current_service_year == year:
                 next_service_number = int(last_service_number[-3:])+1
                 if len(str(next_service_number)) == 1:
-                    next_service_number_str = f'{str(current_service_year)}00{str(next_service_number)}'
+                    next_service_number_str = f'SVC{str(current_service_year)}00{str(next_service_number)}'
                 elif len(str(next_service_number)) == 2:
-                    next_service_number_str = f'{str(current_service_year)}0{str(next_service_number)}'
+                    next_service_number_str = f'SVC{str(current_service_year)}0{str(next_service_number)}'
                 elif len(str(next_service_number)) == 3:
-                    next_service_number_str = f'{str(current_service_year)}{str(next_service_number)}'
+                    next_service_number_str = f'SVC{str(current_service_year)}{str(next_service_number)}'
             else:
                 next_service_number = '001'
-                next_service_number_str = f'{year}{str(next_service_number)}'
+                next_service_number_str = f'SVC{year}{str(next_service_number)}'
             
         except AttributeError:
             #if database is empty
             last_service_number = None
-            next_service_number_str = f'{year}001'
+            next_service_number_str = f'SVC{year}001'
 
+        #! hse number
         try:
             last_hse = model_to_dict(HSEModel.objects.filter(is_active=True).order_by('-number').first())
             last_hse_number = (last_hse['number'])
