@@ -35,6 +35,7 @@ class Project(models.Model):
     project_category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True)
     project_type = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True)
     address = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
+    customer = models.ForeignKey('contact.Company', on_delete=models.PROTECT)
     terms = models.CharField(max_length=200, null= True)
     prevailing_rate = models.BooleanField(null= False, default=False)
     union = models.BooleanField(null= False, default=False)
@@ -45,7 +46,7 @@ class Project(models.Model):
     billing_type = models.ForeignKey(BillingType, on_delete=models.SET_NULL, null=True)
     order_type = models.ForeignKey(OrderType, on_delete=models.SET_NULL, null=True)
     price = models.FloatField(null=True, blank=True, default=0)
-
+    po_number = models.CharField(max_length=200, blank=True, null= True)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
 
@@ -59,6 +60,7 @@ class Service(models.Model):
     project_category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True)
     project_type = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True)
     address = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
+    customer = models.ForeignKey('contact.Company', on_delete=models.PROTECT)
     terms = models.CharField(max_length=200, null= True)
     prevailing_rate = models.BooleanField(null= False, default=False)
     union = models.BooleanField(null= False, default=False)
@@ -69,7 +71,7 @@ class Service(models.Model):
     billing_type = models.ForeignKey(BillingType, on_delete=models.SET_NULL, null=True)
     order_type = models.ForeignKey(OrderType, on_delete=models.SET_NULL, null=True)
     price = models.FloatField(null=True, blank=True, default=0)
-
+    po_number = models.CharField(max_length=200, blank=True, null= True)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
     
@@ -83,6 +85,7 @@ class HSE(models.Model):
     project_category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True)
     project_type = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True)
     address = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
+    customer = models.ForeignKey('contact.Company', on_delete=models.PROTECT)
     terms = models.CharField(max_length=200, null= True)
     prevailing_rate = models.BooleanField(null= False, default=False)
     union = models.BooleanField(null= False, default=False)
@@ -93,7 +96,7 @@ class HSE(models.Model):
     billing_type = models.ForeignKey(BillingType, on_delete=models.SET_NULL, null=True)
     order_type = models.ForeignKey(OrderType, on_delete=models.SET_NULL, null=True)
     price = models.FloatField(null=True, blank=True, default=0)
-
+    po_number = models.CharField(max_length=200, blank=True, null= True)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
     
