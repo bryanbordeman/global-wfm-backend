@@ -46,7 +46,7 @@ class Project(models.Model):
     billing_type = models.ForeignKey(BillingType, on_delete=models.SET_NULL, null=True)
     order_type = models.ForeignKey(OrderType, on_delete=models.SET_NULL, null=True)
     price = models.FloatField(null=True, blank=True, default=0)
-    po_number = models.CharField(max_length=200, blank=True, null= True)
+    po_number = models.CharField(max_length=200, blank=True)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
 
@@ -71,7 +71,7 @@ class Service(models.Model):
     billing_type = models.ForeignKey(BillingType, on_delete=models.SET_NULL, null=True)
     order_type = models.ForeignKey(OrderType, on_delete=models.SET_NULL, null=True)
     price = models.FloatField(null=True, blank=True, default=0)
-    po_number = models.CharField(max_length=200, blank=True, null= True)
+    po_number = models.CharField(max_length=200, blank=True)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
     
@@ -96,7 +96,7 @@ class HSE(models.Model):
     billing_type = models.ForeignKey(BillingType, on_delete=models.SET_NULL, null=True)
     order_type = models.ForeignKey(OrderType, on_delete=models.SET_NULL, null=True)
     price = models.FloatField(null=True, blank=True, default=0)
-    po_number = models.CharField(max_length=200, blank=True, null= True)
+    po_number = models.CharField(max_length=200, blank=True)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
     
