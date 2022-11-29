@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from project.models import Project, ProjectCategory, ProjectType
 from project.models import BillingType, OrderType
+from project.models import Service, HSE
 
 class  ProjectCategorySerializer(serializers.ModelSerializer):
     '''Project Category serializer'''
@@ -38,9 +39,47 @@ class MinimalProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id', 'number', 'name', 'is_active' ]
 
-class  ProjectCreateSerializer(serializers.ModelSerializer):
+class ProjectCreateSerializer(serializers.ModelSerializer):
     ''' Create Project serializer'''
     is_active = serializers.BooleanField(initial=True)
     class Meta:
         model = Project
+        fields = '__all__'
+
+class  ServiceSerializer(serializers.ModelSerializer):
+    '''Service serializer'''
+    class Meta:
+        model = Service
+        fields = '__all__'
+        depth = 3
+
+class MinimalServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id', 'number', 'name', 'is_active' ]
+
+class ServiceCreateSerializer(serializers.ModelSerializer):
+    ''' Create Service serializer'''
+    is_active = serializers.BooleanField(initial=True)
+    class Meta:
+        model = Service
+        fields = '__all__'
+
+class  HSESerializer(serializers.ModelSerializer):
+    '''HSE serializer'''
+    class Meta:
+        model = HSE
+        fields = '__all__'
+        depth = 3
+
+class MinimalHSESerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HSE
+        fields = ['id', 'number', 'name', 'is_active' ]
+
+class HSECreateSerializer(serializers.ModelSerializer):
+    ''' Create HSE serializer'''
+    is_active = serializers.BooleanField(initial=True)
+    class Meta:
+        model = HSE
         fields = '__all__'
