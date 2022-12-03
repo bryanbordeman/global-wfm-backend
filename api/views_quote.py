@@ -14,6 +14,14 @@ class Quote(generics.ListAPIView):
     def get_queryset(self):
         return QuoteModel.objects.filter(is_active=True).order_by('-number')
 
+class QuoteArchive(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = QuoteSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return QuoteModel.objects.filter(is_active=False).order_by('-number')
+
 class QuoteCreate(generics.ListCreateAPIView):
     serializer_class = QuoteCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
