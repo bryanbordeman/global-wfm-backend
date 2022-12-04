@@ -19,8 +19,7 @@ class Quote(models.Model):
     revision = models.IntegerField(null=True, default=0)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.number} {self.name}'
-

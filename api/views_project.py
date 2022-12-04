@@ -69,14 +69,22 @@ class Project(generics.ListAPIView):
 
     def get_queryset(self):
         return ProjectModel.objects.filter(is_active=True).order_by('-number')
+class ProjectYear(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = ProjectSerializer
+    permissions_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        year = self.kwargs['year']
+        return ProjectModel.objects.filter(is_active=True, created__year=year).order_by('-number')
 class ProjectArchive(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ProjectSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return ProjectModel.objects.filter(is_active=False).order_by('-number')
+        year = self.kwargs['year']
+        return ProjectModel.objects.filter(is_active=False, created__year=year).order_by('-number')
 class ProjectCreate(generics.ListCreateAPIView):
     serializer_class = ProjectCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -101,14 +109,22 @@ class Service(generics.ListAPIView):
 
     def get_queryset(self):
         return ServiceModel.objects.filter(is_active=True).order_by('-number')
+class ServiceYear(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = ServiceSerializer
+    permissions_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        year = self.kwargs['year']
+        return ServiceModel.objects.filter(is_active=True, created__year=year).order_by('-number')
 class ServiceArchive(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ServiceSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return ServiceModel.objects.filter(is_active=False).order_by('-number')
+        year = self.kwargs['year']
+        return ServiceModel.objects.filter(is_active=False, created__year=year).order_by('-number')
 class ServiceCreate(generics.ListCreateAPIView):
     serializer_class = ServiceCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -139,7 +155,16 @@ class HSEArchive(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return HSEModel.objects.filter(is_active=False).order_by('-number')
+        year = self.kwargs['year']
+        return HSEModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+class HSEYear(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = HSESerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        year = self.kwargs['year']
+        return HSEModel.objects.filter(is_active=True, created__year=year).order_by('-number')
 class HSECreate(generics.ListCreateAPIView):
     serializer_class = HSECreateSerializer
     permissions_classes = [permissions.IsAuthenticated]

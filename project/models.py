@@ -49,11 +49,9 @@ class BaseProject(models.Model):
     po_number = models.CharField(max_length=200, blank=True)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
-    created = models.DateTimeField(auto_now_add=True)
-
+    created = models.DateField(auto_now_add=True)
     class Meta:
         abstract = True
-
 class Project(BaseProject):
     def __str__(self):
         return f'{self.number} {self.name}'
