@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .serializers_quote import QuoteSerializer, QuoteCreateSerializer
+from .serializers_quote import QuoteSerializer, QuoteCreateSerializer, QuoteToggleSerializer
 from quote.models import Quote as QuoteModel
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -33,6 +33,17 @@ class QuoteArchive(generics.ListAPIView):
         year = self.kwargs['year']
         return QuoteModel.objects.filter(is_active=False, created__year=year).order_by('-number')
 
+class QuoteToggleArchive(generics.UpdateAPIView):
+    '''Toggle Archive'''
+    serializer_class = QuoteToggleSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return QuoteModel.objects.all()
+    
+    def perform_update(self, serializer):
+        serializer.instance.is_active=not(serializer.instance.is_active)
+        serializer.save()
 class QuoteCreate(generics.ListCreateAPIView):
     serializer_class = QuoteCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]

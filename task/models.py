@@ -42,7 +42,7 @@ class Task(models.Model):
                                 validators=[MaxLengthValidator(1000)])
     due = models.DateField(null=True)
     subtasks = models.ManyToManyField(SubTask, blank=True)
-    project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
+    project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.CASCADE)
     quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)

@@ -44,6 +44,7 @@ urlpatterns = [
     path('quotes/', views_quote.Quote.as_view()),
     path('quotes/<int:year>', views_quote.QuoteYear.as_view()),
     path('quotes/archive/<int:year>', views_quote.QuoteArchive.as_view()),
+    path('quote/<int:pk>/togglearchive/', views_quote.QuoteToggleArchive.as_view()),
     path('next/quote/', views_quote.NextQuoteNumber),
     path('last/quote/', views_quote.LastQuote),
     path('create/quote/', views_quote.QuoteCreate.as_view()),

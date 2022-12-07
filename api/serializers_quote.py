@@ -10,6 +10,11 @@ class QuoteSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 3
 
+class QuoteToggleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quote
+        fields = ['id']
+        read_only_fields = ['number', 'name']
 class MinimalQuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quote
