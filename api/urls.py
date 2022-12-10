@@ -12,8 +12,6 @@ from . import views_user
 from . import views_task
 from . import views_user
 
-
-
 urlpatterns = [
     path('worksegments/', views_worksegment.WorkSegments.as_view()),
     path('create/worksegment/<int:user_id>/', views_worksegment.WorkSegmentCreate.as_view()),
@@ -58,16 +56,19 @@ urlpatterns = [
     path('projects/', views_project.Project.as_view()),
     path('projects/<int:year>', views_project.ProjectYear.as_view()),
     path('projects/archive/<int:year>', views_project.ProjectArchive.as_view()),
+    path('project/<int:pk>/togglearchive/', views_project.ProjectToggleArchive.as_view()),
     path('create/project/', views_project.ProjectCreate.as_view()),
     path('project/<int:pk>', views_project.ProjectRetrieveUpdateDestroy.as_view()),
     path('services/', views_project.Service.as_view()),
     path('services/<int:year>', views_project.ServiceYear.as_view()),
     path('services/archive/<int:year>', views_project.ServiceArchive.as_view()),
+    path('service/<int:pk>/togglearchive/', views_project.ServiceToggleArchive.as_view()),
     path('create/service/', views_project.ServiceCreate.as_view()),
     path('service/<int:pk>', views_project.ServiceRetrieveUpdateDestroy.as_view()),
     path('hses/', views_project.HSE.as_view()),
     path('hses/<int:year>', views_project.HSEYear.as_view()),
     path('hses/archive/<int:year>', views_project.HSEArchive.as_view()),
+    path('hse/<int:pk>/togglearchive/', views_project.HSEToggleArchive.as_view()),
     path('create/hse/', views_project.HSECreate.as_view()),
     path('hse/<int:pk>', views_project.HSERetrieveUpdateDestroy.as_view()),
     path('next/project/', views_project.NextProjectNumber),

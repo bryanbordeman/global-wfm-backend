@@ -3,6 +3,9 @@ from .serializers_project import ProjectSerializer, ProjectCreateSerializer
 from .serializers_project import ServiceSerializer, ServiceCreateSerializer
 from .serializers_project import HSESerializer, HSECreateSerializer
 from .serializers_project import ProjectCategorySerializer, ProjectTypeSerializer
+from .serializers_project import ProjectToggleSerializer
+from .serializers_project import ServiceToggleSerializer
+from .serializers_project import HSEToggleSerializer
 from .serializers_project import BillingTypeSerializer, OrderTypeSerializer
 from project.models import Project as ProjectModel
 from project.models import Service as ServiceModel
@@ -15,7 +18,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 import time
-
 
 class ProjectCategory(generics.ListAPIView):
     '''Employee view'''
@@ -62,6 +64,7 @@ class OrderType(generics.ListAPIView):
 
     def get_queryset(self):
         return OrderTypeModel.objects.all()
+
 class Project(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ProjectSerializer
@@ -69,6 +72,7 @@ class Project(generics.ListAPIView):
 
     def get_queryset(self):
         return ProjectModel.objects.filter(is_active=True).order_by('-number')
+
 class ProjectYear(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ProjectSerializer
@@ -77,6 +81,7 @@ class ProjectYear(generics.ListAPIView):
     def get_queryset(self):
         year = self.kwargs['year']
         return ProjectModel.objects.filter(is_active=True, created__year=year).order_by('-number')
+
 class ProjectArchive(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ProjectSerializer
@@ -85,6 +90,19 @@ class ProjectArchive(generics.ListAPIView):
     def get_queryset(self):
         year = self.kwargs['year']
         return ProjectModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+
+class ProjectToggleArchive(generics.UpdateAPIView):
+    '''Toggle Archive'''
+    serializer_class = ProjectToggleSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ProjectModel.objects.all()
+    
+    def perform_update(self, serializer):
+        serializer.instance.is_active=not(serializer.instance.is_active)
+        serializer.save()
+
 class ProjectCreate(generics.ListCreateAPIView):
     serializer_class = ProjectCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -109,6 +127,19 @@ class Service(generics.ListAPIView):
 
     def get_queryset(self):
         return ServiceModel.objects.filter(is_active=True).order_by('-number')
+
+class ServiceToggleArchive(generics.UpdateAPIView):
+    '''Toggle Archive'''
+    serializer_class = ServiceToggleSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ServiceModel.objects.all()
+    
+    def perform_update(self, serializer):
+        serializer.instance.is_active=not(serializer.instance.is_active)
+        serializer.save()
+
 class ServiceYear(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ServiceSerializer
@@ -157,6 +188,19 @@ class HSEArchive(generics.ListAPIView):
     def get_queryset(self):
         year = self.kwargs['year']
         return HSEModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+
+class HSEToggleArchive(generics.UpdateAPIView):
+    '''Toggle Archive'''
+    serializer_class = HSEToggleSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return HSEModel.objects.all()
+    
+    def perform_update(self, serializer):
+        serializer.instance.is_active=not(serializer.instance.is_active)
+        serializer.save()
+
 class HSEYear(generics.ListAPIView):
     '''Employee view'''
     serializer_class = HSESerializer
@@ -165,6 +209,7 @@ class HSEYear(generics.ListAPIView):
     def get_queryset(self):
         year = self.kwargs['year']
         return HSEModel.objects.filter(is_active=True, created__year=year).order_by('-number')
+
 class HSECreate(generics.ListCreateAPIView):
     serializer_class = HSECreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -174,6 +219,7 @@ class HSECreate(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save()
+
 class HSERetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = HSECreateSerializer
     permissions_classes = [permissions.IsAuthenticated]

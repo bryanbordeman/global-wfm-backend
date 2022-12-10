@@ -34,6 +34,12 @@ class  ProjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 3
 
+class ProjectToggleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id']
+        read_only_fields = ['number', 'name']
+
 class MinimalProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
@@ -53,6 +59,12 @@ class  ServiceSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 3
 
+class ServiceToggleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id']
+        read_only_fields = ['number', 'name']
+
 class MinimalServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
@@ -71,6 +83,12 @@ class  HSESerializer(serializers.ModelSerializer):
         model = HSE
         fields = '__all__'
         depth = 3
+
+class HSEToggleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HSE
+        fields = ['id']
+        read_only_fields = ['number', 'name']
 
 class MinimalHSESerializer(serializers.ModelSerializer):
     class Meta:
