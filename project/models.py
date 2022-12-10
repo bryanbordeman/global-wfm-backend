@@ -52,12 +52,15 @@ class BaseProject(models.Model):
     created = models.DateField(auto_now_add=True)
     class Meta:
         abstract = True
+        
 class Project(BaseProject):
     def __str__(self):
         return f'{self.number} {self.name}'
+
 class Service(BaseProject):
     def __str__(self):  
         return f'{self.number} {self.name}'
+
 class HSE(BaseProject):
     def __str__(self):
         return f'{self.number} {self.name}'

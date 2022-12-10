@@ -43,6 +43,8 @@ class Task(models.Model):
     due = models.DateField(null=True)
     subtasks = models.ManyToManyField(SubTask, blank=True)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.CASCADE)
+    service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.CASCADE)
+    hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.CASCADE)
     quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
@@ -54,5 +56,9 @@ class Task(models.Model):
     def __str__(self):
         if self.project:
             return f'{self.project} | {self.title}'
+        elif self.service:
+            return f'{self.service} | {self.title}'
+        elif self.hse:
+            return f'{self.hse} | {self.title}'
         else:
             return f'{self.quote} | {self.title}'
