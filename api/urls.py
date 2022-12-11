@@ -47,6 +47,8 @@ urlpatterns = [
     path('last/quote/', views_quote.LastQuote),
     path('create/quote/', views_quote.QuoteCreate.as_view()),
     path('quote/<int:pk>', views_quote.QuoteRetrieveUpdateDestroy.as_view()),
+    path('quotes/data/<int:year>', views_quote.QuoteData),
+
     path('project/categories/', views_project.ProjectCategory.as_view()),
     path('project/types/', views_project.ProjectType.as_view()),
     path('project/billings/', views_project.BillingType.as_view()),

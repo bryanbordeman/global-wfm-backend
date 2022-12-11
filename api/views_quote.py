@@ -1,10 +1,13 @@
 from rest_framework import generics, permissions
 from .serializers_quote import QuoteSerializer, QuoteCreateSerializer, QuoteToggleSerializer
 from quote.models import Quote as QuoteModel
+from project.models import ProjectCategory as ProjectCategoryModel
+from project.models import ProjectType as ProjectTypeModel
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 import time
+from django.db.models import Sum
 
 class Quote(generics.ListAPIView):
     '''Employee view'''
@@ -104,3 +107,32 @@ def LastQuote(request):
         last_quote_id = (last_quote['id'])
 
         return JsonResponse({'last_quote_id': str(last_quote_id)}, status=201)
+
+@csrf_exempt
+def QuoteData(request, year):
+    '''Get totals for project_category and project_type'''
+
+    if request.method == 'GET':
+        data = {'count': 0}
+        # sum = QuoteModel.objects.aggregate(Sum('price'))
+        # sum = QuoteModel.objects.aggregate(Sum('project_category'))
+
+        quotes = QuoteModel.objects.filter(created__year=year).order_by('-number')
+        category_object = ProjectCategoryModel.objects.all().values()
+        type_object = ProjectTypeModel.objects.all().values()
+        
+        
+        data['count'] = str(quotes.count())
+
+        # print(category_object)
+        # print(type_object)
+        
+        # category_object = ProjectCategoryModel.objects.all().values()
+
+        # for i in category_object:
+        #     print(i['id'], i['name'])
+        
+        # last_quote = model_to_dict(QuoteModel.objects.filter(is_active=True).order_by('-number').first())
+        # last_quote_id = (last_quote['id'])
+        return JsonResponse(data, status=201)
+
