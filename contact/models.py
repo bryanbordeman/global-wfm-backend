@@ -49,6 +49,8 @@ class Contact(models.Model):
     email = models.EmailField(max_length=200, null= True, blank=True)
     quotes = models.ManyToManyField('quote.Quote', blank=True)
     projects = models.ManyToManyField('project.Project', blank=True)
+    services = models.ManyToManyField('project.Service', blank=True)
+    hses = models.ManyToManyField('project.HSE', blank=True)
 
     def __str__(self):
         return self.name
