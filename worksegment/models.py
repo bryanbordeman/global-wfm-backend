@@ -17,7 +17,10 @@ def no_future(value):
 class WorkSegment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     segment_type = models.CharField(null=True, blank=True, max_length=100)
+    quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.PROTECT)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
+    service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
+    hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.PROTECT)
     is_approved = models.BooleanField(null= False, default=False)
     date = models.DateField(null=True, validators=[no_future])
     isoweek = models.CharField(max_length=8, blank=True, editable=False)
