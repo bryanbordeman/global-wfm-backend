@@ -19,6 +19,16 @@ class ContactQuote(generics.ListAPIView):
         quote = self.kwargs['quote_id']
         return ContactModel.objects.filter(quotes=quote).all()
 
+#! Make ContactProject
+class ContactProject(generics.ListAPIView):
+    '''get all worksegments for particular isoweek. Admin view only'''
+    serializer_class = ContactSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        project = self.kwargs['project_id']
+        return ContactModel.objects.filter(projects=project).all()
+
 class ContactCompany(generics.ListAPIView):
     '''get all worksegments for particular isoweek. Admin view only'''
     serializer_class = ContactSerializer
