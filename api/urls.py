@@ -14,6 +14,7 @@ from . import views_user
 
 urlpatterns = [
     path('worksegments/', views_worksegment.WorkSegments.as_view()),
+    path('worktypes/', views_worksegment.WorkTypes.as_view()),
     path('create/worksegment/<int:user_id>/', views_worksegment.WorkSegmentCreate.as_view()),
     path('worksegment/<int:pk>', views_worksegment.WorkSegmentRetrieveUpdateDestroy.as_view()),
     path('worksegment/<int:pk>/approved/', views_worksegment.WorkSegmentToggleApproved.as_view()),
@@ -31,6 +32,8 @@ urlpatterns = [
     path('contact/<int:pk>', views_contact.ContactRetrieveUpdateDestroy.as_view()),
     path('contact/quote/<int:quote_id>', views_contact.ContactQuote.as_view()),
     path('contact/project/<int:project_id>', views_contact.ContactProject.as_view()),
+    path('contact/service/<int:service_id>', views_contact.ContactService.as_view()),
+    path('contact/hse/<int:hse_id>', views_contact.ContactHSE.as_view()),
     path('contact/company/<int:company_id>', views_contact.ContactCompany.as_view()),
     path('phone_numbers/', views_phone.Phone.as_view()),
     path('create/phone_number/', views_phone.PhoneCreate.as_view()),
@@ -49,7 +52,6 @@ urlpatterns = [
     path('create/quote/', views_quote.QuoteCreate.as_view()),
     path('quote/<int:pk>', views_quote.QuoteRetrieveUpdateDestroy.as_view()),
     path('quotes/data/<int:year>', views_quote.QuoteData),
-
     path('project/categories/', views_project.ProjectCategory.as_view()),
     path('project/types/', views_project.ProjectType.as_view()),
     path('project/billings/', views_project.BillingType.as_view()),

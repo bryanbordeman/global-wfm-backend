@@ -29,6 +29,24 @@ class ContactProject(generics.ListAPIView):
         project = self.kwargs['project_id']
         return ContactModel.objects.filter(projects=project).all()
 
+class ContactService(generics.ListAPIView):
+    '''get all worksegments for particular isoweek. Admin view only'''
+    serializer_class = ContactSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        service = self.kwargs['service_id']
+        return ContactModel.objects.filter(services=service).all()
+
+class ContactHSE(generics.ListAPIView):
+    '''get all worksegments for particular isoweek. Admin view only'''
+    serializer_class = ContactSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        hse = self.kwargs['hse_id']
+        return ContactModel.objects.filter(hses=hse).all()
+
 class ContactCompany(generics.ListAPIView):
     '''get all worksegments for particular isoweek. Admin view only'''
     serializer_class = ContactSerializer

@@ -1,7 +1,15 @@
 from rest_framework import generics, permissions
 from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedSerializer, WorkSegmentsWeekSerializer
-from worksegment.models import WorkSegment
+from .serializers_worksegment import WorkTypeSerializer
+from worksegment.models import WorkSegment, WorkType
 from django.contrib.auth.models import User
+
+class WorkTypes(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = WorkTypeSerializer
+
+    def get_queryset(self):
+        return WorkType.objects.all()
 
 class WorkSegments(generics.ListAPIView):
     '''Employee view'''

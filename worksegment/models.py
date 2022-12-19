@@ -13,10 +13,17 @@ def no_future(value):
     if value > today:
         raise ValidationError('Date cannot be in the future.')
 
+
+class WorkType(models.Model):
+    name = models.CharField(max_length=200, null= True)
+
+    def __str__(self):
+        return self.name
+
 # Create your models here.
 class WorkSegment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    segment_type = models.CharField(null=True, blank=True, max_length=100)
+    segment_type = models.ForeignKey(WorkType, on_delete=models.CASCADE)
     quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.PROTECT)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
     service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)

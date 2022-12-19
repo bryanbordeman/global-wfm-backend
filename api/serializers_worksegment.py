@@ -1,6 +1,13 @@
 from rest_framework import serializers
-from worksegment.models import WorkSegment
+from worksegment.models import WorkSegment, WorkType
 from api.serializers_user import MinimalUserSerializer
+
+
+class  WorkTypeSerializer(serializers.ModelSerializer):
+    '''All work types [field, shop, office]'''
+    class Meta:
+        model = WorkType
+        fields = '__all__'
 
 class  WorkSegmentSerializer(serializers.ModelSerializer):
     '''Employee view only'''
