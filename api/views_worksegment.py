@@ -3,6 +3,9 @@ from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedS
 from .serializers_worksegment import WorkTypeSerializer
 from worksegment.models import WorkSegment, WorkType
 from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 class WorkTypes(generics.ListAPIView):
     '''Employee view'''
@@ -34,7 +37,7 @@ class WorkSegmentCreate(generics.ListCreateAPIView):
         user_id = self.kwargs['user_id']
         user = User.objects.filter(id=user_id)[0]
         serializer.save(user=user)
- 
+
 class WorkSegmentRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WorkSegmentSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -79,24 +82,38 @@ class AdminWorkSegmentsWeek(generics.ListAPIView):
     def get_queryset(self):
         isoweek = self.kwargs['isoweek']
         qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
-        
-        qs_list = [i for i in qs]
-        users = {}
-        for i in qs_list:
-            users[f'{i.user.username}'] = {'total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0}
-        
-        for item in qs_list:
-            for key in users:
-                if item.user.username == key:
-                    users[f'{item.user.username}']['total_duration'] += item.duration
-                    users[f'{item.user.username}']['travel'] += item.travel_duration
-                    # print(item)
-        for k, v in users.items():
-            v['regular'] = v['total_duration'] - v['travel']
-            if v['regular'] > 40:
-                v['overtime'] = v['regular'] - 40
-                v['regular'] = 40
-            print(k, v['total_duration'], v['regular'],v['overtime'],v['travel'])
-    
         user = self.request.user
         return qs if user.is_staff else qs.filter(id=user.id)
+
+@csrf_exempt
+def WorksegmentTotals(request, isoweek):
+    '''Get total time for week'''
+    if request.method == 'GET':
+        try:
+            # create variables
+            total_list = []
+            users = {}
+            qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
+            
+            qs_list = [i for i in qs]
+            for i in qs_list:
+                users[f'{i.user.id}'] = {'total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0}
+            for item in qs_list:
+                for key in users:
+                    if item.user.id == int(key):
+                        users[f'{item.user.id}']['total_duration'] += item.duration
+                        users[f'{item.user.id}']['travel'] += item.travel_duration
+                        # print(item)
+            for k, v in users.items():
+                v['regular'] = v['total_duration'] - v['travel']
+                if v['regular'] > 40:
+                    v['overtime'] = v['regular'] - 40
+                    v['regular'] = 40
+                totals = {'user_id': k, 'isoweek': isoweek, 'total_duration': str(v['total_duration']), 'regular': str(v['regular']), 'overtime' : str(v['overtime']),'travel': str(v['travel'])}
+                total_list.append(totals)
+
+        except AttributeError: 
+            #if database is empty
+            total_list = []  #Doesn't exist, set to None
+
+        return JsonResponse(total_list, safe=False)

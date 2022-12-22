@@ -20,6 +20,7 @@ urlpatterns = [
     path('worksegment/<int:pk>/approved/', views_worksegment.WorkSegmentToggleApproved.as_view()),
     path('worksegments/<str:isoweek>/', views_worksegment.WorkSegmentsWeek.as_view()),
     path('admin/worksegments/<str:isoweek>/', views_worksegment.AdminWorkSegmentsWeek.as_view()),
+    path('worksegments/totals/<str:isoweek>/', views_worksegment.WorksegmentTotals),
     path('announcement/', views_announcement.Announcement.as_view()),
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
     path('announcement/<int:pk>', views_announcement.AnnouncementRetrieveUpdateDestroy.as_view()),
