@@ -50,8 +50,8 @@ class Task(models.Model):
     is_complete = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     is_read = models.BooleanField(default=False)
-    completed = models.DateTimeField(null=True, blank=True)
-    updated = models.DateTimeField(null=True, blank=True)
+    completed = models.DateTimeField(null=True, blank=True, auto_now_add=True, editable=True)
+    updated = models.DateTimeField(null=True, blank=True, auto_now_add=True, editable=True)
 
     def __str__(self):
         if self.project:

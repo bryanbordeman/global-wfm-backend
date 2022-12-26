@@ -4,6 +4,7 @@ from .serializers_task import TaskSerializer, TaskListSerializer, TaskCreateSeri
 from task.models import Task as TaskModel
 from task.models import TaskList as TaskListModel
 from task.models import SubTask as SubTaskModel
+from django.utils.timezone import now
 
 class TaskAssignee(generics.ListAPIView):
     '''Employee view'''
@@ -69,6 +70,7 @@ class TaskToggleCompleted(generics.UpdateAPIView):
     
     def perform_update(self, serializer):
         serializer.instance.is_complete=not(serializer.instance.is_complete)
+        serializer.instance.completed=(now())
         serializer.save()
 
 class SubtaskToggleCompleted(generics.UpdateAPIView):
