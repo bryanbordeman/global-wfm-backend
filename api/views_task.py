@@ -83,6 +83,7 @@ class SubtaskToggleCompleted(generics.UpdateAPIView):
     
     def perform_update(self, serializer):
         serializer.instance.is_complete=not(serializer.instance.is_complete)
+        serializer.instance.completed=(now())
         serializer.save()
 
 class SubtaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):

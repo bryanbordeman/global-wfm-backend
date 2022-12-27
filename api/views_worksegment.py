@@ -97,7 +97,7 @@ def WorksegmentTotals(request, isoweek):
             
             qs_list = [i for i in qs]
             for i in qs_list:
-                users[f'{i.user.id}'] = {'total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0}
+                users[f'{i.user.id}'] = {'user_name': f'{i.user.first_name} {i.user.last_name}','total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0}
             for item in qs_list:
                 for key in users:
                     if item.user.id == int(key):
@@ -109,7 +109,7 @@ def WorksegmentTotals(request, isoweek):
                 if v['regular'] > 40:
                     v['overtime'] = v['regular'] - 40
                     v['regular'] = 40
-                totals = {'user_id': k, 'isoweek': isoweek, 'total_duration': str(v['total_duration']), 'regular': str(v['regular']), 'overtime' : str(v['overtime']),'travel': str(v['travel'])}
+                totals = {'user_id': k, 'user_name': str(v['user_name']), 'isoweek': isoweek, 'total_duration': str(v['total_duration']), 'regular': str(v['regular']), 'overtime' : str(v['overtime']),'travel': str(v['travel'])}
                 total_list.append(totals)
 
         except AttributeError: 

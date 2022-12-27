@@ -22,7 +22,10 @@ class MileRate (models.Model):
 
 class Mile (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.CASCADE)
+    quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.PROTECT)
+    project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
+    service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
+    hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.PROTECT)
     miles = models.FloatField(null= True)
     rate = models.ForeignKey(MileRate, null=True, on_delete=models.SET_NULL)
     price = models.FloatField(null= True)
@@ -41,7 +44,10 @@ class Mile (models.Model):
 
 class Expense (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey('project.Project', null=True, on_delete=models.CASCADE)
+    quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.PROTECT)
+    project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
+    service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
+    hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.PROTECT)
     receipt_pic = ProcessedImageField(default='receipt.png', format='JPEG', upload_to='None', options={'quality': 20})
     merchant = models.CharField(max_length=200, null= True, blank=True)
     price = models.FloatField(null= True)

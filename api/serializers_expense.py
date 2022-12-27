@@ -64,7 +64,7 @@ class MileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Mile
-        fields = ['id', 'user', 'project', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
+        fields = ['id', 'user', 'project', 'service', 'hse', 'quote', 'miles', 'rate', 'price', 'notes', 'is_approved', 'date_purchased', 'date_created']
         depth = 1
 
 class CreateMileSerializer(serializers.ModelSerializer):
