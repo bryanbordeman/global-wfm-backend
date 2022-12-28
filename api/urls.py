@@ -11,8 +11,10 @@ from . import views_expense
 from . import views_user
 from . import views_task
 from . import views_user
+from . import views_stats
 
 urlpatterns = [
+    path('stats/<int:year>', views_stats.Stats),
     path('worksegments/', views_worksegment.WorkSegments.as_view()),
     path('worktypes/', views_worksegment.WorkTypes.as_view()),
     path('create/worksegment/<int:user_id>/', views_worksegment.WorkSegmentCreate.as_view()),

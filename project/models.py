@@ -9,7 +9,8 @@ class ProjectCategory(models.Model):
         return self.name
 
 class ProjectType(models.Model):
-    project_category = models.ForeignKey(ProjectCategory, on_delete=models.CASCADE)
+    project_category = models.ManyToManyField(ProjectCategory, blank=True)
+    # project_category = models.ForeignKey(ProjectCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=3)
 

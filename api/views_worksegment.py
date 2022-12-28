@@ -116,4 +116,4 @@ def WorksegmentTotals(request, isoweek):
             #if database is empty
             total_list = []  #Doesn't exist, set to None
 
-        return JsonResponse(total_list, safe=False)
+        return JsonResponse(total_list, json_dumps_params={'indent': 2}, safe=False)
