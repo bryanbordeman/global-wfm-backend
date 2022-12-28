@@ -81,7 +81,7 @@ class AdminWorkSegmentsWeek(generics.ListAPIView):
 
     def get_queryset(self):
         isoweek = self.kwargs['isoweek']
-        qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user')
+        qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('-user', '-date')
         user = self.request.user
         return qs if user.is_staff else qs.filter(id=user.id)
 

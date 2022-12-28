@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+
+import environ
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-tfhn+ml&kr43zon6#af23bt79#b=bn0ev1s=-v9bi20&v+a0)g'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,7 +49,7 @@ ALLOWED_HOSTS = ['192.168.1.8',
                 '192.168.1.19', 
                 '192.168.90.31', 
                 '192.168.1.18',
-                '172.16.193.251'
+                '172.16.193.251',
                 ]
 
 
@@ -122,8 +128,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
-
-
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://192.168.1.6:3000',
@@ -152,20 +156,14 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'global_wfm', 
-        'USER': 'postgres',
-        'PASSWORD': 'Engbb2012',
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'ENGINE': env("DATABASE_ENGINE"),
+        'NAME': env("DATABASE_NAME"),
+        'USER': env("DATABASE_USER"),
+        'PASSWORD': env("DATABASE_PASS"),
+        'HOST': env("DATABASE_HOST"), 
+        'PORT': env("DATABASE_PORT"),
     }
 }
 

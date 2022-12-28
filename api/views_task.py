@@ -52,6 +52,10 @@ class TaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return TaskModel.objects.all()
 
+    def perform_update(self, serializer):
+        serializer.instance.updated=(now())
+        serializer.save()
+
 class TaskList(generics.ListAPIView):
     '''Employee view'''
     serializer_class = TaskListSerializer
