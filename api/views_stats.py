@@ -8,6 +8,7 @@ from project.models import ProjectType as ProjectTypeModel
 
 from worksegment.models import WorkSegment, WorkType
 from django.views.decorators.csrf import csrf_exempt
+# from django.forms.models import model_to_dict
 import json
 
 @csrf_exempt
@@ -35,13 +36,23 @@ def Stats(request, year):
             else:
                 total_sales_closed = 0
 
-            stats = {
-                'total_quotes': total_quotes, 
-                'total_projects': total_projects,
-                'total_services': total_services,  
-                'total_hses': total_hses, 
-                'total_sales_closed': total_sales_closed 
-            }
+            # qs_categories = ProjectCategoryModel.objects.all().order_by('-name').values_list('id','name')
+            qs_categories = ProjectCategoryModel.objects.all().order_by('-name').values()
+            qs_types = ProjectTypeModel.objects.all().order_by('-name').values()
+
+            categories_list = list(qs_categories)
+            types_list = list(qs_types)
+
+
+            # get category counts
+            for i in range (len(categories_list)):
+                categories_list[i]['quotes'] = (qs_quotes.filter(project_category__pk=categories_list[i]['id']).count())
+                categories_list[i]['projects'] = (qs_projects.filter(project_category__pk=categories_list[i]['id']).count())
+            
+            # get type counts
+            for i in range (len(types_list)):
+                types_list[i]['quotes'] = (qs_quotes.filter(project_type__pk=types_list[i]['id']).count())
+                types_list[i]['projects'] = (qs_projects.filter(project_type__pk=types_list[i]['id']).count())
 
             #! Projects
             # total projects 
@@ -54,6 +65,16 @@ def Stats(request, year):
 
             #! Production
             # total OT hours
+
+            stats = {
+                'total_quotes': total_quotes, 
+                'total_projects': total_projects,
+                'total_services': total_services,  
+                'total_hses': total_hses, 
+                'total_sales_closed': total_sales_closed,
+                'categories_list': categories_list,
+                'types_list': types_list,
+            }
 
         except AttributeError: 
             #if database is empty
