@@ -18,7 +18,7 @@ class UserView(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return User.objects.filter(is_active=True).all()
+        return User.objects.filter(is_active=True).all().order_by('first_name')
 
 @csrf_exempt
 def signup(request):
