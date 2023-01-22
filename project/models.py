@@ -31,6 +31,7 @@ class OrderType(models.Model):
 
 class BaseProject(models.Model):
     is_active = models.BooleanField(null= False, default=True)
+    quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.PROTECT)
     number = models.CharField(max_length=8, null= True)
     name = models.CharField(max_length=200, null= True)
     project_category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True)

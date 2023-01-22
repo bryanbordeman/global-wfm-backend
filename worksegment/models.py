@@ -69,6 +69,9 @@ class WorkSegment(models.Model):
 
     def save(self, *args, **kwargs):
         'get delta between end and start time and save to duration as float'
+
+        'make duration calculate in 15 min increments'
+        
         delta = datetime.combine(self.date, self.end_time) - datetime.combine(self.date, self.start_time)
         if self.lunch:
             self.duration = (round(delta.total_seconds()/60)/60) - 0.5

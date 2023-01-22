@@ -98,7 +98,7 @@ class ProjectToggleArchive(generics.UpdateAPIView):
 
     def get_queryset(self):
         return ProjectModel.objects.all()
-    
+
     def perform_update(self, serializer):
         serializer.instance.is_active=not(serializer.instance.is_active)
         serializer.save()
@@ -109,7 +109,7 @@ class ProjectCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return ProjectModel.objects.all()
-    
+
     def perform_create(self, serializer):
         serializer.save()
 class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -135,7 +135,7 @@ class ServiceToggleArchive(generics.UpdateAPIView):
 
     def get_queryset(self):
         return ServiceModel.objects.all()
-    
+
     def perform_update(self, serializer):
         serializer.instance.is_active=not(serializer.instance.is_active)
         serializer.save()
@@ -162,7 +162,7 @@ class ServiceCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return ServiceModel.objects.all()
-    
+
     def perform_create(self, serializer):
         serializer.save()
 class ServiceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -196,7 +196,7 @@ class HSEToggleArchive(generics.UpdateAPIView):
 
     def get_queryset(self):
         return HSEModel.objects.all()
-    
+
     def perform_update(self, serializer):
         serializer.instance.is_active=not(serializer.instance.is_active)
         serializer.save()
@@ -216,7 +216,7 @@ class HSECreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return HSEModel.objects.all()
-    
+
     def perform_create(self, serializer):
         serializer.save()
 
@@ -231,11 +231,26 @@ def NextProjectNumber(request):
     '''Get the Next Project, Service, and HSE Numbers'''
     year = time.strftime("%Y")[2:]
     if request.method == 'GET':
-        #! what if its not sequential and we manually enter old quote or database is empty?? 
+        #! what if its not sequential and we manually enter old quote or database is empty??
         #! project number
         try:
-            last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
-            last_project_number = (last_project['number'])
+            if ProjectModel.objects.count() > 0:
+                projects = list(ProjectModel.objects.filter(is_active=True).values_list('number', flat=True))
+
+                project_list_year=[]
+
+                for i in projects:
+                    if i[-2:] == year:
+                        project_list_year.append(int(i))
+
+                if len(project_list_year):
+                    last_project_number = f'{sorted(project_list_year)[-1]}'
+                else:
+                    raise AttributeError
+            else:
+                last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
+                last_project_number = (last_project['number'])
+
             current_project_year = last_project_number[-2:]
 
             if current_project_year == year:
@@ -245,15 +260,31 @@ def NextProjectNumber(request):
                 next_project_number = '100'
                 next_project_number_str = f'{next_project_number}{year}'
 
-        except AttributeError: 
+        except AttributeError:
             #if database is empty
-            last_project = None  #Doesn't exist, set to None
+            # last_project = None  #Doesn't exist, set to None
             next_project_number_str = f'100{year}'
 
         #! service number
         try:
-            last_service = model_to_dict(ServiceModel.objects.filter(is_active=True).order_by('-number').first())
-            last_service_number = (last_service['number'])  
+            if not ServiceModel.objects.count() > 0:
+                services = list(ServiceModel.objects.filter(is_active=True).values_list('number', flat=True))
+
+                service_list_year=[]
+
+                for i in services:
+                    if i[3:5] == year:
+                        service_list_year.append(i)
+
+                if len(service_list_year):
+                    last_service_number = f'{sorted(service_list_year)[-1]}'
+                else:
+                    raise AttributeError
+
+            else:
+                last_service = model_to_dict(ServiceModel.objects.filter(is_active=True).order_by('-number').first())
+                last_service_number = (last_service['number'])
+
             current_service_year = last_service_number[3:5]
 
             if current_service_year == year:
@@ -267,7 +298,7 @@ def NextProjectNumber(request):
             else:
                 next_service_number = '001'
                 next_service_number_str = f'SVC{year}{str(next_service_number)}'
-            
+
         except AttributeError:
             #if database is empty
             last_service_number = None
@@ -275,8 +306,24 @@ def NextProjectNumber(request):
 
         #! hse number
         try:
-            last_hse = model_to_dict(HSEModel.objects.filter(is_active=True).order_by('-number').first())
-            last_hse_number = (last_hse['number'])
+            if HSEModel.objects.count() > 0:
+                hses = list(HSEModel.objects.filter(is_active=True).values_list('number', flat=True))
+
+                hse_list_year=[]
+
+                for i in hses:
+                    if i[3:5] == year:
+                        hse_list_year.append(i)
+
+                if len(hse_list_year):
+                    last_hse_number = f'{sorted(hse_list_year)[-1]}'
+                else:
+                    raise AttributeError
+
+            else:
+                last_hse = model_to_dict(HSEModel.objects.filter(is_active=True).order_by('-number').first())
+                last_hse_number = (last_hse['number'])
+
             current_hse_year = last_hse_number[3:5]
 
             if current_hse_year == year:
@@ -293,7 +340,7 @@ def NextProjectNumber(request):
             #if database is empty
             last_hse_number = None
             next_hse_number_str = f'HSE{year}01'
-        
+
         return JsonResponse({
             'next_project_number': str(next_project_number_str),
             'next_service_number': str(next_service_number_str),
@@ -309,6 +356,6 @@ def LastProject(request):
             last_project_id = (last_project['id'])
             return JsonResponse({'last_project_id': str(last_project_id)}, status=201)
         #to be more specific you can except ProfileObjectDoesNotExist
-        except AttributeError: 
+        except AttributeError:
             last_project = None  #Doesn't exist, set to None
             return JsonResponse({'last_project_id': str('Table Empty')}, status=201)

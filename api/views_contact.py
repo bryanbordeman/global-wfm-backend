@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .serializers_contact import ContactSerializer
+from .serializers_contact import ContactSerializer, ContactUpdateSerializer
 from contact.models import Contact as ContactModel
 
 class Contact(generics.ListAPIView):
@@ -58,7 +58,7 @@ class ContactCompany(generics.ListAPIView):
 
 
 class ContactCreate(generics.ListCreateAPIView):
-    serializer_class = ContactSerializer
+    serializer_class = ContactUpdateSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -68,7 +68,7 @@ class ContactCreate(generics.ListCreateAPIView):
         serializer.save()
 
 class ContactRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ContactSerializer
+    serializer_class = ContactUpdateSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):

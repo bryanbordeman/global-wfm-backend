@@ -31,3 +31,9 @@ class ContactSerializer(serializers.ModelSerializer):
         model = Contact
         fields = '__all__'
         depth = 2
+
+class ContactUpdateSerializer(serializers.ModelSerializer):
+    '''Update Contact serializer'''
+    class Meta:
+        model = Contact
+        fields = '__all__'
