@@ -71,7 +71,7 @@ class Project(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return ProjectModel.objects.filter(is_active=True).order_by('-number')
+        return ProjectModel.objects.filter(is_active=True).order_by('-id')
 
 class ProjectYear(generics.ListAPIView):
     '''Employee view'''
@@ -349,13 +349,42 @@ def NextProjectNumber(request):
 
 @csrf_exempt
 def LastProject(request):
-    '''Get the Last Quote Number'''
+    '''Get the Last Project Number'''
     if request.method == 'GET':
         try:
-            last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
-            last_project_id = (last_project['id'])
-            return JsonResponse({'last_project_id': str(last_project_id)}, status=201)
+            project_model = ProjectModel.objects.filter(is_active=True).order_by('-created').exists()
+            if project_model:
+                last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-created').first())
+                last_project_id = (last_project['id'])
+            else:
+                last_project_id = 'Table Empty'
+
+            service_model = ServiceModel.objects.filter(is_active=True).order_by('-created').exists()
+            if service_model:
+                last_service = model_to_dict(ServiceModel.objects.filter(is_active=True).order_by('-created').first())
+                last_service_id = (last_service['id'])
+            else:
+                last_service_id = 'Table Empty'
+
+            hse_model = HSEModel.objects.filter(is_active=True).order_by('-created').exists()
+            if hse_model:
+                last_hse = model_to_dict(HSEModel.objects.filter(is_active=True).order_by('-created').first())
+                last_hse_id = (last_hse['id'])
+            else:
+                last_hse_id = 'Table Empty'
+
+            return JsonResponse({
+                'last_project_id': str(last_project_id),
+                'last_service_id': str(last_service_id),
+                'last_hse_id': str(last_hse_id),
+                }, status=201)
         #to be more specific you can except ProfileObjectDoesNotExist
         except AttributeError:
             last_project = None  #Doesn't exist, set to None
-            return JsonResponse({'last_project_id': str('Table Empty')}, status=201)
+            last_service = None  #Doesn't exist, set to None
+            last_hse = None  #Doesn't exist, set to None
+            return JsonResponse({
+                'last_project_id': str('Table Empty'),
+                'last_service_id': str('Table Empty'),
+                'last_hse_id': str('Table Empty')
+                }, status=201)
