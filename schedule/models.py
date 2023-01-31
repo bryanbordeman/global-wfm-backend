@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator
+from imagekit.models.fields import ProcessedImageField
 
 class Holiday(models.Model):
     CHOICES = (('New Years Day','New Years Day'),
@@ -42,6 +43,7 @@ class VehicleInspection(models.Model):
     date = models.DateField(null=True)
 
 class Vehicle(models.Model):
+    image = ProcessedImageField(default='van.png', format='JPEG', upload_to='None', options={'quality': 20})
     make = models.CharField(max_length=50, blank=True)
     model = models.CharField(max_length=50, blank=True)
     year = models.CharField(max_length=4, blank=True)
@@ -50,7 +52,7 @@ class Vehicle(models.Model):
     nickname = models.CharField(max_length=50)
     cleanings = models.ManyToManyField(VehicleCleaning, blank=True,)
     services = models.ManyToManyField(VehicleService, blank=True,)
-    inspections = models.ManyToManyField(VehicleService, blank=True,)
+    inspections = models.ManyToManyField(VehicleInspection, blank=True,)
     assignment = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
     max_passagers = models.IntegerField(default=0)
     max_weight = models.DecimalField(decimal_places=2, max_digits=10, default=0)
