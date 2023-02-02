@@ -8,7 +8,7 @@ class Vehicle(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return VehicleModel.objects.all()
+        return VehicleModel.objects.all().order_by('-id')
 
 class VehicleCreate(generics.ListCreateAPIView):
     serializer_class = VehicleSerializer
@@ -26,3 +26,4 @@ class VehicleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return VehicleModel.objects.all()
+

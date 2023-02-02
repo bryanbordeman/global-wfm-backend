@@ -4,6 +4,7 @@ from .models import *
 # Register your models here.
 
 admin.site.register(Holiday)
+admin.site.register(VehicleIssue)
 admin.site.register(VehicleCleaning)
 admin.site.register(VehicleService)
 admin.site.register(VehicleInspection)

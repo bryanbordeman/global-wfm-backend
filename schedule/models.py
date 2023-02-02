@@ -34,6 +34,11 @@ class VehicleCleaning(models.Model):
     other = models.BooleanField(null= False, default=False)
     other_description = models.CharField(max_length=500, blank=True)
 
+class VehicleIssue(models.Model):
+    description = models.CharField(max_length=500, blank=True)
+    date = models.DateField(null=True)
+    is_resolved = models.BooleanField(null= False, default=False)
+
 class VehicleService(models.Model):
     description = models.CharField(max_length=500, blank=True)
     date = models.DateField(null=True)
@@ -50,6 +55,7 @@ class Vehicle(models.Model):
     color = models.CharField(max_length=50, blank=True)
     license_plate = models.CharField(max_length=50, blank=True)
     nickname = models.CharField(max_length=50)
+    issues = models.ManyToManyField(VehicleIssue, blank=True,)
     cleanings = models.ManyToManyField(VehicleCleaning, blank=True,)
     services = models.ManyToManyField(VehicleService, blank=True,)
     inspections = models.ManyToManyField(VehicleInspection, blank=True,)
