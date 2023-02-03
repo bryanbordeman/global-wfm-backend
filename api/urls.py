@@ -47,9 +47,15 @@ urlpatterns = [
     path('create/company/', views_company.CompanyCreate.as_view()),
     path('company/<int:pk>', views_company.CompanyRetrieveUpdateDestroy.as_view()),
     path('company/short/<int:pk>', views_company.CompanyRetrieveUpdateDestroyShort.as_view()),
+    
     path('vehicles/', views_vehicle.Vehicle.as_view()),
     path('create/vehicle/', views_vehicle.VehicleCreate.as_view()),
     path('vehicle/<int:pk>', views_vehicle.VehicleRetrieveUpdateDestroy.as_view()),
+    
+    path('vehicle/issues/', views_vehicle.VehicleIssue.as_view()),
+    path('create/vehicle/issue/', views_vehicle.VehicleIssueCreate.as_view()),
+    path('vehicle/issue/<int:pk>', views_vehicle.VehicleIssueRetrieveUpdateDestroy.as_view()),
+
     path('quotes/', views_quote.Quote.as_view()),
     path('quotes/<int:year>', views_quote.QuoteYear.as_view()),
     path('quotes/archive/<int:year>', views_quote.QuoteArchive.as_view()),
