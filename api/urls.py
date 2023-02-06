@@ -56,6 +56,18 @@ urlpatterns = [
     path('create/vehicle/issue/', views_vehicle.VehicleIssueCreate.as_view()),
     path('vehicle/issue/<int:pk>', views_vehicle.VehicleIssueRetrieveUpdateDestroy.as_view()),
 
+    path('vehicle/inspections/', views_vehicle.VehicleInspection.as_view()),
+    path('create/vehicle/inspection/', views_vehicle.VehicleInspectionCreate.as_view()),
+    path('vehicle/inspection/<int:pk>', views_vehicle.VehicleInspectionRetrieveUpdateDestroy.as_view()),
+
+    path('vehicle/services/', views_vehicle.VehicleService.as_view()),
+    path('create/vehicle/service/', views_vehicle.VehicleServiceCreate.as_view()),
+    path('vehicle/service/<int:pk>', views_vehicle.VehicleServiceRetrieveUpdateDestroy.as_view()),
+
+    path('vehicle/cleanings/', views_vehicle.VehicleCleaning.as_view()),
+    path('create/vehicle/cleaning/', views_vehicle.VehicleCleaningCreate.as_view()),
+    path('vehicle/cleaning/<int:pk>', views_vehicle.VehicleCleaningRetrieveUpdateDestroy.as_view()),
+
     path('quotes/', views_quote.Quote.as_view()),
     path('quotes/<int:year>', views_quote.QuoteYear.as_view()),
     path('quotes/archive/<int:year>', views_quote.QuoteArchive.as_view()),

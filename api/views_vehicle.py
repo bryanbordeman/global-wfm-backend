@@ -3,7 +3,7 @@ from .serializers_vehicle import VehicleSerializer
 from .serializers_vehicle import VehicleIssueSerializer
 from .serializers_vehicle import VehicleInspectionSerializer
 from .serializers_vehicle import VehicleServiceSerializer
-from .serializers_vehicle import VehicleCleaning
+from .serializers_vehicle import VehicleCleaningSerializer
 
 from .serializers_vehicle import CreateVehicleIssueSerializer
 from .serializers_vehicle import CreateVehicleInspectionSerializer
@@ -15,6 +15,11 @@ from schedule.models import VehicleIssue as VehicleIssueModel
 from schedule.models import VehicleInspection as VehicleInspectionModel
 from schedule.models import VehicleService as VehicleServiceModel
 from schedule.models import VehicleCleaning as VehicleCleaningModel
+
+import datetime 
+
+today = datetime.datetime.now() 
+last_year = datetime.datetime.now() - datetime.timedelta(days=1*365)
 
 class Vehicle(generics.ListAPIView):
     '''Employee view'''
@@ -41,7 +46,7 @@ class VehicleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return VehicleModel.objects.all()
 
-#------------------------------------------------------------------
+#!------------------------------------------------------------------
 
 class VehicleIssue(generics.ListAPIView):
     '''Employee view'''
@@ -49,7 +54,7 @@ class VehicleIssue(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return VehicleIssueModel.objects.all().order_by('-date')
+        return VehicleIssueModel.objects.filter(is_resolved=False).order_by('-date')
 
 class VehicleIssueCreate(generics.ListCreateAPIView):
     serializer_class = CreateVehicleIssueSerializer
@@ -67,3 +72,84 @@ class VehicleIssueRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return VehicleIssueModel.objects.all()
+
+#!------------------------------------------------------------------
+
+class VehicleInspection(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = VehicleInspectionSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleInspectionModel.objects.filter(date__gte=last_year).filter(date__lte=today).order_by('-date')
+
+class VehicleInspectionCreate(generics.ListCreateAPIView):
+    serializer_class = CreateVehicleInspectionSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleInspectionModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+class VehicleInspectionRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CreateVehicleInspectionSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleInspectionModel.objects.all()
+
+#!------------------------------------------------------------------
+
+class VehicleService(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = VehicleServiceSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleServiceModel.objects.filter(date__gte=last_year).filter(date__lte=today).order_by('-date')
+
+class VehicleServiceCreate(generics.ListCreateAPIView):
+    serializer_class = CreateVehicleServiceSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleServiceModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+class VehicleServiceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CreateVehicleServiceSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleServiceModel.objects.all()
+
+#!------------------------------------------------------------------
+
+class VehicleCleaning(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = VehicleCleaningSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleCleaningModel.objects.filter(date__gte=last_year).filter(date__lte=today).order_by('-date')
+
+class VehicleCleaningCreate(generics.ListCreateAPIView):
+    serializer_class = CreateVehicleCleaningSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleCleaningModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+class VehicleCleaningRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CreateVehicleCleaningSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return VehicleCleaningModel.objects.all()
