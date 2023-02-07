@@ -108,7 +108,8 @@ class VehicleService(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return VehicleServiceModel.objects.filter(date__gte=last_year).filter(date__lte=today).order_by('-date')
+        year = self.kwargs['year']
+        return VehicleServiceModel.objects.filter(date__year=year).order_by('-date')
 
 class VehicleServiceCreate(generics.ListCreateAPIView):
     serializer_class = CreateVehicleServiceSerializer
@@ -135,7 +136,8 @@ class VehicleCleaning(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return VehicleCleaningModel.objects.filter(date__gte=last_year).filter(date__lte=today).order_by('-date')
+        year = self.kwargs['year']
+        return VehicleCleaningModel.objects.filter(date__year=year).order_by('-date')
 
 class VehicleCleaningCreate(generics.ListCreateAPIView):
     serializer_class = CreateVehicleCleaningSerializer
@@ -153,3 +155,4 @@ class VehicleCleaningRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView
 
     def get_queryset(self):
         return VehicleCleaningModel.objects.all()
+
