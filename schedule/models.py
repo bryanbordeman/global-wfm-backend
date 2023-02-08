@@ -79,6 +79,7 @@ class VehicleInspection(models.Model):
     vehicle = models.ForeignKey(Vehicle, null=True, on_delete=models.PROTECT)
     description = models.CharField(max_length=500, blank=True)
     date = models.DateField(null=True)
+    expiration_date = models.DateField(null=True)
 
     def __str__(self):
         return f'{self.vehicle.nickname} | {self.date}' 

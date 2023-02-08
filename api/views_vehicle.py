@@ -109,7 +109,7 @@ class VehicleService(generics.ListAPIView):
 
     def get_queryset(self):
         year = self.kwargs['year']
-        return VehicleServiceModel.objects.filter(date__year=year).order_by('-date')
+        return VehicleServiceModel.objects.filter(date__year=year).order_by('-vehicle')
 
 class VehicleServiceCreate(generics.ListCreateAPIView):
     serializer_class = CreateVehicleServiceSerializer
