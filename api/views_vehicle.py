@@ -81,7 +81,8 @@ class VehicleInspection(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return VehicleInspectionModel.objects.filter(date__gte=last_year).filter(date__lte=today).order_by('-date')
+        # return VehicleInspectionModel.objects.filter(date__gte=last_year).filter(date__lte=today).order_by('-date')
+        return VehicleInspectionModel.objects.order_by('expiration_date')
 
 class VehicleInspectionCreate(generics.ListCreateAPIView):
     serializer_class = CreateVehicleInspectionSerializer

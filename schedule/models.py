@@ -36,7 +36,7 @@ class Vehicle(models.Model):
     max_weight = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
     def __str__(self):
-        
+
         return f'{self.nickname}'
 
 class VehicleCleaning(models.Model):
@@ -53,7 +53,7 @@ class VehicleCleaning(models.Model):
     other_description = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
-        return f'{self.vehicle.nickname} | {self.date}' 
+        return f'{self.vehicle.nickname} | {self.date}'
 
 class VehicleIssue(models.Model):
     created_by = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
@@ -63,7 +63,7 @@ class VehicleIssue(models.Model):
     is_resolved = models.BooleanField(null= False, default=False)
 
     def __str__(self):
-        return f'{self.vehicle.nickname} | {self.date}' 
+        return f'{self.vehicle.nickname} | {self.date}'
 
 class VehicleService(models.Model):
     created_by = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
@@ -72,17 +72,17 @@ class VehicleService(models.Model):
     date = models.DateField(null=True)
 
     def __str__(self):
-        return f'{self.vehicle.nickname} | {self.date}' 
+        return f'{self.vehicle.nickname} | {self.date}'
 
 class VehicleInspection(models.Model):
     created_by = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
     vehicle = models.ForeignKey(Vehicle, null=True, on_delete=models.PROTECT)
     description = models.CharField(max_length=500, blank=True)
-    date = models.DateField(null=True)
     expiration_date = models.DateField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.vehicle.nickname} | {self.date}' 
+        return f'{self.vehicle.nickname} | {self.expiration_date}'
 
 class Travel(models.Model):
     hotel = models.TextField(max_length=250, blank=True,
@@ -103,7 +103,7 @@ class ScheduleSegment(models.Model):
                                 validators=[MaxLengthValidator(250)])
     is_travel = models.BooleanField(null= False, default=False)
     travel = models.ForeignKey(Travel, null=True, blank=True, on_delete=models.PROTECT)
-    
+
     def __str__(self):
         local_or_travel = 'L'
         if self.is_travel:
@@ -119,5 +119,3 @@ class Schedule(models.Model):
 
     def __str__(self):
         return f'{self.isoday} | {self.isoweek}'
-        
-
