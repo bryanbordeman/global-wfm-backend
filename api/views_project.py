@@ -126,7 +126,7 @@ class Service(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return ServiceModel.objects.filter(is_active=True).order_by('-number')
+        return ServiceModel.objects.filter(is_active=True).order_by('number')
 
 class ServiceToggleArchive(generics.UpdateAPIView):
     '''Toggle Archive'''

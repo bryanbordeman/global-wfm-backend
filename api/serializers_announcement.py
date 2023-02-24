@@ -5,4 +5,4 @@ class  AnnouncementSerializer(serializers.ModelSerializer):
     '''Announcement serializer'''
     class Meta:
         model = Announcement
-        fields = ['id','title', 'memo', 'is_active']
+        fields = ['id','title', 'memo', 'is_active', 'created']
