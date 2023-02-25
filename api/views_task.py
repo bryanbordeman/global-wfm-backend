@@ -15,6 +15,42 @@ class TaskAssignee(generics.ListAPIView):
         assignee = self.kwargs['assignee']
         return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(is_deleted=False).filter(is_complete=False).order_by('due')
 
+class TaskProject(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = TaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        project = self.kwargs['project']
+        return TaskModel.objects.filter(**{"project_id" : project}).filter(is_deleted=False).filter(is_complete=False).order_by('assignee')
+
+class TaskService(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = TaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        service = self.kwargs['service']
+        return TaskModel.objects.filter(**{"service_id" : service}).filter(is_deleted=False).filter(is_complete=False).order_by('assignee')
+
+class TaskHSE(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = TaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        hse = self.kwargs['hse']
+        return TaskModel.objects.filter(**{"hse_id" : hse}).filter(is_deleted=False).filter(is_complete=False).order_by('assignee')
+
+class TaskQuote(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = TaskSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        quote = self.kwargs['quote']
+        return TaskModel.objects.filter(**{"quote_id" : quote}).filter(is_deleted=False).filter(is_complete=False).order_by('assignee')
+
 class TaskAssigneeCompleteList(generics.ListAPIView):
     '''Employee view'''
     serializer_class = TaskSerializer
