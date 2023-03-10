@@ -47,6 +47,7 @@ class QuoteToggleArchive(generics.UpdateAPIView):
     def perform_update(self, serializer):
         serializer.instance.is_active=not(serializer.instance.is_active)
         serializer.save()
+
 class QuoteCreate(generics.ListCreateAPIView):
     serializer_class = QuoteCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -76,7 +77,7 @@ def NextQuoteNumber(request):
     if request.method == 'GET':
         #! what if its not sequential and we manually enter old quote?? 
         try:
-            last_quote = model_to_dict(QuoteModel.objects.filter(is_active=True).order_by('-number').first())
+            last_quote = model_to_dict(QuoteModel.objects.all().order_by('-number').first())  # omitted filter active. Might be an issue when DB gets large?
             
             last_quote_number = (last_quote['number'])
             current_quote_year = last_quote_number[1:3]
