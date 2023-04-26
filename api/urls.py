@@ -24,13 +24,23 @@ urlpatterns = [
     path('worksegments/<str:isoweek>/', views_worksegment.WorkSegmentsWeek.as_view()),
     path('admin/worksegments/<str:isoweek>/', views_worksegment.AdminWorkSegmentsWeek.as_view()),
     path('worksegments/totals/<str:isoweek>/', views_worksegment.WorksegmentTotals),
+    
+    path('pto/', views_worksegment.PTOs.as_view()),
+    path('create/pto/<int:user_id>/', views_worksegment.PTOCreate.as_view()),
+    path('pto/<int:pk>', views_worksegment.PTORetrieveUpdateDestroy.as_view()),
+    path('pto/<int:pk>/approved/', views_worksegment.PTOToggleApproved.as_view()),
+    path('pto/<str:isoweek>/', views_worksegment.PTOWeek.as_view()),
+    path('admin/pto/<str:isoweek>/', views_worksegment.AdminPTOWeek.as_view()),
+
     path('announcement/', views_announcement.Announcement.as_view()),
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
     path('announcement/<int:pk>', views_announcement.AnnouncementRetrieveUpdateDestroy.as_view()),
+    
     path('addresses/', views_address.Address.as_view()),
     path('create/address/', views_address.AddressCreate.as_view()),
     path('address/<int:pk>', views_address.AddressRetrieveUpdateDestroy.as_view()),
     path('address/lookup/<str:place_id>', views_address.AddressLookup.as_view()),
+
     path('contacts/', views_contact.Contact.as_view()),
     path('create/contact/', views_contact.ContactCreate.as_view()),
     path('contact/<int:pk>', views_contact.ContactRetrieveUpdateDestroy.as_view()),
@@ -42,6 +52,7 @@ urlpatterns = [
     path('phone_numbers/', views_phone.Phone.as_view()),
     path('create/phone_number/', views_phone.PhoneCreate.as_view()),
     path('phone_number/<int:pk>', views_phone.PhoneRetrieveUpdateDestroy.as_view()),
+    
     path('companies/', views_company.Company.as_view()),
     path('companies/short/', views_company.CompanyShort.as_view()),
     path('create/company/', views_company.CompanyCreate.as_view()),

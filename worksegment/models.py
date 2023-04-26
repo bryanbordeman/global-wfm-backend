@@ -20,6 +20,37 @@ class WorkType(models.Model):
     def __str__(self):
         return self.name
 
+
+class PTO(models.Model):
+    CHOICES = (('Vacation','Vacation'),
+                ('Sick','Sick'),
+                ('Bereavement','Bereavement'),
+                ('Jury Duty','Jury Duty'),)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    PTO_type = models.CharField(max_length=200, null=True, choices=CHOICES)
+    is_full_day = models.BooleanField(null= False, default=False) # True = 8 hours False = 4 hours
+    is_approved = models.BooleanField(null= False, default=False)
+    date = models.DateField(null=True)
+    isoweek = models.CharField(max_length=8, blank=True, editable=False)
+    # duration is self calculated and based on full day or half day. full day = 8 hrs, half day = 4 hrs
+    duration = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=0, editable=False)
+    notes = models.TextField(max_length=250, blank=True,
+                                validators=[MaxLengthValidator(250)])
+
+    def save(self, *args, **kwargs):
+        if self.is_full_day:
+            self.duration = 8
+        else:
+            self.duration = 4
+
+        'convert date to isoweek'
+        self.isoweek = Week.withdate(self.date)
+
+        super(PTO, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'User: {self.user.first_name} {self.user.last_name} | Week: {self.isoweek} | Date: {self.date} | Id: {self.id}'
+
 # Create your models here.
 class WorkSegment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
