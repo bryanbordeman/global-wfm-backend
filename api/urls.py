@@ -140,4 +140,5 @@ urlpatterns = [
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),
+    path('is_active/', views_user.is_active),
 ]

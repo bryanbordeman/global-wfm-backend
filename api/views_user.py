@@ -72,3 +72,12 @@ def login(request):
                                 # 'user_last_name' : str(user_information.last_name),
                                 # 'user_is_staff' : str(user_information.is_staff),
                                 }, status=201)
+
+@csrf_exempt
+def is_active(request):
+    if request.method == 'POST':
+            data = json.load(request) # data is a dictionary
+            dict_obj = model_to_dict(User.objects.get(username=data['username']) )
+            return JsonResponse({
+                                'user_is_active' : str(dict_obj['is_active']),
+                                }, status=201)
