@@ -200,7 +200,8 @@ def WorksegmentTotals(request, isoweek):
                 for key in users:
                     if item.user.id == int(key):
                         users[f'{item.user.id}']['total_duration'] += item.duration
-                        users[f'{item.user.id}']['travel'] += item.travel_duration
+                        if item.travel_duration:
+                            users[f'{item.user.id}']['travel'] += item.travel_duration
 
             for k, v in users.items():
                 v['regular'] = v['total_duration'] - v['travel']

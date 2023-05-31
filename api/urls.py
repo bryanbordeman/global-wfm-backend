@@ -13,8 +13,18 @@ from . import views_task
 from . import views_user
 from . import views_stats
 from . import views_vehicle
+from . import views_uploader
 
 urlpatterns = [
+    path('drawings/', views_uploader.DrawingViewset.as_view()),
+    path('drawings/<int:project_id>', views_uploader.DrawingProject.as_view()),
+    path('create/drawing/', views_uploader.DrawingCreate.as_view()),
+    path('drawing/<int:pk>', views_uploader.DrawingRetrieveUpdateDestroy.as_view()),
+
+    path('dropboxes/', views_uploader.DropBoxViewset.as_view()),
+    path('create/dropbox/', views_uploader.DropBoxCreate.as_view()),
+    path('dropbox/<int:pk>', views_uploader.DropBoxRetrieveUpdateDestroy.as_view()),
+
     path('stats/<int:year>', views_stats.Stats),
     path('worksegments/', views_worksegment.WorkSegments.as_view()),
     path('worktypes/', views_worksegment.WorkTypes.as_view()),
@@ -88,6 +98,7 @@ urlpatterns = [
     path('create/quote/', views_quote.QuoteCreate.as_view()),
     path('quote/<int:pk>', views_quote.QuoteRetrieveUpdateDestroy.as_view()),
     path('quotes/data/<int:year>', views_quote.QuoteData),
+    
     path('project/categories/', views_project.ProjectCategory.as_view()),
     path('project/types/', views_project.ProjectType.as_view()),
     path('project/billings/', views_project.BillingType.as_view()),
@@ -95,6 +106,8 @@ urlpatterns = [
     path('project/category/<int:pk>', views_project.ProjectCategoryRetrieveUpdateDestroy.as_view()),
     path('project/type/<int:pk>', views_project.ProjectTypeRetrieveUpdateDestroy.as_view()),
     path('projects/', views_project.Project.as_view()),
+    path('projects/minimal', views_project.MinimalProject.as_view()),
+    
     path('projects/<int:year>', views_project.ProjectYear.as_view()),
     path('projects/archive/<int:year>', views_project.ProjectArchive.as_view()),
     path('project/<int:pk>/togglearchive/', views_project.ProjectToggleArchive.as_view()),

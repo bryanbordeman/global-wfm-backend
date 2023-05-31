@@ -7,6 +7,7 @@ from .serializers_project import ProjectToggleSerializer
 from .serializers_project import ServiceToggleSerializer
 from .serializers_project import HSEToggleSerializer
 from .serializers_project import BillingTypeSerializer, OrderTypeSerializer
+from .serializers_project import MinimalProjectSerializer
 from project.models import Project as ProjectModel
 from project.models import Service as ServiceModel
 from project.models import HSE as HSEModel
@@ -69,6 +70,15 @@ class Project(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ProjectSerializer
     permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ProjectModel.objects.filter(is_active=True).order_by('-id')
+    
+class MinimalProject(generics.ListAPIView):
+    '''Customer view'''
+    serializer_class = MinimalProjectSerializer
+    permission_classes = [permissions.AllowAny]
+    authentication_classes = []
 
     def get_queryset(self):
         return ProjectModel.objects.filter(is_active=True).order_by('-id')

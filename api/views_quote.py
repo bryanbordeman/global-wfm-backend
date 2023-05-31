@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
 from .serializers_quote import QuoteSerializer, QuoteCreateSerializer, QuoteToggleSerializer
 from quote.models import Quote as QuoteModel
+from project.models import Project as ProjectModel
 from project.models import ProjectCategory as ProjectCategoryModel
 from project.models import ProjectType as ProjectTypeModel
 from django.http import JsonResponse
@@ -114,25 +115,29 @@ def QuoteData(request, year):
     '''Get totals for project_category and project_type'''
 
     if request.method == 'GET':
-        data = {'count': 0}
-        # sum = QuoteModel.objects.aggregate(Sum('price'))
+        data = {'quote_count': 0, 'project_count': 0,'outstanding_sales_sum' : 0, 'sold_sales_sum' : 0}
+        outstanding_sales_sum = QuoteModel.objects.filter(is_active=True, number__startswith=f'Q{str(year)[-2:]}').aggregate(Sum('price'))
+        sold_sales_sum = ProjectModel.objects.filter(number__endswith=str(year)[-2:]).aggregate(Sum('price'))
         # sum = QuoteModel.objects.aggregate(Sum('project_category'))
 
-        quotes = QuoteModel.objects.filter(created__year=year).order_by('-number')
+        quotes = QuoteModel.objects.filter(number__startswith=f'Q{str(year)[-2:]}').order_by('-number')
+        projects = ProjectModel.objects.filter(number__endswith=str(year)[-2:]).order_by('-number')
         category_object = ProjectCategoryModel.objects.all().values()
         type_object = ProjectTypeModel.objects.all().values()
-        
-        
-        data['count'] = str(quotes.count())
 
+
+        data['quote_count'] = str(quotes.count())
+        data['project_count'] = str(projects.count())
+        data['outstanding_sales_sum'] = str(round(outstanding_sales_sum['price__sum'],2))
+        data['sold_sales_sum'] = str(round(sold_sales_sum['price__sum'],2))
         # print(category_object)
         # print(type_object)
-        
+
         # category_object = ProjectCategoryModel.objects.all().values()
 
         # for i in category_object:
         #     print(i['id'], i['name'])
-        
+
         # last_quote = model_to_dict(QuoteModel.objects.filter(is_active=True).order_by('-number').first())
         # last_quote_id = (last_quote['id'])
         return JsonResponse(data, status=201)
