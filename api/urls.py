@@ -17,9 +17,15 @@ from . import views_uploader
 
 urlpatterns = [
     path('drawings/', views_uploader.DrawingViewset.as_view()),
-    path('drawings/<int:project_id>', views_uploader.DrawingProject.as_view()),
+    path('drawings/project/<int:project_id>', views_uploader.DrawingProject.as_view()),
+    path('drawings/service/<int:service_id>', views_uploader.DrawingService.as_view()),
+    path('drawings/hse/<int:hse_id>', views_uploader.DrawingHSE.as_view()),
     path('create/drawing/', views_uploader.DrawingCreate.as_view()),
     path('drawing/<int:pk>', views_uploader.DrawingRetrieveUpdateDestroy.as_view()),
+
+    path('drawing_types/', views_uploader.DrawingTypeView.as_view()),
+    path('create/drawing_type/', views_uploader.DrawingTypeCreate.as_view()),
+    path('drawing_type/<int:pk>', views_uploader.DrawingTypeRetrieveUpdateDestroy.as_view()),
 
     path('dropboxes/', views_uploader.DropBoxViewset.as_view()),
     path('create/dropbox/', views_uploader.DropBoxCreate.as_view()),

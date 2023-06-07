@@ -21,15 +21,24 @@ class DrawingType(models.Model):
 class Drawing(models.Model):
     is_active = models.BooleanField(null= False, default=True)
     drawing_type = models.ForeignKey(DrawingType, on_delete=models.SET_NULL, null=True)
-    rev = models.IntegerField(null=True, blank=True, default=0)
+    rev = models.CharField(max_length=3, null=True, blank=True)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
+    service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
+    hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.PROTECT)
     title = models.CharField(max_length=150, editable=False)
+    title_suffix = models.CharField(max_length=150, blank=True)
     document = models.FileField(max_length=150)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        self.title = f'{self.project.number} {self.drawing_type.description} Rev {self.rev}'
+        if self.service:
+            number = self.service.number
+        elif self.hse:
+            number = self.hse.number
+        else:
+            number = self.project.number
+        self.title = f'{number} {self.drawing_type.description}{f" {self.title_suffix}" if self.title_suffix else ""}{f" Rev {self.rev}" if self.rev else ""}'
         super(Drawing, self).save(*args, **kwargs)
 
     class Meta:
