@@ -27,7 +27,7 @@ class Drawing(models.Model):
     hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.PROTECT)
     title = models.CharField(max_length=150, editable=False)
     title_suffix = models.CharField(max_length=150, blank=True)
-    document = models.FileField(max_length=150)
+    document = models.FileField(max_length=150, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
