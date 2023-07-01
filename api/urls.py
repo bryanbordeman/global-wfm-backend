@@ -14,8 +14,56 @@ from . import views_user
 from . import views_stats
 from . import views_vehicle
 from . import views_uploader
+from . import views_asset
 
 urlpatterns = [
+    path('asset/door/attributes', views_asset.DoorAttributesViewset.as_view()),
+    path('asset/door/reports', views_asset.DoorReportViewset.as_view()),
+    path('asset/create/door/report', views_asset.DoorReportCreate.as_view()),
+    path('asset/door/report/<int:pk>', views_asset.DoorReportRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/revs', views_asset.DoorRevViewset.as_view()),
+    path('asset/create/door/rev', views_asset.DoorRevCreate.as_view()),
+    path('asset/door/rev/<int:pk>', views_asset.DoorRevRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/locksets', views_asset.DoorLocksetViewset.as_view()),
+    path('asset/create/door/lockset', views_asset.DoorLocksetCreate.as_view()),
+    path('asset/door/lockset/<int:pk>', views_asset.DoorLocksetRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/types', views_asset.DoorTypeViewset.as_view()),
+    path('asset/create/door/type', views_asset.DoorTypeCreate.as_view()),
+    path('asset/door/type/<int:pk>', views_asset.DoorTypeRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/sills', views_asset.DoorSillTypeViewset.as_view()),
+    path('asset/create/door/sill', views_asset.DoorSillTypeCreate.as_view()),
+    path('asset/door/sill/<int:pk>', views_asset.DoorSillTypeRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/frames', views_asset.DoorFrameTypeViewset.as_view()),
+    path('asset/create/door/frame', views_asset.DoorFrameTypeCreate.as_view()),
+    path('asset/door/frame/<int:pk>', views_asset.DoorFrameTypeRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/cores', views_asset.DoorCoreTypeViewset.as_view()),
+    path('asset/create/door/core', views_asset.DoorCoreTypeCreate.as_view()),
+    path('asset/door/core/<int:pk>', views_asset.DoorCoreTypeRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/hinges', views_asset.DoorHingeTypeViewset.as_view()),
+    path('asset/create/door/hinge', views_asset.DoorHingeTypeCreate.as_view()),
+    path('asset/door/hinge/<int:pk>', views_asset.DoorHingeTypeRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/options', views_asset.DoorOptionsViewset.as_view()),
+    path('asset/create/door/option', views_asset.DoorOptionsCreate.as_view()),
+    path('asset/door/option/<int:pk>', views_asset.DoorOptionsRetrieveUpdateDestroy.as_view()),
+
+    path('asset/door/packaging', views_asset.DoorPackagingViewset.as_view()),
+    path('asset/create/door/packaging', views_asset.DoorPackagingCreate.as_view()),
+    path('asset/door/packaging/<int:pk>', views_asset.DoorPackagingRetrieveUpdateDestroy.as_view()),
+
+    path('asset/doors', views_asset.DoorViewset.as_view()),
+    path('asset/create/door', views_asset.DoorCreate.as_view()),
+    path('asset/door/<int:pk>', views_asset.DoorRetrieveUpdateDestroy.as_view()),
+    path('asset/complete/door/<int:pk>', views_asset.DoorToggleCompleted.as_view()),
+    path('asset/door/project/<int:project>', views_asset.DoorProjectList.as_view()),
+
     path('drawings/', views_uploader.DrawingViewset.as_view()),
     path('drawings/project/<int:project_id>', views_uploader.DrawingProject.as_view()),
     path('drawings/service/<int:service_id>', views_uploader.DrawingService.as_view()),
@@ -133,6 +181,7 @@ urlpatterns = [
     path('hse/<int:pk>', views_project.HSERetrieveUpdateDestroy.as_view()),
     path('next/project/', views_project.NextProjectNumber),
     path('last/project/', views_project.LastProject),
+    
     path('expenses/<int:month>/<int:year>', views_expense.Expense.as_view()),
     path('create/expense/<int:user_id>/', views_expense.ExpenseCreate.as_view()),
     path('expense/<int:pk>', views_expense.ExpenseRetrieveUpdateDestroy.as_view()),
@@ -142,6 +191,7 @@ urlpatterns = [
     path('mile/<int:pk>', views_expense.MileRetrieveUpdateDestroy.as_view()),
     path('mile/<int:pk>/approved/', views_expense.MileToggleApproved.as_view()),
     path('milerates/', views_expense.MileRates.as_view()),
+   
     path('tasks/<int:assignee>/', views_task.TaskAssignee.as_view()),
     path('tasks/<int:assignee>/<int:tasklist>/', views_task.TaskAssigneeList.as_view()),
     path('complete/tasks/<int:assignee>/<int:tasklist>/', views_task.TaskAssigneeCompleteList.as_view()),
@@ -156,6 +206,7 @@ urlpatterns = [
     path('subtask/<int:pk>/completed/', views_task.SubtaskToggleCompleted.as_view()),
     path('subtask/<int:pk>', views_task.SubtaskRetrieveUpdateDestroy.as_view()),
     path('create/subtask/', views_task.SubtaskCreate.as_view()),
+    
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),
