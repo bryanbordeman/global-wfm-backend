@@ -4,6 +4,10 @@ from expense.models import Expense as ExpenseModel
 from expense.models import Mile as MileModel
 from expense.models import MileRate as MileRatesModel
 from django.contrib.auth.models import User
+import boto3
+from django.conf import settings
+from django.http import JsonResponse
+from django.db import transaction
 
 def filter_by_month(qs, month, year):
     qs_list = [i for i in qs]
@@ -44,7 +48,6 @@ class ExpenseCreate(generics.ListCreateAPIView):
         user = User.objects.filter(id=user_id)[0]
         serializer.save(user=user)
 
-
 class ExpenseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CreateExpenseSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -52,6 +55,33 @@ class ExpenseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return ExpenseModel.objects.all()
 
+    def get_serializer(self, *args, **kwargs):
+        kwargs['partial'] = True  # Set partial=True
+        return super().get_serializer(*args, **kwargs)
+    
+    def perform_destroy(self, instance):
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
+
+        file_field = instance.receipt_pic  # Retrieve the FieldFile object
+        file_path = str(file_field)  # Convert the FieldFile object to a string (file path)
+
+        try:
+            s3.delete_object(
+                Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                Key=file_path
+            )
+            with transaction.atomic():
+                instance.delete()  # Delete the database instance
+
+        except Exception as e:
+            print("Exception:", str(e))
+            return JsonResponse({'error': str(e)}, status=500)
+    
 class ExpenseToggleApproved(generics.UpdateAPIView):
     '''Approve expense. Admin view only'''
     serializer_class = ExpenseApprovedSerializer

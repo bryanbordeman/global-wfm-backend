@@ -17,6 +17,7 @@ from asset.models import (
 from .serializers_asset import (
     DoorReportSerializer,
     DoorRevSerializer,
+    DoorRevCreateSerializer,
     DoorLocksetSerializer,
     DoorTypeSerializer,
     DoorSillTypeSerializer,
@@ -26,6 +27,9 @@ from .serializers_asset import (
     DoorOptionsSerializer,
     DoorPackagingSerializer,
     DoorSerializer,
+    DoorCreateSerializer,
+    MinimalDoorSerializer,
+    DoorCompletedSerializer,
 )
 
 
@@ -64,7 +68,7 @@ class DoorRevViewset(generics.ListAPIView):
         return DoorRev.objects.all()
 
 class DoorRevCreate(generics.ListCreateAPIView):
-    serializer_class = DoorRevSerializer
+    serializer_class = DoorRevCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -282,14 +286,14 @@ class DoorPackagingRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 class DoorViewset(generics.ListAPIView):
 
-    serializer_class = DoorSerializer
+    serializer_class = MinimalDoorSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Door.objects.filter(is_complete=False).order_by('due')
 
 class DoorCreate(generics.ListCreateAPIView):
-    serializer_class = DoorSerializer
+    serializer_class = DoorCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -299,20 +303,27 @@ class DoorCreate(generics.ListCreateAPIView):
         serializer.save()
 
 class DoorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DoorSerializer
+    serializer_class = DoorCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Door.objects.all()
+
+class DoorRetrieve(generics.RetrieveAPIView):
+    serializer_class = MinimalDoorSerializer
+    permission_classes = []  # Remove the authentication requirement
 
     def get_queryset(self):
         return Door.objects.all()
 
 class DoorToggleCompleted(generics.UpdateAPIView):
     '''Complete Door'''
-    serializer_class = DoorSerializer
+    serializer_class = DoorCompletedSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Door.objects.all()
-    
+
     def perform_update(self, serializer):
         serializer.instance.is_complete=not(serializer.instance.is_complete)
         serializer.instance.completed=(now())
@@ -328,19 +339,21 @@ class DoorProjectList(generics.ListAPIView):
         return Door.objects.filter(**{"project_id" : project}).all()
 
 class DoorAttributesViewset(generics.ListAPIView):
+    queryset = Door.objects.all()  # Replace "Door" with your actual model name
+    serializer_class = DoorSerializer  # Replace with your actual serializer class
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
         attributes = {
-            "door_type": DoorType.objects.all(),
-            "lockset": DoorLockset.objects.all(),
-            "sill_type": DoorSillType.objects.all(),
-            "frame_type": DoorFrameType.objects.all(),
-            "core_type": DoorCoreType.objects.all(),
-            "hinge_type": DoorHingeType.objects.all(),
-            "options": DoorOptions.objects.all(),
-            "packaging": DoorPackaging.objects.all(),
+            "door_type": DoorType.objects.all().order_by('id'),
+            "lockset": DoorLockset.objects.all().order_by('id'),
+            "sill_type": DoorSillType.objects.all().order_by('id'),
+            "frame_type": DoorFrameType.objects.all().order_by('id'),
+            "core_type": DoorCoreType.objects.all().order_by('id'),
+            "hinge_type": DoorHingeType.objects.all().order_by('id'),
+            "options": DoorOptions.objects.all().order_by('id'),
+            "packaging": DoorPackaging.objects.all().order_by('id'),
         }
 
         attribute_serializers = {
@@ -358,7 +371,7 @@ class DoorAttributesViewset(generics.ListAPIView):
         for attribute_name, serializer in attribute_serializers.items():
             serialized_attributes[attribute_name] = serializer.data
 
-        response.data["attributes"] = serialized_attributes
+        response.data = {"attributes": serialized_attributes}
 
         return response
 

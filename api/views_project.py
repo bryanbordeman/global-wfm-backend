@@ -34,7 +34,7 @@ class ProjectType(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return ProjectTypeModel.objects.all()
+        return ProjectTypeModel.objects.all().order_by('name')
 
 class ProjectCategoryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectCategorySerializer
@@ -73,12 +73,13 @@ class Project(generics.ListAPIView):
 
     def get_queryset(self):
         return ProjectModel.objects.filter(is_active=True).order_by('-id')
-    
+
 class MinimalProject(generics.ListAPIView):
     '''Customer view'''
     serializer_class = MinimalProjectSerializer
-    permission_classes = [permissions.AllowAny]
-    authentication_classes = []
+    permissions_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.AllowAny]
+    # authentication_classes = []
 
     def get_queryset(self):
         return ProjectModel.objects.filter(is_active=True).order_by('-id')
@@ -158,6 +159,7 @@ class ServiceYear(generics.ListAPIView):
     def get_queryset(self):
         year = self.kwargs['year']
         return ServiceModel.objects.filter(is_active=True, created__year=year).order_by('-number')
+
 class ServiceArchive(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ServiceSerializer
@@ -166,6 +168,7 @@ class ServiceArchive(generics.ListAPIView):
     def get_queryset(self):
         year = self.kwargs['year']
         return ServiceModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+
 class ServiceCreate(generics.ListCreateAPIView):
     serializer_class = ServiceCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -236,6 +239,7 @@ class HSERetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return HSEModel.objects.all()
+
 @csrf_exempt
 def NextProjectNumber(request):
     '''Get the Next Project, Service, and HSE Numbers'''
@@ -245,7 +249,7 @@ def NextProjectNumber(request):
         #! project number
         try:
             if ProjectModel.objects.count() > 0:
-                projects = list(ProjectModel.objects.filter(is_active=True).values_list('number', flat=True))
+                projects = list(ProjectModel.objects.values_list('number', flat=True))
 
                 project_list_year=[]
 
@@ -258,7 +262,7 @@ def NextProjectNumber(request):
                 else:
                     raise AttributeError
             else:
-                last_project = model_to_dict(ProjectModel.objects.filter(is_active=True).order_by('-number').first())
+                last_project = model_to_dict(ProjectModel.objects.order_by('-number').first())
                 last_project_number = (last_project['number'])
 
             current_project_year = last_project_number[-2:]
@@ -278,7 +282,7 @@ def NextProjectNumber(request):
         #! service number
         try:
             if not ServiceModel.objects.count() > 0:
-                services = list(ServiceModel.objects.filter(is_active=True).values_list('number', flat=True))
+                services = list(ServiceModel.objects.values_list('number', flat=True))
 
                 service_list_year=[]
 
@@ -292,7 +296,7 @@ def NextProjectNumber(request):
                     raise AttributeError
 
             else:
-                last_service = model_to_dict(ServiceModel.objects.filter(is_active=True).order_by('-number').first())
+                last_service = model_to_dict(ServiceModel.objects.order_by('-number').first())
                 last_service_number = (last_service['number'])
 
             current_service_year = last_service_number[3:5]
@@ -317,7 +321,7 @@ def NextProjectNumber(request):
         #! hse number
         try:
             if HSEModel.objects.count() > 0:
-                hses = list(HSEModel.objects.filter(is_active=True).values_list('number', flat=True))
+                hses = list(HSEModel.objects.values_list('number', flat=True))
 
                 hse_list_year=[]
 
@@ -331,7 +335,7 @@ def NextProjectNumber(request):
                     raise AttributeError
 
             else:
-                last_hse = model_to_dict(HSEModel.objects.filter(is_active=True).order_by('-number').first())
+                last_hse = model_to_dict(HSEModel.objects.order_by('-number').first())
                 last_hse_number = (last_hse['number'])
 
             current_hse_year = last_hse_number[3:5]

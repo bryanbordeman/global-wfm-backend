@@ -179,14 +179,14 @@ def WorksegmentTotals(request, isoweek):
             qs_pto_list = [i for i in qs_pto]
 
             for i in qs_list:
-                users[f'{i.user.id}'] = {'user_name': f'{i.user.first_name} {i.user.last_name}','total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0, 'sick': 0, 'vacation': 0}
+                users[f'{i.user.id}'] = {'user_name': f'{i.user.first_name} {i.user.last_name}','total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0, 'sick': 0, 'vacation': 0, 'holiday': 0}
 
             # if no worksegments and PTO logged
             for item in qs_pto_list:
                 if item.user.id in users:
                     continue
                 else:
-                    users[f'{item.user.id}'] = {'user_name': f'{item.user.first_name} {item.user.last_name}','total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0, 'sick': 0, 'vacation': 0}
+                    users[f'{item.user.id}'] = {'user_name': f'{item.user.first_name} {item.user.last_name}','total_duration': 0, 'overtime': 0, 'regular': 0, 'travel': 0, 'sick': 0, 'vacation': 0,'holiday': 0 }
 
 
             for item in qs_pto_list:
@@ -195,6 +195,8 @@ def WorksegmentTotals(request, isoweek):
                         users[f'{item.user.id}']['vacation'] += item.duration
                     elif item.user.id == int(key) and item.PTO_type == 'Sick':
                         users[f'{item.user.id}']['sick'] += item.duration
+                    elif item.user.id == int(key) and item.PTO_type == 'Holiday':
+                        users[f'{item.user.id}']['holiday'] += item.duration
 
             for item in qs_list:
                 for key in users:
@@ -212,6 +214,8 @@ def WorksegmentTotals(request, isoweek):
                     v['total_duration'] = v['total_duration'] + v['vacation']
                 if v['sick'] > 0:
                     v['total_duration'] = v['total_duration'] + v['sick']
+                if v['holiday'] > 0:
+                    v['total_duration'] = v['total_duration'] + v['holiday']
 
                 totals = {'user_id': k,
                         'user_name': str(v['user_name']),
@@ -221,7 +225,9 @@ def WorksegmentTotals(request, isoweek):
                         'overtime' : str(v['overtime']),
                         'travel': str(v['travel']),
                         'sick': str(v['sick']),
-                        'vacation': str(v['vacation'])}
+                        'vacation': str(v['vacation']),
+                        'holiday': str(v['holiday'])
+                        }
 
                 total_list.append(totals)
 

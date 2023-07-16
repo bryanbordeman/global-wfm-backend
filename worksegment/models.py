@@ -24,6 +24,7 @@ class WorkType(models.Model):
 class PTO(models.Model):
     CHOICES = (('Vacation','Vacation'),
                 ('Sick','Sick'),
+                ('Holiday','Holiday'),
                 ('Bereavement','Bereavement'),
                 ('Jury Duty','Jury Duty'),)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

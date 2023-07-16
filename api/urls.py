@@ -61,6 +61,7 @@ urlpatterns = [
     path('asset/doors', views_asset.DoorViewset.as_view()),
     path('asset/create/door', views_asset.DoorCreate.as_view()),
     path('asset/door/<int:pk>', views_asset.DoorRetrieveUpdateDestroy.as_view()),
+    path('asset/portal/door/<int:pk>', views_asset.DoorRetrieve.as_view()),
     path('asset/complete/door/<int:pk>', views_asset.DoorToggleCompleted.as_view()),
     path('asset/door/project/<int:project>', views_asset.DoorProjectList.as_view()),
 
@@ -88,7 +89,7 @@ urlpatterns = [
     path('worksegments/<str:isoweek>/', views_worksegment.WorkSegmentsWeek.as_view()),
     path('admin/worksegments/<str:isoweek>/', views_worksegment.AdminWorkSegmentsWeek.as_view()),
     path('worksegments/totals/<str:isoweek>/', views_worksegment.WorksegmentTotals),
-    
+
     path('pto/', views_worksegment.PTOs.as_view()),
     path('create/pto/<int:user_id>/', views_worksegment.PTOCreate.as_view()),
     path('pto/<int:pk>', views_worksegment.PTORetrieveUpdateDestroy.as_view()),
@@ -99,7 +100,7 @@ urlpatterns = [
     path('announcement/', views_announcement.Announcement.as_view()),
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
     path('announcement/<int:pk>', views_announcement.AnnouncementRetrieveUpdateDestroy.as_view()),
-    
+
     path('addresses/', views_address.Address.as_view()),
     path('create/address/', views_address.AddressCreate.as_view()),
     path('address/<int:pk>', views_address.AddressRetrieveUpdateDestroy.as_view()),
@@ -116,17 +117,17 @@ urlpatterns = [
     path('phone_numbers/', views_phone.Phone.as_view()),
     path('create/phone_number/', views_phone.PhoneCreate.as_view()),
     path('phone_number/<int:pk>', views_phone.PhoneRetrieveUpdateDestroy.as_view()),
-    
+
     path('companies/', views_company.Company.as_view()),
     path('companies/short/', views_company.CompanyShort.as_view()),
     path('create/company/', views_company.CompanyCreate.as_view()),
     path('company/<int:pk>', views_company.CompanyRetrieveUpdateDestroy.as_view()),
     path('company/short/<int:pk>', views_company.CompanyRetrieveUpdateDestroyShort.as_view()),
-    
+
     path('vehicles/', views_vehicle.Vehicle.as_view()),
     path('create/vehicle/', views_vehicle.VehicleCreate.as_view()),
     path('vehicle/<int:pk>', views_vehicle.VehicleRetrieveUpdateDestroy.as_view()),
-    
+
     path('vehicle/issues/', views_vehicle.VehicleIssue.as_view()),
     path('create/vehicle/issue/', views_vehicle.VehicleIssueCreate.as_view()),
     path('vehicle/issue/<int:pk>', views_vehicle.VehicleIssueRetrieveUpdateDestroy.as_view()),
@@ -152,7 +153,7 @@ urlpatterns = [
     path('create/quote/', views_quote.QuoteCreate.as_view()),
     path('quote/<int:pk>', views_quote.QuoteRetrieveUpdateDestroy.as_view()),
     path('quotes/data/<int:year>', views_quote.QuoteData),
-    
+
     path('project/categories/', views_project.ProjectCategory.as_view()),
     path('project/types/', views_project.ProjectType.as_view()),
     path('project/billings/', views_project.BillingType.as_view()),
@@ -161,7 +162,7 @@ urlpatterns = [
     path('project/type/<int:pk>', views_project.ProjectTypeRetrieveUpdateDestroy.as_view()),
     path('projects/', views_project.Project.as_view()),
     path('projects/minimal', views_project.MinimalProject.as_view()),
-    
+
     path('projects/<int:year>', views_project.ProjectYear.as_view()),
     path('projects/archive/<int:year>', views_project.ProjectArchive.as_view()),
     path('project/<int:pk>/togglearchive/', views_project.ProjectToggleArchive.as_view()),
@@ -181,7 +182,7 @@ urlpatterns = [
     path('hse/<int:pk>', views_project.HSERetrieveUpdateDestroy.as_view()),
     path('next/project/', views_project.NextProjectNumber),
     path('last/project/', views_project.LastProject),
-    
+
     path('expenses/<int:month>/<int:year>', views_expense.Expense.as_view()),
     path('create/expense/<int:user_id>/', views_expense.ExpenseCreate.as_view()),
     path('expense/<int:pk>', views_expense.ExpenseRetrieveUpdateDestroy.as_view()),
@@ -191,7 +192,7 @@ urlpatterns = [
     path('mile/<int:pk>', views_expense.MileRetrieveUpdateDestroy.as_view()),
     path('mile/<int:pk>/approved/', views_expense.MileToggleApproved.as_view()),
     path('milerates/', views_expense.MileRates.as_view()),
-   
+
     path('tasks/<int:assignee>/', views_task.TaskAssignee.as_view()),
     path('tasks/<int:assignee>/<int:tasklist>/', views_task.TaskAssigneeList.as_view()),
     path('complete/tasks/<int:assignee>/<int:tasklist>/', views_task.TaskAssigneeCompleteList.as_view()),
@@ -206,7 +207,7 @@ urlpatterns = [
     path('subtask/<int:pk>/completed/', views_task.SubtaskToggleCompleted.as_view()),
     path('subtask/<int:pk>', views_task.SubtaskRetrieveUpdateDestroy.as_view()),
     path('create/subtask/', views_task.SubtaskCreate.as_view()),
-    
+
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),

@@ -10,6 +10,8 @@ from asset.models import DoorHingeType
 from asset.models import DoorOptions
 from asset.models import DoorPackaging
 from asset.models import Door
+from api.serializers_user import MinimalUserSerializer
+from api.serializers_project import MinimalProjectSerializer
 
 class DoorReportSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +19,15 @@ class DoorReportSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DoorRevSerializer(serializers.ModelSerializer):
+    created_by=MinimalUserSerializer()
+    approved_by=MinimalUserSerializer()
+
+    class Meta:
+        model = DoorRev
+        fields = '__all__'
+
+class DoorRevCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = DoorRev
         fields = '__all__'
@@ -65,5 +76,32 @@ class DoorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Door
         fields = '__all__'
+        depth = 2
 
-        
+class DoorCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Door
+        fields = '__all__'
+
+class MinimalDoorSerializer(serializers.ModelSerializer):
+    created_by=MinimalUserSerializer()
+    checked_by=MinimalUserSerializer()
+    project=MinimalProjectSerializer()
+
+    class Meta:
+        model = Door
+        fields = '__all__'
+        depth = 2
+
+class DoorCompletedSerializer(serializers.ModelSerializer):
+    '''Admin view only'''
+    class Meta:
+        model = Door
+        fields = ['id']
+
+    def get_fields(self):
+        fields = super().get_fields()
+        for field_name, field in fields.items():
+            field.read_only = True
+        return fields
+

@@ -124,6 +124,7 @@ class Door(models.Model):
     ]
 
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
+    service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
     rev = models.ManyToManyField(DoorRev, blank=True)
     due = models.DateField(null=True)
     issue_date = models.DateField(null=True)
@@ -132,7 +133,7 @@ class Door(models.Model):
     hand = models.CharField( max_length=200, choices=HAND_CHOICES, default="RH")
     swing = models.CharField( max_length=200, choices=SWING_CHOICES, default="in")
     door_type = models.ForeignKey(DoorType, on_delete=models.SET_NULL, null=True)
-    is_double_door = models.BooleanField(default=False, editable=False) # if door_type = double
+    is_double_door = models.BooleanField(default=False) # if door_type = double
     inactive_width = models.DecimalField(max_digits=10, decimal_places=2)
     width = models.DecimalField(max_digits=10, decimal_places=2)
     height = models.DecimalField(max_digits=10, decimal_places=2)

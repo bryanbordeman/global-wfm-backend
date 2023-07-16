@@ -48,7 +48,7 @@ class Expense (models.Model):
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
     service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
     hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.PROTECT)
-    receipt_pic = ProcessedImageField(default='receipt.png', format='JPEG', upload_to='None', options={'quality': 20})
+    receipt_pic = ProcessedImageField(default='receipt.png', format='JPEG', upload_to='receipts', options={'quality': 20})
     merchant = models.CharField(max_length=200, null= True, blank=True)
     price = models.FloatField(null= True)
     notes = models.TextField(max_length=250, blank=True,
