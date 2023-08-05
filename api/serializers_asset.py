@@ -83,6 +83,12 @@ class DoorCreateSerializer(serializers.ModelSerializer):
         model = Door
         fields = '__all__'
 
+    def get_fields(self):
+        fields = super().get_fields()
+        if self.instance:
+            fields["count"].read_only = True
+        return fields
+
 class MinimalDoorSerializer(serializers.ModelSerializer):
     created_by=MinimalUserSerializer()
     checked_by=MinimalUserSerializer()
@@ -92,6 +98,9 @@ class MinimalDoorSerializer(serializers.ModelSerializer):
         model = Door
         fields = '__all__'
         depth = 2
+
+class CountDoorSerializer(serializers.Serializer):
+    count = serializers.IntegerField()
 
 class DoorCompletedSerializer(serializers.ModelSerializer):
     '''Admin view only'''
@@ -104,4 +113,3 @@ class DoorCompletedSerializer(serializers.ModelSerializer):
         for field_name, field in fields.items():
             field.read_only = True
         return fields
-

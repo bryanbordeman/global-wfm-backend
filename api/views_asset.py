@@ -1,5 +1,12 @@
 from rest_framework import generics, permissions
 from django.utils.timezone import now
+from rest_framework.response import Response
+from rest_framework import status
+
+import boto3
+from django.conf import settings
+from django.db import transaction
+from django.http import JsonResponse
 
 from asset.models import (
     DoorReport,
@@ -30,6 +37,7 @@ from .serializers_asset import (
     DoorCreateSerializer,
     MinimalDoorSerializer,
     DoorCompletedSerializer,
+    CountDoorSerializer,
 )
 
 
@@ -78,7 +86,7 @@ class DoorRevCreate(generics.ListCreateAPIView):
         serializer.save()
 
 class DoorRevRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DoorRevSerializer
+    serializer_class = DoorRevCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -302,12 +310,37 @@ class DoorCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
+
 class DoorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DoorCreateSerializer
-    permissions_classes = [permissions.IsAuthenticated]
+    serializer_class = DoorCreateSerializer  
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Door.objects.all()
+
+    def perform_destroy(self, instance):
+        qr_code = instance.qr_code  # Assuming qr_code is a separate model representing the QR code
+        if qr_code:
+            s3 = boto3.client(
+                's3',
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name=settings.AWS_S3_REGION_NAME
+            )
+
+            file_path = str(qr_code.document)  # Assuming document is the file field on the qr_code model
+
+            s3.delete_object(
+                Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                Key=file_path
+            )
+            with transaction.atomic():
+                qr_code.delete()  # Delete the qr_code object
+                instance.delete()  # Delete the door object
+        else:
+            instance.delete()  # Delete the door object
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class DoorRetrieve(generics.RetrieveAPIView):
     serializer_class = MinimalDoorSerializer
@@ -331,12 +364,28 @@ class DoorToggleCompleted(generics.UpdateAPIView):
 
 class DoorProjectList(generics.ListAPIView):
     '''Get all doors on a project'''
-    serializer_class = DoorSerializer
+    serializer_class = MinimalDoorSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         project = self.kwargs['project']
         return Door.objects.filter(**{"project_id" : project}).all()
+
+class DoorProjectCount(generics.ListAPIView):
+    '''Get count of all doors on a project'''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        project_id = self.kwargs['project']
+        door_count = Door.objects.filter(project_id=project_id).count()
+        return door_count
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        response_data = {
+            'count': queryset
+        }
+        return Response(response_data)
 
 class DoorAttributesViewset(generics.ListAPIView):
     queryset = Door.objects.all()  # Replace "Door" with your actual model name
@@ -374,4 +423,3 @@ class DoorAttributesViewset(generics.ListAPIView):
         response.data = {"attributes": serialized_attributes}
 
         return response
-

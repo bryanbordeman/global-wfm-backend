@@ -34,6 +34,30 @@ class DropBoxRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return DropBox.objects.all()
+    
+    def perform_destroy(self, instance):
+
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
+
+        file_field = instance.document  # Retrieve the FieldFile object
+        file_path = str(file_field)  # Convert the FieldFile object to a string (file path)
+
+        try:
+            s3.delete_object(
+                Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                Key=file_path
+            )
+            with transaction.atomic():
+                instance.delete()  # Delete the database instance
+
+        except Exception as e:
+            print("Exception:", str(e))
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 class DrawingViewset(generics.ListAPIView):

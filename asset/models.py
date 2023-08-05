@@ -153,5 +153,17 @@ class Door(models.Model):
     updated = models.DateTimeField(null=True, blank=True, auto_now_add=True, editable=True)
     drawings = models.ManyToManyField('uploader.drawing', blank=True)
     log = models.ManyToManyField(DoorReport, blank=True,)
-    qr_code = models.ForeignKey('uploader.dropbox', on_delete=models.SET_NULL, blank=True, null=True)
+    qr_code = models.ForeignKey('uploader.dropbox', on_delete=models.CASCADE, blank=True, null=True)
+    count = models.IntegerField(editable=False)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # New door, assign count number
+            door_count = Door.objects.filter(project=self.project).count()
+            self.count = door_count + 1
+        super().save(*args, **kwargs)
+
+
+    def __str__(self):
+        return f'{self.project.number} {self.hand} {self.swing}'
 

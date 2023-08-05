@@ -64,6 +64,7 @@ urlpatterns = [
     path('asset/portal/door/<int:pk>', views_asset.DoorRetrieve.as_view()),
     path('asset/complete/door/<int:pk>', views_asset.DoorToggleCompleted.as_view()),
     path('asset/door/project/<int:project>', views_asset.DoorProjectList.as_view()),
+    path('asset/door/project/count/<int:project>', views_asset.DoorProjectCount.as_view()),
 
     path('drawings/', views_uploader.DrawingViewset.as_view()),
     path('drawings/project/<int:project_id>', views_uploader.DrawingProject.as_view()),
