@@ -52,6 +52,7 @@ class Task(models.Model):
     is_read = models.BooleanField(default=False)
     completed = models.DateTimeField(null=True, blank=True, auto_now_add=True, editable=True)
     updated = models.DateTimeField(null=True, blank=True, auto_now_add=True, editable=True)
+    attachments = models.ManyToManyField('uploader.DropBox', blank=True) # attachments are only images for now.
 
     def __str__(self):
         if self.project:
