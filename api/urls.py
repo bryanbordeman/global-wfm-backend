@@ -15,8 +15,13 @@ from . import views_stats
 from . import views_vehicle
 from . import views_uploader
 from . import views_asset
+from . import views_engineering
 
 urlpatterns = [
+    path('engineering/dcns/<int:year>', views_engineering.DCNViewset.as_view()),
+    path('engineering/create/dcn', views_engineering.DCNCreate.as_view()),
+    path('engineering/dcn/<int:pk>', views_engineering.DCNRetrieveUpdateDestroy.as_view()),
+
     path('asset/door/attributes', views_asset.DoorAttributesViewset.as_view()),
     path('asset/door/reports', views_asset.DoorReportViewset.as_view()),
     path('asset/create/door/report', views_asset.DoorReportCreate.as_view()),
