@@ -32,7 +32,7 @@ class TaskCompleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskList
         fields = ['id']
-        read_only_fields = ['title', 'notes', 'is_complete', 'completed', 'updated']
+        read_only_fields = ['title', 'notes', 'is_complete', 'is_read', 'is_public','completed', 'updated']
 
 class  SubTaskSerializer(serializers.ModelSerializer):
     '''SubTask serializer'''

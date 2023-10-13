@@ -59,7 +59,7 @@ class TaskAssigneeCompleteList(generics.ListAPIView):
     def get_queryset(self):
         assignee = self.kwargs['assignee']
         tasklist = self.kwargs['tasklist']
-        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=True).order_by('due')[:100]
+        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=True).order_by('due')[:50]
 
 class TaskAssigneeList(generics.ListAPIView):
     '''Employee view'''
@@ -111,6 +111,18 @@ class TaskToggleCompleted(generics.UpdateAPIView):
     def perform_update(self, serializer):
         serializer.instance.is_complete=not(serializer.instance.is_complete)
         serializer.instance.completed=(now())
+        serializer.save()
+
+class TaskToggleRead(generics.UpdateAPIView):
+    '''Mark Task as read'''
+    serializer_class = TaskCompleteSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return TaskModel.objects.all()
+    
+    def perform_update(self, serializer):
+        serializer.instance.is_read=not(serializer.instance.is_read)
         serializer.save()
 
 class SubtaskToggleCompleted(generics.UpdateAPIView):
