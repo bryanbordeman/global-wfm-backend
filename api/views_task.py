@@ -69,7 +69,7 @@ class TaskAssigneeList(generics.ListAPIView):
     def get_queryset(self):
         assignee = self.kwargs['assignee']
         tasklist = self.kwargs['tasklist']
-        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=False).order_by('due')
+        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=False).order_by('-due')
 
 class TaskCreate(generics.ListCreateAPIView):
     serializer_class = TaskCreateSerializer
