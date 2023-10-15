@@ -1,10 +1,11 @@
-# from email.quoprimime import quote
 from rest_framework import generics, permissions
 from .serializers_task import TaskSerializer, TaskListSerializer, TaskCreateSerializer, SubTaskCompleteSerializer, SubTaskSerializer, TaskCompleteSerializer
 from task.models import Task as TaskModel
 from task.models import TaskList as TaskListModel
 from task.models import SubTask as SubTaskModel
 from django.utils.timezone import now
+
+from rest_framework.response import Response
 
 class TaskAssignee(generics.ListAPIView):
     '''Employee view'''
@@ -59,7 +60,7 @@ class TaskAssigneeCompleteList(generics.ListAPIView):
     def get_queryset(self):
         assignee = self.kwargs['assignee']
         tasklist = self.kwargs['tasklist']
-        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=True).order_by('due')[:50]
+        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=True).order_by('-due')[:50]
 
 class TaskAssigneeList(generics.ListAPIView):
     '''Employee view'''
@@ -69,7 +70,7 @@ class TaskAssigneeList(generics.ListAPIView):
     def get_queryset(self):
         assignee = self.kwargs['assignee']
         tasklist = self.kwargs['tasklist']
-        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=False).order_by('-due')
+        return TaskModel.objects.filter(**{"assignee_id" : assignee}).filter(**{"tasklist_id" : tasklist}).filter(is_deleted=False).filter(is_complete=False).order_by('due')
 
 class TaskCreate(generics.ListCreateAPIView):
     serializer_class = TaskCreateSerializer
@@ -77,7 +78,7 @@ class TaskCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return TaskModel.objects.all()
-    
+
     def perform_create(self, serializer):
         serializer.save()
 
@@ -107,7 +108,7 @@ class TaskToggleCompleted(generics.UpdateAPIView):
 
     def get_queryset(self):
         return TaskModel.objects.all()
-    
+
     def perform_update(self, serializer):
         serializer.instance.is_complete=not(serializer.instance.is_complete)
         serializer.instance.completed=(now())
@@ -120,10 +121,21 @@ class TaskToggleRead(generics.UpdateAPIView):
 
     def get_queryset(self):
         return TaskModel.objects.all()
-    
+
     def perform_update(self, serializer):
         serializer.instance.is_read=not(serializer.instance.is_read)
         serializer.save()
+
+class TaskReadCount(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        assignee = self.kwargs['assignee']
+        count = TaskModel.objects.filter(assignee_id=assignee, is_read=False, is_complete=False).count()
+        response_data = {'count': count}
+        return Response(response_data)
 
 class SubtaskToggleCompleted(generics.UpdateAPIView):
     '''Complete Subtask'''
@@ -132,7 +144,7 @@ class SubtaskToggleCompleted(generics.UpdateAPIView):
 
     def get_queryset(self):
         return SubTaskModel.objects.all()
-    
+
     def perform_update(self, serializer):
         serializer.instance.is_complete=not(serializer.instance.is_complete)
         serializer.instance.completed=(now())
@@ -151,6 +163,6 @@ class SubtaskCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return SubTaskModel.objects.all()
-    
+
     def perform_create(self, serializer):
         serializer.save()

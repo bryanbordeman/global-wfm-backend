@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator
+from django.contrib.auth.models import User
 
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=200)

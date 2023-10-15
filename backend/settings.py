@@ -96,7 +96,8 @@ INSTALLED_APPS = [
     'schedule',
     'asset',
     'uploader',
-    'engineering'
+    'engineering',
+    'report'
 
 ]
 
