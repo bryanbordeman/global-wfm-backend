@@ -29,7 +29,8 @@ class PTO(models.Model):
                 ('Jury Duty','Jury Duty'),)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     PTO_type = models.CharField(max_length=200, null=True, choices=CHOICES)
-    is_full_day = models.BooleanField(null= False, default=False) # True = 8 hours False = 4 hours
+    is_full_day = models.BooleanField(null= False, default=True) # True = 8 hours False = 4 hours
+    is_paid = models.BooleanField(null= False, default=True) # False = 0 hours
     is_approved = models.BooleanField(null= False, default=False)
     date = models.DateField(null=True)
     isoweek = models.CharField(max_length=8, blank=True, editable=False)
@@ -39,10 +40,14 @@ class PTO(models.Model):
                                 validators=[MaxLengthValidator(250)])
 
     def save(self, *args, **kwargs):
-        if self.is_full_day:
-            self.duration = 8
+        if self.is_full_day and not self.is_paid:
+            self.duration = 0  # Set duration to 0 when it's a full day and not paid
+        elif not self.is_full_day and self.is_paid:
+            self.duration = 4  # Set duration to 4 when it's not a full day and is paid
+        elif self.is_full_day and self.is_paid:
+            self.duration = 8  # Set duration to 8 when it's a full day and is paid
         else:
-            self.duration = 4
+            self.duration = 0  # Set a default duration of 0 for other cases
 
         'convert date to isoweek'
         self.isoweek = Week.withdate(self.date)

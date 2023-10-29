@@ -37,7 +37,6 @@ from .serializers_asset import (
     DoorCreateSerializer,
     MinimalDoorSerializer,
     DoorCompletedSerializer,
-    CountDoorSerializer,
 )
 
 
@@ -370,6 +369,15 @@ class DoorProjectList(generics.ListAPIView):
     def get_queryset(self):
         project = self.kwargs['project']
         return Door.objects.filter(**{"project_id" : project}).all()
+    
+class DoorServiceList(generics.ListAPIView):
+    '''Get all doors on a service'''
+    serializer_class = MinimalDoorSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        service = self.kwargs['service']
+        return Door.objects.filter(**{"service_id" : service}).all()
 
 class DoorProjectCount(generics.ListAPIView):
     '''Get count of all doors on a project'''

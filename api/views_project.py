@@ -72,7 +72,17 @@ class Project(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return ProjectModel.objects.filter(is_active=True).order_by('-id')
+        queryset = ProjectModel.objects.filter(is_active=True)
+
+        # Fetch all objects and convert to a list
+        projects = list(queryset)
+
+        # Sort the list based on the last 2 characters of the number field
+        projects.sort(key=lambda p: p.number[-2:])
+
+        projects.reverse() # this makes the last project entered the first on the list
+
+        return projects
 
 class MinimalProject(generics.ListAPIView):
     '''Customer view'''
@@ -123,6 +133,7 @@ class ProjectCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
+
 class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -130,14 +141,13 @@ class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return ProjectModel.objects.all()
 
-
 class Service(generics.ListAPIView):
     '''Employee view'''
     serializer_class = ServiceSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return ServiceModel.objects.filter(is_active=True).order_by('number')
+        return ServiceModel.objects.filter(is_active=True).order_by('-number')
 
 class ServiceToggleArchive(generics.UpdateAPIView):
     '''Toggle Archive'''

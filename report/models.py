@@ -45,15 +45,33 @@ class ProjectReport(BaseReport):
         return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.user.first_name} {self.user.last_name}'
 
 class DoorServiceReport(BaseReport):
+    CHOICES = (('Complete','Complete'),
+                ('Incomplete','Incomplete'),
+                ('Pending','Pending'),
+                ('Under Observation','Under Observation'),
+                ('Working solution provided','Working solution provided'))
     door = models.ForeignKey('asset.Door', null=True, blank=True, on_delete=models.PROTECT)
+    
+    status = models.CharField(max_length=200, null=True, choices=CHOICES)
+    problem_reported = models.TextField(max_length=5000, blank=True,
+                                validators=[MaxLengthValidator(5000)])
+    service_rendered = models.TextField(max_length=5000, blank=True,
+                                validators=[MaxLengthValidator(5000)])
 
     def __str__(self):
         return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.user.first_name} {self.user.last_name}'
 
 class IncidentReport(BaseReport):
-    witnesses = models.ManyToManyField('contact.Contact', blank=True) # attachments are only images for now.
-    participants = models.ManyToManyField('contact.Contact', blank=True) # attachments are only images for now.
-    location = models.ForeignKey('contact.Address', null=True, blank=True, on_delete=models.PROTECT)
-    
+    CHOICES = (('Shop','Shop'),
+                ('Field','Field'),
+                ('Office','Office'),)
+    witnesses =  models.TextField(max_length=300, blank=True,
+                                validators=[MaxLengthValidator(300)])
+    participants = models.TextField(max_length=300, blank=True,
+                                validators=[MaxLengthValidator(300)])
+    location = models.TextField(max_length=300, blank=True,
+                                validators=[MaxLengthValidator(300)])
+    category = models.CharField(max_length=200, null=True, choices=CHOICES)
+
     def __str__(self):
         return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.user.first_name} {self.user.last_name}'
