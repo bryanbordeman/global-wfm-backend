@@ -5,7 +5,7 @@ from isoweek import Week
 
 class BaseReport(models.Model):
     number = models.CharField(max_length=30, blank=True, editable=False)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     quote = models.ForeignKey('quote.Quote', null=True, blank=True, on_delete=models.PROTECT)
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
     service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
@@ -45,14 +45,21 @@ class ProjectReport(BaseReport):
         return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.user.first_name} {self.user.last_name}'
 
 class DoorServiceReport(BaseReport):
-    CHOICES = (('Complete','Complete'),
+    STATUS_CHOICES = [('Complete','Complete'),
                 ('Incomplete','Incomplete'),
                 ('Pending','Pending'),
                 ('Under Observation','Under Observation'),
-                ('Working solution provided','Working solution provided'))
+                ('Working solution provided','Working solution provided')]
+    SERVICE_TYPE_CHOICES = [
+                ("Emergency ", "Emergency "),
+                ("Warranty", "Warranty"),
+                ("Scheduled Maintenance", "Scheduled Maintenance"),
+                ]
+    technician = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE)
     door = models.ForeignKey('asset.Door', null=True, blank=True, on_delete=models.PROTECT)
     
-    status = models.CharField(max_length=200, null=True, choices=CHOICES)
+    status = models.CharField(max_length=200, null=True, choices=STATUS_CHOICES)
+    service_type = models.CharField( max_length=200, choices=SERVICE_TYPE_CHOICES, default="Scheduled Maintenance")
     problem_reported = models.TextField(max_length=5000, blank=True,
                                 validators=[MaxLengthValidator(5000)])
     service_rendered = models.TextField(max_length=5000, blank=True,

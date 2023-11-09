@@ -115,7 +115,8 @@ class Door(models.Model):
     ("RH", "Right Hand"),
     ("LH", "Left Hand"),
     ("RHA", "Right Hand Active"),
-    ("LHA", "Left Hand Active")
+    ("LHA", "Left Hand Active"),
+    ("BI", "Bi-Parting")
     ]
 
     SWING_CHOICES = [
@@ -134,9 +135,11 @@ class Door(models.Model):
     swing = models.CharField( max_length=200, choices=SWING_CHOICES, default="in")
     door_type = models.ForeignKey(DoorType, on_delete=models.SET_NULL, null=True)
     is_double_door = models.BooleanField(default=False) # if door_type = double
-    inactive_width = models.DecimalField(max_digits=10, decimal_places=2)
-    width = models.DecimalField(max_digits=10, decimal_places=2)
-    height = models.DecimalField(max_digits=10, decimal_places=2)
+    is_sliding = models.BooleanField(default=False) 
+    is_biparting = models.BooleanField(default=False) 
+    inactive_width = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True)
+    width = models.DecimalField(max_digits=10, decimal_places=3)
+    height = models.DecimalField(max_digits=10, decimal_places=3)
     veneer = models.CharField(max_length=200)
     lockset = models.ForeignKey(DoorLockset, on_delete=models.SET_NULL, null=True)
     door_switch = models.BooleanField(default=True)
