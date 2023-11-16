@@ -168,5 +168,12 @@ class Door(models.Model):
 
 
     def __str__(self):
-        return f'{self.project.number} {self.hand} {self.swing}'
+        project = ''
+
+        if self.project != None:
+            project = self.project.number
+        elif self.service != None:
+            project = self.service.number
+        
+        return f'{project} {self.hand} {self.swing}'
 

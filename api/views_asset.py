@@ -292,7 +292,7 @@ class DoorPackagingRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
         return DoorPackaging.objects.all()
 
 class DoorViewset(generics.ListAPIView):
-
+    'shop orders list'
     serializer_class = MinimalDoorSerializer
     permissions_classes = [permissions.IsAuthenticated]
 

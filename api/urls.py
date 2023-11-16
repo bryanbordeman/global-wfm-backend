@@ -96,6 +96,7 @@ urlpatterns = [
     path('worksegments/<str:isoweek>/', views_worksegment.WorkSegmentsWeek.as_view()),
     path('admin/worksegments/<str:isoweek>/', views_worksegment.AdminWorkSegmentsWeek.as_view()),
     path('worksegments/totals/<str:isoweek>/', views_worksegment.WorksegmentTotals),
+    path('worksegments/project/<str:project_number>/', views_worksegment.WorkSegmentsProject.as_view()),
 
     path('pto/', views_worksegment.PTOs.as_view()),
     path('create/pto/<int:user_id>/', views_worksegment.PTOCreate.as_view()),

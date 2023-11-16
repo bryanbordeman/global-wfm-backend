@@ -5,6 +5,8 @@ from worksegment.models import WorkSegment, WorkType, PTO
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from collections import defaultdict
 
 class PTOs(generics.ListAPIView):
     '''Employee view'''
@@ -164,6 +166,31 @@ class AdminWorkSegmentsWeek(generics.ListAPIView):
         user = self.request.user
         return qs if user.is_staff else qs.filter(id=user.id)
 
+class WorkSegmentsProject(generics.ListAPIView):
+    '''Get total duration for each segment_type for a particular project.'''
+    serializer_class = WorkSegmentsWeekSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        project_number = self.kwargs['project_number']
+
+        if(project_number[:3] == 'SVC'):
+            queryset = WorkSegment.objects.filter(service__number=project_number)
+        elif(project_number[:3] == 'HSE'):
+            queryset = WorkSegment.objects.filter(hse__number=project_number)
+        else:
+            queryset = WorkSegment.objects.filter(project__number=project_number)
+
+        # Calculate total duration for each segment_type
+        total_durations = defaultdict(float)
+        for work_segment in queryset:
+            segment_type_name = work_segment.segment_type.name
+            duration = float(work_segment.duration)
+            total_durations[segment_type_name] += duration
+
+        # Return the total durations as a Response
+        return Response(total_durations)
+    
 @csrf_exempt
 def WorksegmentTotals(request, isoweek):
     '''Get total time for week'''
@@ -172,7 +199,7 @@ def WorksegmentTotals(request, isoweek):
             # create variables
             total_list = []
             users = {}
-            qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('user__last_name')
+            qs = WorkSegment.objects.filter(isoweek=isoweek).order_by('user__last_name', 'user__first_name')
             qs_pto = PTO.objects.filter(isoweek=isoweek).order_by('-user')
 
             qs_list = [i for i in qs]

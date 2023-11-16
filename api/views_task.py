@@ -4,8 +4,11 @@ from task.models import Task as TaskModel
 from task.models import TaskList as TaskListModel
 from task.models import SubTask as SubTaskModel
 from django.utils.timezone import now
-
 from rest_framework.response import Response
+from django.http import JsonResponse
+from django.db import transaction
+import boto3
+from django.conf import settings
 
 class TaskAssignee(generics.ListAPIView):
     '''Employee view'''
@@ -90,8 +93,54 @@ class TaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
         return TaskModel.objects.all()
 
     def perform_update(self, serializer):
-        serializer.instance.updated=(now())
+        serializer.instance.updated = now()
         serializer.save()
+
+    def destroy_attachments(self, instance):
+        """
+        Delete attachments associated with the task instance.
+
+        Args:
+            instance: Task instance
+        """
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
+
+        try:
+            attachments = instance.attachments.all()
+
+            for attachment in attachments:
+                file_path = str(attachment.document)  
+                s3.delete_object(
+                    Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                    Key=file_path
+                )
+                attachment.delete()
+
+        except Exception as e:
+            print("Exception:", str(e))
+            return JsonResponse({'error': str(e)}, status=500)
+
+    def perform_destroy(self, instance):
+        """
+        Perform destroy action and delete associated attachments.
+
+        Args:
+            instance: Task instance
+        """
+        try:
+            with transaction.atomic():
+                self.destroy_attachments(instance)
+                instance.delete()
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+        return JsonResponse({'success': 'Task and attachments deleted successfully.'})
 
 class TaskList(generics.ListAPIView):
     '''Employee view'''
