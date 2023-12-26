@@ -3,6 +3,7 @@ from uploader.models import DropBox
 from uploader.models import Drawing
 from uploader.models import DrawingType
 from api.serializers_expense import Base64ImageField
+from rest_framework import serializers
 
 class DropBoxSerializer(serializers.ModelSerializer):
     document = Base64ImageField(max_length=None, use_url=True)

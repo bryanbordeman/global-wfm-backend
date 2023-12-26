@@ -97,7 +97,8 @@ INSTALLED_APPS = [
     'asset',
     'uploader',
     'engineering',
-    'report'
+    'report',
+    'shop'
 
 ]
 

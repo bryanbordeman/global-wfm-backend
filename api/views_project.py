@@ -77,10 +77,8 @@ class Project(generics.ListAPIView):
         # Fetch all objects and convert to a list
         projects = list(queryset)
 
-        # Sort the list based on the last 2 characters of the number field
-        projects.sort(key=lambda p: p.number[-2:])
-
-        projects.reverse() # this makes the last project entered the first on the list
+        # Sort the list based on the last 2 characters of the number field and then reverse
+        projects.sort(key=lambda p: (p.number[-2:], p.number), reverse=True)
 
         return projects
 

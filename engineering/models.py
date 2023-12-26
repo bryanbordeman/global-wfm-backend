@@ -6,7 +6,7 @@ class DCN(models.Model):
     created_by = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE)
     number = models.CharField(max_length=9, null= True) # 2023-001  YYYY-###
     rev = models.CharField(max_length=3, null=True, blank=True) ## rev A
-    comments = models.TextField(max_length=250, blank=True,
+    comments = models.TextField(max_length=1000, blank=True,
                                 validators=[MaxLengthValidator(250)])
     is_external = models.BooleanField(default=True) # if False DCN is internal
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.CASCADE)

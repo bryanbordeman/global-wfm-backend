@@ -1,40 +1,40 @@
 from rest_framework import generics, permissions
-from uploader.models import DropBox
-from uploader.models import Drawing
-from uploader.models import DrawingType
-from .serializers_uploader import DropBoxSerializer
-from .serializers_uploader import DrawingSerializer
-from .serializers_uploader import DrawingTypeSerializer
+from uploader.models import Video
+from uploader.models import VideoCategory
+from uploader.models import VideoThumbnail
+from .serializers_video import VideoSerializer
+from .serializers_video import VideoCategorySerializer
+from .serializers_video import VideoThumbnailSerializer
 
 import boto3
 from django.conf import settings
 from django.http import JsonResponse
 from django.db import transaction
 
-class DropBoxViewset(generics.ListAPIView):
+class VideoViewset(generics.ListAPIView):
 
-    serializer_class = DropBoxSerializer
+    serializer_class = VideoSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return DropBox.objects.all()
+        return Video.objects.all()
 
-class DropBoxCreate(generics.ListCreateAPIView):
-    serializer_class = DropBoxSerializer
+class VideoCreate(generics.ListCreateAPIView):
+    serializer_class = VideoSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return DropBox.objects.all()
+        return Video.objects.all()
 
     def perform_create(self, serializer):
         serializer.save()
 
-class DropBoxRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DropBoxSerializer
+class VideoRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = VideoSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return DropBox.objects.all()
+        return Video.objects.all()
     
     def perform_destroy(self, instance):
 
@@ -61,58 +61,31 @@ class DropBoxRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
             return JsonResponse({'error': str(e)}, status=500)
 
 
-class DrawingViewset(generics.ListAPIView):
+class VideoThumbnailViewset(generics.ListAPIView):
 
-    serializer_class = DrawingSerializer
+    serializer_class = VideoThumbnailSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Drawing.objects.all()
+        return VideoThumbnail.objects.all()
 
-class DrawingProject(generics.ListAPIView):
-
-    serializer_class = DrawingSerializer
+class VideoThumbnailCreate(generics.ListCreateAPIView):
+    serializer_class = VideoThumbnail
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        project_id = self.kwargs['project_id']
-        return Drawing.objects.filter(project_id=project_id, is_active=True).all()
-
-class DrawingService(generics.ListAPIView):
-
-    serializer_class = DrawingSerializer
-    permissions_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        service_id = self.kwargs['service_id']
-        return Drawing.objects.filter(service_id=service_id, is_active=True).all()
-
-class DrawingHSE(generics.ListAPIView):
-
-    serializer_class = DrawingSerializer
-    permissions_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        hse_id = self.kwargs['hse_id']
-        return Drawing.objects.filter(hse_id=hse_id, is_active=True).all()
-
-class DrawingCreate(generics.ListCreateAPIView):
-    serializer_class = DrawingSerializer
-    permissions_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Drawing.objects.all()
+        return VideoThumbnail.objects.all()
 
     def perform_create(self, serializer):
         serializer.save()
 
-class DrawingRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DrawingSerializer
+class VideoThumbnailRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = VideoThumbnail
     permissions_classes = [permissions.IsAuthenticated]
 
 
     def get_queryset(self):
-        return Drawing.objects.all()
+        return VideoThumbnail.objects.all()
 
     def perform_update(self, serializer):
         instance = self.get_object()
@@ -161,27 +134,27 @@ class DrawingRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
             print("Exception:", str(e))
             return JsonResponse({'error': str(e)}, status=500)
 
-class DrawingTypeView(generics.ListAPIView):
+class VideoCategoryViewset(generics.ListAPIView):
 
-    serializer_class = DrawingTypeSerializer
+    serializer_class = VideoCategorySerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return DrawingType.objects.all()
+        return VideoCategory.objects.all()
 
-class DrawingTypeCreate(generics.ListCreateAPIView):
-    serializer_class = DrawingTypeSerializer
+class VideoCategoryCreate(generics.ListCreateAPIView):
+    serializer_class = VideoCategorySerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return DrawingType.objects.all()
+        return VideoCategory.objects.all()
 
     def perform_create(self, serializer):
         serializer.save()
 
-class DrawingTypeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DrawingTypeSerializer
+class VideoCategoryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = VideoCategorySerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return DrawingType.objects.all()
+        return VideoCategory.objects.all()

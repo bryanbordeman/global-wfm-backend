@@ -11,7 +11,7 @@ class BaseReport(models.Model):
     service = models.ForeignKey('project.Service', null=True, blank=True, on_delete=models.PROTECT)
     hse = models.ForeignKey('project.HSE', null=True, blank=True, on_delete=models.PROTECT)
     comments = models.TextField(max_length=2500, blank=True,
-                                validators=[MaxLengthValidator(2500)])
+                                validators=[MaxLengthValidator(5000)])
     date = models.DateField(null=True)
     isoweek = models.CharField(max_length=8, blank=True, editable=False)
     attachments = models.ManyToManyField('uploader.DropBox', blank=True) # attachments are only images for now.

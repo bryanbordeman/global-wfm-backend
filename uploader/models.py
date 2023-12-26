@@ -46,3 +46,39 @@ class Drawing(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+    
+
+class VideoCategory(models.Model):
+    description = models.CharField(max_length=400)
+    
+    class Meta:
+        verbose_name_plural = 'Video Categories'
+
+    def __str__(self):
+        return f'{self.description}'
+
+class VideoThumbnail(models.Model):
+    title = models.CharField(max_length=150)
+    document = models.FileField(max_length=150, upload_to='videos/thumbnails')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Video Thumbnails'
+
+    def __str__(self):
+        return f'{self.title}'
+
+class Video(models.Model):
+    title = models.CharField(max_length=150)
+    thumbnail = models.ForeignKey(VideoThumbnail, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(VideoCategory, on_delete=models.SET_NULL, null=True)
+    document = models.FileField(max_length=150, upload_to='videos/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Videos'
+
+    def __str__(self):
+        return f'{self.title}'

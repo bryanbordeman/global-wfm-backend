@@ -11,6 +11,9 @@ class Address(models.Model):
     postal_code = USZipCodeField()
     country = CountryField()
 
+    class Meta:
+        verbose_name_plural = 'Addresses'
+
     def __str__(self):
         return f'''{self.address}, {self.city}, {self.state} {self.postal_code}'''
 

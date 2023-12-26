@@ -14,6 +14,7 @@ from . import views_user
 from . import views_stats
 from . import views_vehicle
 from . import views_uploader
+from . import views_video
 from . import views_asset
 from . import views_engineering
 
@@ -86,6 +87,8 @@ urlpatterns = [
     path('dropboxes/', views_uploader.DropBoxViewset.as_view()),
     path('create/dropbox/', views_uploader.DropBoxCreate.as_view()),
     path('dropbox/<int:pk>', views_uploader.DropBoxRetrieveUpdateDestroy.as_view()),
+
+    path('videos/', views_video.VideoViewset.as_view()),
 
     path('stats/<int:year>', views_stats.Stats),
     path('worksegments/', views_worksegment.WorkSegments.as_view()),
