@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from uploader.models import Video, VideoCategory, VideoThumbnail
 from api.serializers_expense import Base64ImageField
-from rest_framework import serializers
 
 
 class VideoCategorySerializer(serializers.ModelSerializer):
