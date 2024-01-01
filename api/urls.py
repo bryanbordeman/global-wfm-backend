@@ -91,15 +91,15 @@ urlpatterns = [
 
     path('videos/', views_video.VideoViewset.as_view()),
 
-    path('report/project/<int:project>', views_report.ProjectReport.as_view()),
+    path('report/project/get/<int:project>', views_report.ProjectReport.as_view()),
     path('report/project/create', views_report.ProjectReportCreate.as_view()),
     path('report/project/<int:pk>', views_report.ProjectReportRetrieveUpdateDestroy.as_view()),
-    path('report/incident/', views_report.IncidentReport.as_view()),
+    path('report/incident', views_report.IncidentReport.as_view()),
     path('report/incident/create', views_report.IncidentReportCreate.as_view()),
     path('report/incident/<int:pk>', views_report.IncidentReportRetrieveUpdateDestroy.as_view()),
-    path('report/door/service/<int:service>', views_report.DoorServiceReport.as_view()),
-    path('report/door/create', views_report.DoorReportCreate.as_view()),
-    path('report/door/<int:pk>', views_report.DoorReportRetrieveUpdateDestroy.as_view()),
+    path('report/door/service/get/<int:service>', views_report.DoorServiceReport.as_view()),
+    path('report/door/service/create', views_report.DoorReportCreate.as_view()),
+    path('report/door/service/<int:pk>', views_report.DoorReportRetrieveUpdateDestroy.as_view()),
 
     path('stats/<int:year>', views_stats.Stats),
     path('worksegments/', views_worksegment.WorkSegments.as_view()),

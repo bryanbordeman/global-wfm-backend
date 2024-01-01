@@ -21,19 +21,6 @@ class BaseReport(models.Model):
         'convert date to isoweek'
         self.isoweek = Week.withdate(self.date)
 
-        'report number = project number plus report id. example 12345.1'
-        project = ''
-        if self.project != None:
-            project = self.project.number
-        elif self.service != None:
-            project = self.service.number
-        elif self.hse != None:
-            project = self.hse.number
-        elif self.quote != None:
-            project = self.quote.number
-        
-        self.number = f'{project}.{self.id}'
-
         super(BaseReport, self).save(*args, **kwargs)
 
     class Meta:
@@ -41,8 +28,32 @@ class BaseReport(models.Model):
 
 class ProjectReport(BaseReport):
 
+    def save(self, *args, **kwargs):
+        'report number = project number plus report count. example 12345.1'
+        project = ''
+        if self.project:
+            project = self.project.number
+        elif self.service:
+            project = self.service.number
+        elif self.hse:
+            project = self.hse.number
+        elif self.quote:
+            project = self.quote.number
+
+        existing_reports = ProjectReport.objects.filter(number__startswith=f'{project}.').order_by('-number')
+
+        if existing_reports.exists():
+            last_report_number = existing_reports.first().number
+            last_count = int(last_report_number.split('.')[-1])
+            count = last_count + 1
+        else:
+            count = 1
+
+        self.number = f'{project}.{count}'
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.user.first_name} {self.user.last_name}'
+        return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.created_by.first_name} {self.created_by.last_name}'
 
 class DoorServiceReport(BaseReport):
     STATUS_CHOICES = [('Complete','Complete'),
@@ -57,7 +68,7 @@ class DoorServiceReport(BaseReport):
                 ]
     technician = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE)
     door = models.ForeignKey('asset.Door', null=True, blank=True, on_delete=models.PROTECT)
-    
+
     status = models.CharField(max_length=200, null=True, choices=STATUS_CHOICES)
     service_type = models.CharField( max_length=200, choices=SERVICE_TYPE_CHOICES, default="Scheduled Maintenance")
     problem_reported = models.TextField(max_length=5000, blank=True,
@@ -65,8 +76,32 @@ class DoorServiceReport(BaseReport):
     service_rendered = models.TextField(max_length=5000, blank=True,
                                 validators=[MaxLengthValidator(5000)])
 
+    def save(self, *args, **kwargs):
+        'report number = project number plus report count. example 12345.1'
+        project = ''
+        if self.project:
+            project = self.project.number
+        elif self.service:
+            project = self.service.number
+        elif self.hse:
+            project = self.hse.number
+        elif self.quote:
+            project = self.quote.number
+
+        existing_reports = DoorServiceReport.objects.filter(number__startswith=f'{project}.').order_by('-number')
+
+        if existing_reports.exists():
+            last_report_number = existing_reports.first().number
+            last_count = int(last_report_number.split('.')[-1])
+            count = last_count + 1
+        else:
+            count = 1
+
+        self.number = f'{project}.{count}'
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.user.first_name} {self.user.last_name}'
+        return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.created_by.first_name} {self.created_by.last_name}'
 
 class IncidentReport(BaseReport):
     CHOICES = (('Shop','Shop'),
@@ -80,5 +115,30 @@ class IncidentReport(BaseReport):
                                 validators=[MaxLengthValidator(300)])
     category = models.CharField(max_length=200, null=True, choices=CHOICES)
 
+    def save(self, *args, **kwargs):
+        'report number = project number plus report count. example 12345.1'
+        # if not self.pk:
+        project = ''
+        if self.project:
+            project = self.project.number
+        elif self.service:
+            project = self.service.number
+        elif self.hse:
+            project = self.hse.number
+        elif self.quote:
+            project = self.quote.number
+
+        existing_reports = IncidentReport.objects.filter(number__startswith=f'IR-{project}.').order_by('-number')
+
+        if existing_reports.exists():
+            last_report_number = existing_reports.first().number
+            last_count = int(last_report_number.split('.')[-1])
+            count = last_count + 1
+        else:
+            count = 1
+
+        self.number = f'IR-{project}.{count}'
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.user.first_name} {self.user.last_name}'
+        return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.created_by.first_name} {self.created_by.last_name}'

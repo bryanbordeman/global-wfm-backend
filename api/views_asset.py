@@ -394,7 +394,7 @@ class DoorProjectCount(generics.ListAPIView):
             'count': queryset
         }
         return Response(response_data)
-
+    
 class DoorAttributesViewset(generics.ListAPIView):
     queryset = Door.objects.all()  # Replace "Door" with your actual model name
     serializer_class = DoorSerializer  # Replace with your actual serializer class
