@@ -30,28 +30,28 @@ class ProjectReport(BaseReport):
 
     def save(self, *args, **kwargs):
         'report number = project number plus report count. example 12345.1'
-        project = ''
-        if self.project:
-            project = self.project.number
-        elif self.service:
-            project = self.service.number
-        elif self.hse:
-            project = self.hse.number
-        elif self.quote:
-            project = self.quote.number
+        if not self.id:  # only update the number if it's a new instance
+            project = ''
+            if self.project:
+                project = self.project.number
+            elif self.service:
+                project = self.service.number
+            elif self.hse:
+                project = self.hse.number
+            elif self.quote:
+                project = self.quote.number
 
-        existing_reports = ProjectReport.objects.filter(number__startswith=f'{project}.').order_by('-number')
+            existing_reports = ProjectReport.objects.filter(number__startswith=f'{project}.').order_by('-number')
 
-        if existing_reports.exists():
-            last_report_number = existing_reports.first().number
-            last_count = int(last_report_number.split('.')[-1])
-            count = last_count + 1
-        else:
-            count = 1
+            if existing_reports.exists():
+                last_report_number = existing_reports.first().number
+                last_count = int(last_report_number.split('.')[-1])
+                count = last_count + 1
+            else:
+                count = 1
 
-        self.number = f'{project}.{count}'
+            self.number = f'{project}.{count}'
         super().save(*args, **kwargs)
-
     def __str__(self):
         return f'Report Number: {self.number} | Date: {self.date} | Week: {self.isoweek} | User: {self.created_by.first_name} {self.created_by.last_name}'
 

@@ -26,7 +26,7 @@ class QuoteYear(generics.ListAPIView):
     def get_queryset(self):
         year = self.kwargs['year']
 
-        return QuoteModel.objects.filter(is_active=True, created__year=year).order_by('-number')
+        return QuoteModel.objects.filter(is_active=True, number__startswith=f'Q{str(year)[-2:]}').order_by('-number')
 
 class QuoteArchive(generics.ListAPIView):
     '''Employee view'''
@@ -35,7 +35,7 @@ class QuoteArchive(generics.ListAPIView):
 
     def get_queryset(self):
         year = self.kwargs['year']
-        return QuoteModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+        return QuoteModel.objects.filter(is_active=False, number__startswith=f'Q{str(year)[-2:]}').order_by('-number')
 
 class QuoteToggleArchive(generics.UpdateAPIView):
     '''Toggle Archive'''

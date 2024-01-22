@@ -2,6 +2,8 @@ from rest_framework import generics, permissions
 from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedSerializer, WorkSegmentsWeekSerializer
 from .serializers_worksegment import WorkTypeSerializer, PTOSerializer, PTOApprovedSerializer, PTOWeekSerializer, WorkSegmentDepthSerializer
 from worksegment.models import WorkSegment, WorkType, PTO
+from employee.models import Employee
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -263,3 +265,203 @@ def WorksegmentTotals(request, isoweek):
             total_list = []  #Doesn't exist, set to None
 
         return JsonResponse(total_list, json_dumps_params={'indent': 2}, safe=False)
+
+@csrf_exempt
+def PayrollTotals(request, isoweek):
+    '''Get total time for week'''
+    if request.method == 'GET':
+        try:
+            projects_dict = {}
+            user_hours = defaultdict(int)  # Dictionary to keep track of total hours worked by each user
+            qs = WorkSegment.objects.filter(isoweek=isoweek, is_approved=True).order_by('user__last_name', 'date', 'user__id', 'project', 'service', 'quote', 'hse')
+
+            for i in qs:
+                if i.project:
+                    if i.project.id not in projects_dict:
+                        projects_dict[i.project.id] = {
+                            'project_id': i.project.id,
+                            'project_number': i.project.number,
+                            'project_name': i.project.name,
+                            'service_id': None,
+                            'service_number': None,
+                            'service_name': None,
+                            'quote_id': None,
+                            'quote_number': None,
+                            'quote_name': None,
+                            'hse_id': None,
+                            'hse_number': None,
+                            'hse_name': None,
+                            'segments': [],
+                            'prevailing_rate': i.project.prevailing_rate
+                        }
+                if i.service:
+                    if i.service.id not in projects_dict:
+                        projects_dict[i.service.id] = {
+                            'project_id': None,
+                            'project_number': None,
+                            'project_name': None,
+                            'service_id': i.service.id,
+                            'service_number': i.service.number,
+                            'service_name': i.service.name,
+                            'quote_id': None,
+                            'quote_number': None,
+                            'quote_name': None,
+                            'hse_id': None,
+                            'hse_number': None,
+                            'hse_name': None,
+                            'segments': [],
+                            'prevailing_rate': i.service.prevailing_rate
+                        }
+                if i.quote:
+                    if i.quote.id not in projects_dict:
+                        projects_dict[i.quote.id] = {
+                            'project_id': None,
+                            'project_number': None,
+                            'project_name': None,
+                            'service_id': None,
+                            'service_number': None,
+                            'service_name': None,
+                            'quote_id': i.quote.id,
+                            'quote_number': i.quote.number,
+                            'quote_name': i.quote.name,
+                            'hse_id': None,
+                            'hse_number': None,
+                            'hse_name': None,
+                            'segments': [],
+                            'prevailing_rate': False  # Update this as needed
+                        }
+                if i.hse:
+                    if i.hse.id not in projects_dict:
+                        projects_dict[i.hse.id] = {
+                            'project_id': None,
+                            'project_number': None,
+                            'project_name': None,
+                            'service_id': None,
+                            'service_number': None,
+                            'service_name': None,
+                            'quote_id': None,
+                            'quote_number': None,
+                            'quote_name': None,
+                            'hse_id': i.hse.id,
+                            'hse_number': i.hse.number,
+                            'hse_name': i.hse.name,
+                            'segments': [],
+                            'prevailing_rate': i.hse.prevailing_rate
+                        }
+
+                # Calculate total hours worked by the user excluding travel hours
+                work_hours = i.duration - i.travel_duration
+                user_hours[i.user.id] += work_hours
+
+
+                prevailing_rate = False
+                if i.project:
+                    prevailing_rate = i.project.prevailing_rate
+                elif i.service:
+                    prevailing_rate = i.service.prevailing_rate
+                elif i.quote:
+                    prevailing_rate = i.quote.prevailing_rate
+                elif i.hse:
+                    prevailing_rate = i.hse.prevailing_rate
+
+                # Initialize doubletime
+                doubletime = 0
+                # Determine if the hours are regular, overtime, or doubletime
+                day_of_week = i.date.weekday()
+                if prevailing_rate and i.segment_type_id == 2:
+                    if work_hours > 8:
+                        regular = 8
+                        overtime = work_hours - 8
+                    else:
+                        regular = work_hours
+                        overtime = 0
+                    accumulated_regular += regular
+                elif day_of_week == 5:  # Saturday
+                    regular = 0
+                    overtime = work_hours
+                    accumulated_regular += regular
+                elif day_of_week == 6:  # Sunday
+                    regular = 0
+                    overtime = 0
+                    doubletime = work_hours
+                else:
+                    if user_hours[i.user.id] <= 40:
+                        regular = work_hours
+                        overtime = 0
+                        accumulated_regular = user_hours[i.user.id]
+                    else:
+                        if user_hours[i.user.id] - work_hours < 40:
+                            regular = 40 - (user_hours[i.user.id] - work_hours)
+                            overtime = work_hours - regular
+                            accumulated_regular = 40
+                        else:
+                            regular = 0
+                            overtime = work_hours
+                            accumulated_regular = user_hours[i.user.id]
+                
+                try:
+                    employee = Employee.objects.get(user_id=i.user.id)
+                    rate = employee.rate
+                except ObjectDoesNotExist:
+                    rate = None
+
+                segment = {
+                    'segment_type_id': i.segment_type.id,
+                    'segment_type_name': i.segment_type.name,
+                    'user_id': i.user.id,
+                    'employee': f'{i.user.last_name}, {i.user.first_name}',
+                    'date': i.date,
+                    'start_time': i.start_time,
+                    'end_time': i.end_time,
+                    'lunch': i.lunch,
+                    'travel_duration': i.travel_duration,
+                    'total_duration': i.duration,
+                    'regular': regular,
+                    'overtime': overtime,
+                    'doubletime': doubletime,
+                    'accumulated_regular': accumulated_regular,
+                    'notes': i.notes,
+                    'prevailing_rate': prevailing_rate,
+                    'rate': rate 
+                }
+
+                if i.project and i.project.id in projects_dict:
+                    projects_dict[i.project.id]['segments'].append(segment)
+                if i.service and i.service.id in projects_dict:
+                    projects_dict[i.service.id]['segments'].append(segment)
+                if i.quote and i.quote.id in projects_dict:
+                    projects_dict[i.quote.id]['segments'].append(segment)
+                if i.hse and i.hse.id in projects_dict:
+                    projects_dict[i.hse.id]['segments'].append(segment)
+
+        except AttributeError:
+            projects_dict = {}
+
+        # Condense segments for each project
+        for project in projects_dict.values():
+            project['segments'] = condense_segments(project['segments'])
+
+        return JsonResponse(list(projects_dict.values()), json_dumps_params={'indent': 2}, safe=False)
+
+def condense_segments(segments):
+    condensed_segments = defaultdict(lambda: {'user_id': None, 'segment_type_name': None, 'segment_type_id': None, 'employee': None, 'regular': 0, 'overtime': 0, 'doubletime': 0, 'travel_duration': 0})
+
+    for segment in segments:
+        user_id = segment['user_id']
+        segment_type_id = segment['segment_type_id']
+        segment_type_name = segment['segment_type_name']
+        key = (user_id, segment_type_id)  # Group by both user_id and segment_type_id
+
+        condensed_segments[key]['user_id'] = user_id
+        condensed_segments[key]['segment_type_id'] = segment_type_id
+        condensed_segments[key]['segment_type_name'] = segment_type_name
+        condensed_segments[key]['employee'] = segment['employee']
+        condensed_segments[key]['regular'] += float(segment['regular'])
+        condensed_segments[key]['overtime'] += float(segment['overtime'])
+        condensed_segments[key]['doubletime'] += float(segment['doubletime'])
+        condensed_segments[key]['travel_duration'] += float(segment['travel_duration'])
+        condensed_segments[key]['prevailing_rate'] = segment_type_id == 2 and segment['prevailing_rate']
+        condensed_segments[key]['base_rate'] = segment['rate']
+        condensed_segments[key]['pr_rate'] = segment['rate'] if segment_type_id == 2 and segment['prevailing_rate'] else None
+
+    return list(condensed_segments.values())

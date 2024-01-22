@@ -98,7 +98,8 @@ INSTALLED_APPS = [
     'uploader',
     'engineering',
     'report',
-    'shop'
+    'shop',
+    'employee',
 
 ]
 

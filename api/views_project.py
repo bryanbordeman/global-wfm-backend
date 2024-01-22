@@ -106,9 +106,10 @@ class ProjectArchive(generics.ListAPIView):
     serializer_class = ProjectSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
+
     def get_queryset(self):
         year = self.kwargs['year']
-        return ProjectModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+        return ProjectModel.objects.filter(is_active=False, number__endswith=str(year)[-2:]).order_by('-number')
 
 class ProjectToggleArchive(generics.UpdateAPIView):
     '''Toggle Archive'''
@@ -175,7 +176,8 @@ class ServiceArchive(generics.ListAPIView):
 
     def get_queryset(self):
         year = self.kwargs['year']
-        return ServiceModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+        service_substring_to_check = "SVC" + str(year)[-2:]
+        return ServiceModel.objects.filter(is_active=False, number__startswith=service_substring_to_check).order_by('-number')
 
 class ServiceCreate(generics.ListCreateAPIView):
     serializer_class = ServiceCreateSerializer
@@ -208,7 +210,8 @@ class HSEArchive(generics.ListAPIView):
 
     def get_queryset(self):
         year = self.kwargs['year']
-        return HSEModel.objects.filter(is_active=False, created__year=year).order_by('-number')
+        hse_substring_to_check = "HSE" + str(year)[-2:]
+        return HSEModel.objects.filter(is_active=False, number__startswith=hse_substring_to_check).order_by('-number')
 
 class HSEToggleArchive(generics.UpdateAPIView):
     '''Toggle Archive'''

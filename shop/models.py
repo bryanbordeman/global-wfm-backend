@@ -19,16 +19,26 @@ class PartCategory(models.Model):
     def __str__(self):
         return f'{self.description}'
     
+class PartAttribute(models.Model):
+    description = models.CharField(max_length=400)
+    
+    def __str__(self):
+        return f'{self.description}'
+
 class Part(models.Model):
-    manufacturer = models.CharField(max_length=400, blank=True)
+    manufacturer = models.ForeignKey('contact.Company', null=True, blank=True, on_delete=models.PROTECT)
     manufacturer_part_number = models.CharField(max_length=400, blank=True)
     categories = models.ManyToManyField(PartCategory,  blank=True)
-    quantity = models.IntegerField(default=1, blank=False, null=False) # minimum of 1
+    name = models.CharField(max_length=100)
     description = models.TextField(max_length=8000, blank=True,
                                 validators=[MaxLengthValidator(8000)])
     drawings = models.ManyToManyField('uploader.drawing', blank=True) # drawings are only pdfs.
     attachments = models.ManyToManyField('uploader.DropBox', blank=True) # attachments are only images.
 
+class WorkOrderPart(models.Model):
+    part = models.ForeignKey(Part, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    attributes = models.ManyToManyField(PartAttribute,  blank=True)
 
 class WorkOrder(models.Model):
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.PROTECT)
@@ -39,8 +49,8 @@ class WorkOrder(models.Model):
     issue_date = models.DateField(null=True)
     created_by = models.ForeignKey(User, related_name='created_by', on_delete=models.CASCADE)
     checked_by = models.ForeignKey(User, related_name='checked_by', on_delete=models.CASCADE)
-    assigned = models.ForeignKey(User, related_name='assigned', on_delete=models.CASCADE)
-    parts = models.ManyToManyField(Part, blank=True)
+    assignee = models.ForeignKey(User, related_name='assigned', on_delete=models.CASCADE)
+    parts = models.ManyToManyField(WorkOrderPart, blank=True)
     is_complete = models.BooleanField(default=False) # when ready to ship
     completed = models.DateTimeField(null=True, blank=True, auto_now_add=True, editable=True) # when shipped
     updated = models.DateTimeField(null=True, blank=True, auto_now_add=True, editable=True)
