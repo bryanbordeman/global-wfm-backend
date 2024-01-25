@@ -234,9 +234,12 @@ urlpatterns = [
     path('subtask/<int:pk>', views_task.SubtaskRetrieveUpdateDestroy.as_view()),
     path('create/subtask/', views_task.SubtaskCreate.as_view()),
 
-    path('employees/', views_employee.EmployeeViewset.as_view()),
+    path('employees/', views_employee.Employee.as_view()),
     path('create/employee/', views_employee.EmployeeCreate.as_view()),
     path('employee/<int:pk>', views_employee.EmployeeRetrieveUpdateDestroy.as_view()),
+    path('employees/rates/', views_employee.EmployeeRate.as_view()),
+    path('create/employee/rate', views_employee.EmployeeRateCreate.as_view()),
+    path('employee/rate/<int:pk>', views_employee.EmployeeRateRetrieveUpdateDestroy.as_view()),
     
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),

@@ -2,13 +2,14 @@ from rest_framework import generics, permissions
 from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedSerializer, WorkSegmentsWeekSerializer
 from .serializers_worksegment import WorkTypeSerializer, PTOSerializer, PTOApprovedSerializer, PTOWeekSerializer, WorkSegmentDepthSerializer
 from worksegment.models import WorkSegment, WorkType, PTO
-from employee.models import Employee
+from employee.models import Employee, EmployeeRate
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from collections import defaultdict
+from decimal import Decimal, ROUND_HALF_UP
 
 class PTOs(generics.ListAPIView):
     '''Employee view'''
@@ -349,8 +350,9 @@ def PayrollTotals(request, isoweek):
                             'prevailing_rate': i.hse.prevailing_rate
                         }
 
-                # Calculate total hours worked by the user excluding travel hours
-                work_hours = i.duration - i.travel_duration
+                # Calculate total hours worked by the user excluding travel hour
+                travel_duration = i.travel_duration if i.travel_duration is not None else 0
+                work_hours = i.duration - travel_duration
                 user_hours[i.user.id] += work_hours
 
 
@@ -401,7 +403,8 @@ def PayrollTotals(request, isoweek):
                 
                 try:
                     employee = Employee.objects.get(user_id=i.user.id)
-                    rate = employee.rate
+                    rate_obj = EmployeeRate.objects.filter(employee=employee).order_by('-effective_date').first()
+                    rate = rate_obj.rate if rate_obj else None
                 except ObjectDoesNotExist:
                     rate = None
 
@@ -441,6 +444,13 @@ def PayrollTotals(request, isoweek):
         for project in projects_dict.values():
             project['segments'] = condense_segments(project['segments'])
 
+        # Calculate total costs for each project
+        for project in projects_dict.values():
+            project['total_regular_cost'] = sum(segment['regular_cost'] for segment in project['segments'])
+            project['total_overtime_cost'] = sum(segment['overtime_cost'] for segment in project['segments'])
+            project['total_doubletime_cost'] = sum(segment['doubletime_cost'] for segment in project['segments'])
+            project['total_travel_cost'] = sum(segment['travel_cost'] for segment in project['segments'])
+
         return JsonResponse(list(projects_dict.values()), json_dumps_params={'indent': 2}, safe=False)
 
 def condense_segments(segments):
@@ -452,6 +462,14 @@ def condense_segments(segments):
         segment_type_name = segment['segment_type_name']
         key = (user_id, segment_type_id)  # Group by both user_id and segment_type_id
 
+        travel_duration = float(segment['travel_duration']) if segment['travel_duration'] is not None else 0.0
+        rate = segment['rate'] if segment['rate'] is not None else 0.0
+
+        travel_cost = (rate * Decimal(travel_duration)).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+        regular_cost = (rate * Decimal(segment['regular'])).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+        overtime_cost = ((rate * Decimal(1.5)) * Decimal(segment['overtime'])).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+        doubletime_cost = ((rate * Decimal(2)) * Decimal(segment['doubletime'])).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+
         condensed_segments[key]['user_id'] = user_id
         condensed_segments[key]['segment_type_id'] = segment_type_id
         condensed_segments[key]['segment_type_name'] = segment_type_name
@@ -459,9 +477,13 @@ def condense_segments(segments):
         condensed_segments[key]['regular'] += float(segment['regular'])
         condensed_segments[key]['overtime'] += float(segment['overtime'])
         condensed_segments[key]['doubletime'] += float(segment['doubletime'])
-        condensed_segments[key]['travel_duration'] += float(segment['travel_duration'])
+        condensed_segments[key]['travel_duration'] += travel_duration
         condensed_segments[key]['prevailing_rate'] = segment_type_id == 2 and segment['prevailing_rate']
-        condensed_segments[key]['base_rate'] = segment['rate']
-        condensed_segments[key]['pr_rate'] = segment['rate'] if segment_type_id == 2 and segment['prevailing_rate'] else None
+        condensed_segments[key]['base_rate'] = rate
+        condensed_segments[key]['pr_rate'] = rate if segment_type_id == 2 and segment['prevailing_rate'] else None
+        condensed_segments[key]['travel_cost'] = travel_cost 
+        condensed_segments[key]['regular_cost'] = regular_cost
+        condensed_segments[key]['overtime_cost'] = overtime_cost
+        condensed_segments[key]['doubletime_cost'] = doubletime_cost
 
     return list(condensed_segments.values())
