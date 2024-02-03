@@ -1,13 +1,14 @@
 from rest_framework import generics, permissions
 from .serializers_employee import EmployeeSerializer, EmployeeUpdateSerializer
 from .serializers_employee import EmployeeRateSerializer, EmployeeRateUpdateSerializer
+from .serializers_employee import PrevailingRateSerializer, PrevailingRateUpdateSerializer
 from employee.models import Employee as EmployeeModel
 from employee.models import EmployeeRate as EmployeeRateModel
+from employee.models import PrevailingRate as PrevailingRateModel
 from collections import defaultdict
 from rest_framework.response import Response
 
 class Employee(generics.ListAPIView):
-    '''Contact view'''
     serializer_class = EmployeeSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
@@ -32,7 +33,6 @@ class EmployeeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
         return EmployeeModel.objects.all()
 
 class EmployeeRate(generics.ListAPIView):
-    '''Contact view'''
     serializer_class = EmployeeRateSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
@@ -63,3 +63,32 @@ class EmployeeRateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return EmployeeRateModel.objects.all()  
+    
+
+class PrevailingRate(generics.ListAPIView):
+    serializer_class = PrevailingRateSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        project = self.kwargs['project']
+        return PrevailingRateModel.objects.filter(**{"project_id" : project}).order_by('effective_date')
+
+class PrevailingRateCreate(generics.ListCreateAPIView):
+    serializer_class = PrevailingRateUpdateSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return PrevailingRateModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+class PrevailingRateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = PrevailingRateUpdateSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return PrevailingRateModel.objects.all()  
+
+
+

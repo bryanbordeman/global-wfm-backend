@@ -91,6 +91,14 @@ class MinimalProject(generics.ListAPIView):
 
     def get_queryset(self):
         return ProjectModel.objects.filter(is_active=True).order_by('-id')
+    
+class PrevailingRateProject(generics.ListAPIView):
+    '''Customer view'''
+    serializer_class = MinimalProjectSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ProjectModel.objects.filter(is_active=True, prevailing_rate=True).order_by('-number')
 
 class ProjectYear(generics.ListAPIView):
     '''Employee view'''

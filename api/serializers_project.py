@@ -44,7 +44,7 @@ class MinimalProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         # fields = ['id', 'number', 'name', 'is_active' ]
-        fields = ['id', 'number', 'name', 'project_category', 'project_type', 'address']
+        fields = ['id', 'number', 'name', 'project_category', 'project_type', 'address', 'prevailing_rate']
         depth = 2
         
 class ProjectCreateSerializer(serializers.ModelSerializer):

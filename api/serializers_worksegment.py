@@ -58,3 +58,11 @@ class  WorkSegmentsWeekSerializer(serializers.ModelSerializer):
         model = WorkSegment
         fields = '__all__'
         depth = 2
+
+
+class  WorkSegmentsProjectInformationSerializer(serializers.ModelSerializer):
+    '''Admin view only'''
+    user=MinimalUserSerializer()
+    class Meta:
+        model = WorkSegment
+        fields = ['segment_type', 'user','date', 'isoweek', 'start_time', 'end_time', 'lunch', 'travel_duration', 'duration', 'notes']

@@ -112,6 +112,7 @@ urlpatterns = [
     path('admin/worksegments/<str:isoweek>/', views_worksegment.AdminWorkSegmentsWeek.as_view()),
     path('worksegments/totals/<str:isoweek>/', views_worksegment.WorksegmentTotals),
     path('worksegments/project/<str:project_number>/', views_worksegment.WorkSegmentsProject.as_view()),
+    path('worksegments/information/project/<str:project_number>/<str:segment_type>/', views_worksegment.WorkSegmentsProjectInformation.as_view()),
     path('payroll/totals/<str:isoweek>/', views_worksegment.PayrollTotals),
 
     path('pto/', views_worksegment.PTOs.as_view()),
@@ -186,6 +187,7 @@ urlpatterns = [
     path('project/type/<int:pk>', views_project.ProjectTypeRetrieveUpdateDestroy.as_view()),
     path('projects/', views_project.Project.as_view()),
     path('projects/minimal', views_project.MinimalProject.as_view()),
+    path('projects/prevailing', views_project.PrevailingRateProject.as_view()),
 
     path('projects/<int:year>', views_project.ProjectYear.as_view()),
     path('projects/archive/<int:year>', views_project.ProjectArchive.as_view()),
@@ -240,7 +242,11 @@ urlpatterns = [
     path('employees/rates/', views_employee.EmployeeRate.as_view()),
     path('create/employee/rate', views_employee.EmployeeRateCreate.as_view()),
     path('employee/rate/<int:pk>', views_employee.EmployeeRateRetrieveUpdateDestroy.as_view()),
-    
+    path('rates/prevailing/<int:project>', views_employee.PrevailingRate.as_view()),
+    path('create/rate/prevailing', views_employee.PrevailingRateCreate.as_view()),
+    path('rate/prevailing/<int:pk>', views_employee.PrevailingRateRetrieveUpdateDestroy.as_view()),
+
+
     path('users/', views_user.UserView.as_view()),
     path('signup/', views_user.signup),
     path('login/', views_user.login),

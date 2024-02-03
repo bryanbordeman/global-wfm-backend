@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedSerializer, WorkSegmentsWeekSerializer
+from .serializers_worksegment import WorkSegmentSerializer, WorkSegmentApprovedSerializer, WorkSegmentsWeekSerializer, WorkSegmentsProjectInformationSerializer
 from .serializers_worksegment import WorkTypeSerializer, PTOSerializer, PTOApprovedSerializer, PTOWeekSerializer, WorkSegmentDepthSerializer
 from worksegment.models import WorkSegment, WorkType, PTO
 from employee.models import Employee, EmployeeRate
@@ -487,3 +487,23 @@ def condense_segments(segments):
         condensed_segments[key]['doubletime_cost'] = doubletime_cost
 
     return list(condensed_segments.values())
+
+
+
+class WorkSegmentsProjectInformation(generics.ListAPIView):
+    '''get all worksegments for particular project. Admin view only'''
+    serializer_class = WorkSegmentsProjectInformationSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        project_number = self.kwargs['project_number']
+        segment_type_name = self.kwargs['segment_type']
+
+        if(project_number[:3] == 'SVC'):
+            queryset = WorkSegment.objects.filter(service__number=project_number, segment_type__name=segment_type_name)
+        elif(project_number[:3] == 'HSE'):
+            queryset = WorkSegment.objects.filter(hse__number=project_number, segment_type__name=segment_type_name)
+        else:
+            queryset = WorkSegment.objects.filter(project__number=project_number, segment_type__name=segment_type_name)
+
+        return queryset.order_by('-date','start_time')
