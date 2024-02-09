@@ -19,6 +19,7 @@ from . import views_asset
 from . import views_engineering
 from . import views_report
 from . import views_employee
+from . import views_payroll
 
 urlpatterns = [
     path('engineering/dcns/<int:year>', views_engineering.DCNViewset.as_view()),
@@ -113,7 +114,6 @@ urlpatterns = [
     path('worksegments/totals/<str:isoweek>/', views_worksegment.WorksegmentTotals),
     path('worksegments/project/<str:project_number>/', views_worksegment.WorkSegmentsProject.as_view()),
     path('worksegments/information/project/<str:project_number>/<str:segment_type>/', views_worksegment.WorkSegmentsProjectInformation.as_view()),
-    path('payroll/totals/<str:isoweek>/', views_worksegment.PayrollTotals),
 
     path('pto/', views_worksegment.PTOs.as_view()),
     path('create/pto/<int:user_id>/', views_worksegment.PTOCreate.as_view()),
@@ -245,6 +245,13 @@ urlpatterns = [
     path('rates/prevailing/<int:project>', views_employee.PrevailingRate.as_view()),
     path('create/rate/prevailing', views_employee.PrevailingRateCreate.as_view()),
     path('rate/prevailing/<int:pk>', views_employee.PrevailingRateRetrieveUpdateDestroy.as_view()),
+    path('benefits/', views_employee.Benefit.as_view()),
+    path('create/employee/benefit', views_employee.EmployeeBenefitCreate.as_view()),
+    path('benefit/employee/<int:pk>', views_employee.EmployeeBenefitRetrieveUpdateDestroy.as_view()),
+
+    path('payroll/totals/<str:isoweek>/', views_payroll.PayrollTotals),
+    path('payroll/total_fringe/<int:employee_id>/<int:year>', views_payroll.total_fringe),
+    path('payroll/get_employee_hours/<int:employee_id>/<str:isoweek>', views_payroll.total_employee_hours),
 
 
     path('users/', views_user.UserView.as_view()),

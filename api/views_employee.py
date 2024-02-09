@@ -2,12 +2,54 @@ from rest_framework import generics, permissions
 from .serializers_employee import EmployeeSerializer, EmployeeUpdateSerializer
 from .serializers_employee import EmployeeRateSerializer, EmployeeRateUpdateSerializer
 from .serializers_employee import PrevailingRateSerializer, PrevailingRateUpdateSerializer
+from .serializers_employee import BenefitSerializer, EmployeeBenefitSerializer, EmployeeBenefitUpdateSerializer
 from employee.models import Employee as EmployeeModel
 from employee.models import EmployeeRate as EmployeeRateModel
+from employee.models import Benefit as BenefitModel
+from employee.models import EmployeeBenefit as EmployeeBenefitModel
 from employee.models import PrevailingRate as PrevailingRateModel
 from collections import defaultdict
 from rest_framework.response import Response
 
+class Benefit(generics.ListAPIView):
+    serializer_class = BenefitSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return BenefitModel.objects.all()
+
+class EmployeeBenefit(generics.ListAPIView):
+    serializer_class = EmployeeBenefitSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return EmployeeBenefitModel.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        data = defaultdict(list)
+        for benefit in queryset:
+            key = (benefit.employee.id)  # employee ID is the key
+            data[key].append(self.get_serializer(benefit).data)
+        return Response(data)
+    
+class EmployeeBenefitCreate(generics.ListCreateAPIView):
+    serializer_class = EmployeeBenefitUpdateSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return EmployeeBenefitModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+class EmployeeBenefitRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = EmployeeBenefitUpdateSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return EmployeeBenefitModel.objects.all()
+    
 class Employee(generics.ListAPIView):
     serializer_class = EmployeeSerializer
     permissions_classes = [permissions.IsAuthenticated]

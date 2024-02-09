@@ -14,6 +14,7 @@ class EmployeeBenefit(models.Model):
     benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=7, decimal_places=2, default=0.0)
     employer_paid = models.BooleanField(default=False)
+    effective_date = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f'{self.benefit.description} - {self.employee.user.first_name} {self.employee.user.last_name}{" - Employer Paid" if self.employer_paid else ""}'
@@ -46,19 +47,12 @@ class EmployeeRate(models.Model):
 
 class PrevailingRate(models.Model):
     project = models.ForeignKey('project.Project', null=True, blank=True, on_delete=models.CASCADE)
-    segment = models.ManyToManyField('worksegment.WorkSegment', blank=True)
     effective_date = models.DateField(default=timezone.now)
     rate = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     fringe_rate = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     is_foremen = models.BooleanField(default=False)
+    shift_differential = models.BooleanField(default=False) # extra pay for working a less desirable shift
+    compressed_work_week = models.BooleanField(default=False) # four ten-hour days within a week rather than five eight-hour days
 
     def __str__(self):
         return f'{self.project.number} {self.project.name} - $ {self.rate}{" - Foreman Rate" if self.is_foremen else ""}'
-    
-
- # life_insurance = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
-    # long_term_disability = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
-    # dental = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
-    # vision = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
-    # health = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
-    # health_employee_paid = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)

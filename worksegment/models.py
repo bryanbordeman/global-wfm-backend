@@ -75,6 +75,9 @@ class WorkSegment(models.Model):
     duration = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=0, editable=False)
     notes = models.TextField(max_length=250, blank=True,
                                 validators=[MaxLengthValidator(250)])
+    is_foremen = models.BooleanField(default=False)
+    shift_differential = models.BooleanField(default=False) # extra pay for working a less desirable shift
+    compressed_work_week = models.BooleanField(default=False) # four ten-hour days within a week rather than five eight-hour days
 
     def clean(self):
         '''checks end time is greater than start time'''
