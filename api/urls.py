@@ -250,6 +250,7 @@ urlpatterns = [
     path('benefit/employee/<int:pk>', views_employee.EmployeeBenefitRetrieveUpdateDestroy.as_view()),
 
     path('payroll/totals/<str:isoweek>/', views_payroll.PayrollTotals),
+    path('payroll/job_costing/<str:isoweek>/', views_payroll.JobCosting),
     path('payroll/total_fringe/<int:employee_id>/<int:year>', views_payroll.total_fringe),
     path('payroll/get_employee_hours/<int:employee_id>/<str:isoweek>', views_payroll.total_employee_hours),
 

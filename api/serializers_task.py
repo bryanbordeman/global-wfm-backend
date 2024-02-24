@@ -1,8 +1,8 @@
-from dataclasses import field
 from rest_framework import serializers
 from task.models import Task, TaskList, SubTask
 from api.serializers_user import MinimalUserSerializer
 from api.serializers_project import MinimalProjectSerializer
+from api.serializers_uploader import DropBoxSerializer
 
 class  TaskSerializer(serializers.ModelSerializer):
     '''Task serializer'''
@@ -15,11 +15,19 @@ class  TaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-class  TaskCreateSerializer(serializers.ModelSerializer):
+class TaskCreateSerializer(serializers.ModelSerializer):
     '''Create Task serializer'''
+
+    attachments = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+
     class Meta:
         model = Task
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['attachments'] = DropBoxSerializer(instance.attachments.all(), many=True).data
+        return representation
 
 class  TaskListSerializer(serializers.ModelSerializer):
     '''Task List serializer'''

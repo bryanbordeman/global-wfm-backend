@@ -31,17 +31,17 @@ class  WorkTypeSerializer(serializers.ModelSerializer):
 
 class  WorkSegmentSerializer(serializers.ModelSerializer):
     '''Employee view only'''
-    is_approved = serializers.ReadOnlyField()
+    # is_approved = serializers.ReadOnlyField()
     class Meta:
         model = WorkSegment
-        fields = ['id','user','segment_type', 'project', 'service', 'hse', 'quote','date', 'isoweek', 'is_approved', 'start_time', 'end_time', 'lunch', 'travel_duration', 'duration', 'notes']
+        fields = ['id','user','segment_type', 'project', 'service', 'hse', 'quote','date', 'isoweek', 'is_approved', 'start_time', 'end_time', 'lunch', 'travel_duration', 'duration', 'notes', 'is_foremen', 'shift_differential', 'compressed_work_week']
 
 class  WorkSegmentDepthSerializer(serializers.ModelSerializer):
     '''Employee view only'''
     is_approved = serializers.ReadOnlyField()
     class Meta:
         model = WorkSegment
-        fields = ['id','user','segment_type', 'project', 'service', 'hse', 'quote','date', 'isoweek', 'is_approved', 'start_time', 'end_time', 'lunch', 'travel_duration', 'duration', 'notes']
+        fields = ['id','user','segment_type', 'project', 'service', 'hse', 'quote','date', 'isoweek', 'is_approved', 'start_time', 'end_time', 'lunch', 'travel_duration', 'duration', 'notes', 'is_foremen', 'shift_differential', 'compressed_work_week']
         depth = 1
 
 class WorkSegmentApprovedSerializer(serializers.ModelSerializer):
