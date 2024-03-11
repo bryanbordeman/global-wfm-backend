@@ -68,6 +68,10 @@ urlpatterns = [
     path('asset/door/packaging/<int:pk>', views_asset.DoorPackagingRetrieveUpdateDestroy.as_view()),
 
     path('asset/doors', views_asset.DoorViewset.as_view()),
+
+    path('asset/doors/project/<int:year>', views_asset.DoorYear.as_view()),
+    path('asset/doors/service/<int:year>', views_asset.DoorServiceYear.as_view()),
+
     path('asset/create/door', views_asset.DoorCreate.as_view()),
     path('asset/door/<int:pk>', views_asset.DoorRetrieveUpdateDestroy.as_view()),
     path('asset/portal/door/<int:pk>', views_asset.DoorRetrieve.as_view()),
@@ -75,6 +79,7 @@ urlpatterns = [
     path('asset/door/project/<int:project>', views_asset.DoorProjectList.as_view()),
     path('asset/door/service/<int:service>', views_asset.DoorServiceList.as_view()),
     path('asset/door/project/count/<int:project>', views_asset.DoorProjectCount.as_view()),
+    path('asset/door/service/count/<int:service>', views_asset.DoorServiceCount.as_view()),
 
     path('drawings/', views_uploader.DrawingViewset.as_view()),
     path('drawings/project/<int:project_id>', views_uploader.DrawingProject.as_view()),
@@ -248,6 +253,7 @@ urlpatterns = [
     path('benefits/', views_employee.Benefit.as_view()),
     path('create/employee/benefit', views_employee.EmployeeBenefitCreate.as_view()),
     path('benefit/employee/<int:pk>', views_employee.EmployeeBenefitRetrieveUpdateDestroy.as_view()),
+    path('employees/hours/settings/', views_employee.EmployeeHoursSettingsView.as_view()),
 
     path('payroll/totals/<str:isoweek>/', views_payroll.PayrollTotals),
     path('payroll/job_costing/<str:isoweek>/', views_payroll.JobCosting),

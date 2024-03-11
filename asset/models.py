@@ -162,7 +162,10 @@ class Door(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             # New door, assign count number
-            door_count = Door.objects.filter(project=self.project).count()
+            if self.service is not None:
+                door_count = Door.objects.filter(service=self.service).count()
+            else:
+                door_count = Door.objects.filter(project=self.project).count()
             self.count = door_count + 1
         super().save(*args, **kwargs)
 

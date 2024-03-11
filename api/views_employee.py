@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import generics, permissions
 from .serializers_employee import EmployeeSerializer, EmployeeUpdateSerializer
 from .serializers_employee import EmployeeRateSerializer, EmployeeRateUpdateSerializer
@@ -8,8 +9,18 @@ from employee.models import EmployeeRate as EmployeeRateModel
 from employee.models import Benefit as BenefitModel
 from employee.models import EmployeeBenefit as EmployeeBenefitModel
 from employee.models import PrevailingRate as PrevailingRateModel
+
+from worksegment.models import WorkSegment as WorkSegmentModel
+from worksegment.models import PTO as PTOModel
+from django.http import JsonResponse
+from django.db.models import Sum
+from django.utils import timezone
+
 from collections import defaultdict
 from rest_framework.response import Response
+
+from employee.models import EmployeeHoursSettings
+from .serializers_employee import EmployeeHoursSettingsSerializer 
 
 class Benefit(generics.ListAPIView):
     serializer_class = BenefitSerializer
@@ -132,5 +143,16 @@ class PrevailingRateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView)
     def get_queryset(self):
         return PrevailingRateModel.objects.all()  
 
+class EmployeeHoursSettingsView(generics.RetrieveUpdateAPIView):
+    queryset = EmployeeHoursSettings.objects.all()
+    serializer_class = EmployeeHoursSettingsSerializer
+    lookup_field = 'pk'
+    lookup_url_kwarg = 'pk'
 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        EmployeeModel.objects.update(sick_hours=instance.sick_hours, holiday_hours=instance.holiday_hours)
 
+    def get_object(self):
+        return EmployeeHoursSettings.load()
+    

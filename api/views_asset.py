@@ -292,13 +292,33 @@ class DoorPackagingRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
         return DoorPackaging.objects.all()
 
 class DoorViewset(generics.ListAPIView):
-    'shop orders list'
+
     serializer_class = MinimalDoorSerializer
     permissions_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Door.objects.filter(is_complete=False).order_by('due')
+        return Door.objects.filter(is_complete=False).exclude(project__isnull=True).order_by('due')
 
+class DoorYear(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = MinimalDoorSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        year = self.kwargs['year']
+
+        return Door.objects.filter(project__number__endswith=str(year)[-2:], is_complete=True).order_by('-project')
+    
+class DoorServiceYear(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = MinimalDoorSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        year = self.kwargs['year']
+        service_substring_to_check = "SVC" + str(year)[-2:]
+        return Door.objects.filter(service__number__startswith=service_substring_to_check).order_by('-service')
+    
 class DoorCreate(generics.ListCreateAPIView):
     serializer_class = DoorCreateSerializer
     permissions_classes = [permissions.IsAuthenticated]
@@ -386,6 +406,22 @@ class DoorProjectCount(generics.ListAPIView):
     def get_queryset(self):
         project_id = self.kwargs['project']
         door_count = Door.objects.filter(project_id=project_id).count()
+        return door_count
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        response_data = {
+            'count': queryset
+        }
+        return Response(response_data)
+
+class DoorServiceCount(generics.ListAPIView):
+    '''Get count of all doors on a service'''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        service_id = self.kwargs['service']
+        door_count = Door.objects.filter(service_id=service_id).count()
         return door_count
 
     def list(self, request, *args, **kwargs):

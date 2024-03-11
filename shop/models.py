@@ -69,3 +69,60 @@ class WorkOrder(models.Model):
 
 class BillOfMaterials(models.Model):
     materials = models.ManyToManyField(WorkOrder, blank=True)
+
+
+
+
+
+
+class Equipment(models.Model):
+    nickname = models.CharField(max_length=50)
+    make = models.CharField(max_length=50, blank=True)
+    model = models.CharField(max_length=50, blank=True)
+    year = models.CharField(max_length=4, blank=True)
+    color = models.CharField(max_length=50, blank=True)
+    max_weight = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+
+    def __str__(self):
+
+        return f'{self.nickname}'
+
+class EquipmentIssue(models.Model):
+    created_by = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    equipment = models.ForeignKey(Equipment, null=True, on_delete=models.PROTECT)
+    description = models.CharField(max_length=500, blank=True)
+    date = models.DateField(null=True, auto_now_add=True)
+    is_resolved = models.BooleanField(null= False, default=False)
+
+    def __str__(self):
+        return f'{self.vehicle.nickname} | {self.date}'
+
+class EquipmentService(models.Model):
+    created_by = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    equipment = models.ForeignKey(Equipment, null=True, on_delete=models.PROTECT)
+    description = models.CharField(max_length=500, blank=True)
+    date = models.DateField(null=True)
+
+    def __str__(self):
+        return f'{self.vehicle.nickname} | {self.date}'
+
+class InpectionItem(models.Model):
+    description = models.CharField(max_length=500, blank=True)
+
+class EquipmentInspection(models.Model):
+    created_by = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    equipment = models.ForeignKey(Equipment, null=True, on_delete=models.PROTECT)
+    date = models.DateField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.equipment.nickname} | {self.date}'
+
+class InspectionChecklist(models.Model):
+    inspection = models.ForeignKey(EquipmentInspection, on_delete=models.CASCADE)
+    item = models.ForeignKey(InpectionItem, on_delete=models.CASCADE)
+    checked = models.BooleanField(default=False)
+
+
+# inspection = EquipmentInspection.objects.get(date=date)
+# checklist = InspectionChecklist.objects.filter(inspection=inspection)

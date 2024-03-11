@@ -24,7 +24,7 @@ def get_total_fringe_rate(employee_id, year) -> float:
         rate = rate_obj.rate if rate_obj else None
         if rate:
             total_benefits = sum(benefit.amount if benefit.employer_paid else -benefit.amount for benefit in EmployeeBenefit.objects.filter(employee=employee, effective_date__year=year)) * 12
-            fringe_rate = ((employee.vacation_hours * rate) + (employee.sick_hours * rate) + (employee.holiday_hours * rate) + total_benefits) / HOURS_IN_YEAR
+            fringe_rate = ((employee.eligible_vacation_hours() * rate) + (employee.sick_hours * rate) + (employee.holiday_hours * rate) + total_benefits) / HOURS_IN_YEAR
             total_fringe_rate = fringe_rate.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
     except ObjectDoesNotExist:
         rate = None
