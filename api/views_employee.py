@@ -4,20 +4,17 @@ from .serializers_employee import EmployeeSerializer, EmployeeUpdateSerializer
 from .serializers_employee import EmployeeRateSerializer, EmployeeRateUpdateSerializer
 from .serializers_employee import PrevailingRateSerializer, PrevailingRateUpdateSerializer
 from .serializers_employee import BenefitSerializer, EmployeeBenefitSerializer, EmployeeBenefitUpdateSerializer
+from .serializers_employee import SickAccrualOverrideSerializer
+from employee.models import SickAccrualOverride as SickAccrualOverrideModel
 from employee.models import Employee as EmployeeModel
 from employee.models import EmployeeRate as EmployeeRateModel
 from employee.models import Benefit as BenefitModel
 from employee.models import EmployeeBenefit as EmployeeBenefitModel
 from employee.models import PrevailingRate as PrevailingRateModel
 
-from worksegment.models import WorkSegment as WorkSegmentModel
-from worksegment.models import PTO as PTOModel
-from django.http import JsonResponse
-from django.db.models import Sum
-from django.utils import timezone
-
 from collections import defaultdict
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 
 from employee.models import EmployeeHoursSettings
 from .serializers_employee import EmployeeHoursSettingsSerializer 
@@ -67,6 +64,18 @@ class Employee(generics.ListAPIView):
 
     def get_queryset(self):
         return EmployeeModel.objects.filter(user__is_active=True).order_by('user__last_name')
+
+class EmployeeDetailView(generics.RetrieveAPIView):
+    serializer_class = EmployeeSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, user__id=self.kwargs["pk"])
+        return obj
+
+    def get_queryset(self):
+        return EmployeeModel.objects.all()
 
 class EmployeeCreate(generics.ListCreateAPIView):
     serializer_class = EmployeeUpdateSerializer
@@ -156,3 +165,27 @@ class EmployeeHoursSettingsView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return EmployeeHoursSettings.load()
     
+class SickAccrualOverrideList(generics.ListAPIView):
+    serializer_class = SickAccrualOverrideSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        employee_id = int(self.kwargs['employee'])
+        return SickAccrualOverrideModel.objects.filter(employee__user__is_active=True, employee__id=employee_id).all()
+        
+class SickAccrualOverrideCreate(generics.ListCreateAPIView):
+    serializer_class = SickAccrualOverrideSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return SickAccrualOverrideModel.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+class SickAccrualOverrideRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = SickAccrualOverrideSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return SickAccrualOverrideModel.objects.all()

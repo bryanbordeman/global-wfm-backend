@@ -126,6 +126,7 @@ urlpatterns = [
     path('pto/<int:pk>/approved/', views_worksegment.PTOToggleApproved.as_view()),
     path('pto/<str:isoweek>/', views_worksegment.PTOWeek.as_view()),
     path('admin/pto/<str:isoweek>/', views_worksegment.AdminPTOWeek.as_view()),
+    path('pto/year/<int:user_id>/<int:year>', views_worksegment.PTOYear.as_view()),
 
     path('announcement/', views_announcement.Announcement.as_view()),
     path('create/announcement/', views_announcement.AnnouncementCreate.as_view()),
@@ -242,6 +243,7 @@ urlpatterns = [
     path('create/subtask/', views_task.SubtaskCreate.as_view()),
 
     path('employees/', views_employee.Employee.as_view()),
+    path('employees/user/<int:pk>/', views_employee.EmployeeDetailView.as_view()),
     path('create/employee/', views_employee.EmployeeCreate.as_view()),
     path('employee/<int:pk>', views_employee.EmployeeRetrieveUpdateDestroy.as_view()),
     path('employees/rates/', views_employee.EmployeeRate.as_view()),
@@ -254,6 +256,10 @@ urlpatterns = [
     path('create/employee/benefit', views_employee.EmployeeBenefitCreate.as_view()),
     path('benefit/employee/<int:pk>', views_employee.EmployeeBenefitRetrieveUpdateDestroy.as_view()),
     path('employees/hours/settings/', views_employee.EmployeeHoursSettingsView.as_view()),
+
+    path('employee/sick/accrual/override/<int:employee>', views_employee.SickAccrualOverrideList.as_view()),
+    path('create/sick/accrual/override', views_employee.SickAccrualOverrideCreate.as_view()),
+    path('sick/accrual/override/<int:pk>', views_employee.SickAccrualOverrideRetrieveUpdateDestroy.as_view()),
 
     path('payroll/totals/<str:isoweek>/', views_payroll.PayrollTotals),
     path('payroll/job_costing/<str:isoweek>/', views_payroll.JobCosting),

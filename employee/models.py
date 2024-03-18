@@ -35,7 +35,8 @@ class EmployeeHoursSettings(models.Model):
     def load(cls):
         obj, created = cls.objects.get_or_create(pk=1)
         return obj
-    
+
+
 class Employee(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_date = models.DateField(default=timezone.now)
@@ -111,6 +112,14 @@ class Employee(models.Model):
         
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
+
+class SickAccrualOverride(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    start_date = models.DateField(default=timezone.now)
+    sick_accrualed = models.DecimalField(max_digits=7, decimal_places=2, default=0.0)
+
+    def __str__(self):
+        return f'{self.employee.user.first_name} {self.employee.user.last_name}'
 
 class EmployeeRate(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)

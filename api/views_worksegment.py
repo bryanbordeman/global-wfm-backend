@@ -16,6 +16,15 @@ class PTOs(generics.ListAPIView):
         user = self.request.user
         return PTO.objects.filter(user=user).order_by('-date')
 
+class PTOYear(generics.ListAPIView):
+    '''Employee view'''
+    serializer_class = PTOSerializer
+
+    def get_queryset(self):
+        user = self.kwargs['user_id']
+        year = self.kwargs['year']
+        return PTO.objects.filter(user=user, date__year=year).order_by('-date')
+
 class PTOCreate(generics.ListCreateAPIView):
     serializer_class = PTOSerializer
     permissions_classes = [permissions.IsAuthenticated]
